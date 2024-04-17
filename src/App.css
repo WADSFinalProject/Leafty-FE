@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.disable-zoom {
+    touch-action: manipulation; /* Disables double-tap-to-zoom on touch devices */
+    user-scalable: no; /* Disables zooming */
+}
