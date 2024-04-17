@@ -1,7 +1,7 @@
 import "./Circle.css"
 
 function Circle ({ color, position, opacity }) {
-    const circleWidth = "94vw";
+    const circleWidth = "190vw";
     const circleHeight = "190vh";
     return (
         <div

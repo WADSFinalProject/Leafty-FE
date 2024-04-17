@@ -1,8 +1,8 @@
 import "./Button.css"
 
-function Button({background, color, label, img}){
+function Button({background, color, label, img, onClick}){
     return <>
-         <button class='btn max-w-md rounded-full' style={{background: background, color: color, border: "2px solid #0F7275"}}><img src = {img}></img>{label}</button>
+         <button onClick = {onClick} class='btn max-w-md rounded-full' style={{background: background, color: color, border: "2px solid #0F7275"}}><img src = {img}></img>{label}</button>
     </>
 }
 
