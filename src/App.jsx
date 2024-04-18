@@ -1,42 +1,46 @@
-import { useEffect, useState } from 'react'
-import { animate, motion, useAnimationControls } from "framer-motion"
-
-import './App.css'
-import Circle from './components/Circle'
-import logo from './assets/LeaftyLogo.svg'
-import InputField from './components/InputField'
-import CheckBox from './components/Checkbox'
-import Email from './assets/icons/email.svg'
-import Password from './assets/icons/password.svg'
-import Google from './assets/icons/google.svg'
-import Divider from './components/Divider'
-import Button from './components/Button'
+import { useEffect, useState } from 'react';
+import { animate, motion, useAnimationControls } from "framer-motion";
+import './App.css';
+import Circle from './components/Circle';
+import logo from './assets/LeaftyLogo.svg';
+import InputField from './components/InputField';
+import CheckBox from './components/Checkbox';
+import Email from './assets/icons/email.svg';
+import Password from './assets/icons/password.svg';
+import Google from './assets/icons/google.svg';
+import Divider from './components/Divider';
+import Button from './components/Button';
+import LoadingCircle from './components/LoadingCircle';
 
 function App() {
   const [isRegister, setIsRegister] = useState(false);
-  const [hasLogin, sethasLogin] = useState(false);
+  const [hasLogin, setHasLogin] = useState(false);
+  const [showLoadingCircle, setShowLoadingCircle] = useState(false);
 
   const controls = useAnimationControls();
 
   useEffect(() => {
-    controls.start("login")
+    controls.start("login");
     if (hasLogin) {
-      setTimeout(() => controls.start("alreadyLogin"), 1000)
+      const element = document.getElementById("contents");
+      setTimeout(() => controls.start("alreadyLogin"), 1000);
+      setTimeout(() => setShowLoadingCircle(true), 2000);
       setTimeout(() => {
-        sethasLogin(!hasLogin)
-        controls.start("login")
-      }, 5000)
+        setShowLoadingCircle(false);
+        setHasLogin(!hasLogin);
+        controls.start("login");
+      }, 5000);
     }
-  }, [hasLogin])
+  }, [hasLogin]);
 
   const handleLogin = () => {
-    sethasLogin(!hasLogin)
-  }
+    setHasLogin(!hasLogin);
+  };
 
   return (
     <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
       {/* Login Contents */}
-      <div className="flex flex-col w-1/2 h-screen mx-20 my-20 gap-2 max-w-md">
+      <div id="contents" className="flex flex-col w-1/2 h-screen mx-20 my-20 gap-2 max-w-md">
         <img className="w-20 h-20" src={logo} alt="Logo" />
         <div className='flex flex-col'>
           <span className='font-bold text-3xl'>{isRegister ? "Join Us" : "Welcome Back!"}</span>
@@ -74,19 +78,15 @@ function App() {
             left: "-100%"
           }
         }}
-        animate = {controls}
-        
+        animate={controls}
       >
         {/* TODO: Image Carousel */}
-
         <div className='z-0'>
-          {/* <Circle color="#94C3B3" opacity={"50%"} position={{ left: "100%", bottom: "-45%" }} />
-        <Circle color="#94C3B3" opacity={"50%"} position={{ left: "107.5%", bottom: "-45%" }} />
-        <Circle color="#94C3B3" opacity={"100%"} position={{ left: "115%", bottom: "-45%" }} /> */}
           <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
           <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
           <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
-
+          {/* Render the loading circle in the middle of the page */}
+          {showLoadingCircle && <LoadingCircle />}
         </div>
       </motion.div>
       {/* End of Features */}
@@ -94,4 +94,4 @@ function App() {
   );
 }
 
-export default App
+export default App;

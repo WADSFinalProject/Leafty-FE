@@ -1,0 +1,12 @@
+/* LoadingCircle.css */
+.loading-circle-container {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .loading-circle {
+    /* You can define styles for the loading circle container here */
+  }
+  
