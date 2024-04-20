@@ -75,24 +75,17 @@ function OnBoarding() {
             {isRegister ? "Register your account today to join the Leafty community" : "It's nice to see you again! Sign in to continue to Leafty"}
           </span>
         </div>
-
-        <InputField icon={Email} label={"Email Address"} placeholder={"example@gmail.com"} />
-        <InputField icon={Password} label={"Password"} placeholder={"***********"} />
-        <div className='flex flex-row justify-between items-center'>
-          <CheckBox label={"Remember Me"} />
-          {!isRegister && <span style={{ color: "#79B2B7" }}>Forget Password?</span>}
-        </div>
-
-        <Button background="#0F7275" color="#F7FAFC" label={isRegister ? "Sign Up" : (isLogin  ? <span class='loading loading-dots loading-sm'></span> : "Sign In")} onClick={handleLogin}></Button>
+        <form className='flex flex-col gap-1' onSubmit={handleSubmit}>
+          <InputField type={"email"} icon={Email} label={"Email Address"} placeholder={"example@gmail.com"} onChange={(e) => { setEmail(e.target.value) }} value={email} />
+          <InputField type={"password"} icon={Password} label={"Password"} placeholder={"***********"} onChange={(e) => { setPassword(e.target.value) }} value={password} />
+          <div className='flex flex-row justify-between items-center'>
+            <CheckBox label={"Remember Me"} />
+          </div>
+          <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isRegister ? (isSignUp ? <span className='loading loading-dots loading-sm'></span> : "Sign Up") : (isLogin ? <span className='loading loading-dots loading-sm'></span> : "Sign In")} onClick={isRegister ? handleSignUp : handleLogin}></Button>
+        </form>
         <Divider label={"OR"} />
-        <Button background="#F7FAFC" color="#4C4949" label="Sign in with Google" img={Google}></Button>
-        <span className='flex justify-center gap-2'>
-          {isRegister ? "Already have an account?" : "Don't have an account?"}
-          <button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>
-            {isRegister ? "Sign In" : "Sign Up"}
-          </button>
-        </span>
-
+        <Button border = {"2px solid #0F7275"} background="#F7FAFC" color="#4C4949" label={isRegister ? "Sign up with Google" : "Sign in with Google"} img={Google}></Button>
+        <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span>
       </div>
       {/* End of Login Contents */}
       {/* Features */}
