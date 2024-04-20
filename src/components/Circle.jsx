@@ -5,7 +5,7 @@ function Circle ({ color, position, opacity }) {
     const circleHeight = "190vh";
     return (
         <div
-        className={`circle-1 rounded-full absolute slide-left`}
+        className={`circle-1 rounded-full absolute slide-left hidden md:block`}
         style={{
             width: circleWidth,
             height: circleHeight,

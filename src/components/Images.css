@@ -1,7 +1,6 @@
-#back{
+.image-container {
     position: fixed;
+    left: 75%;
+    top: 50%;
     transform: translate(-50%, -50%);
-    top: 7.5%;
-    left: 4%;
-    background: none;
 }
