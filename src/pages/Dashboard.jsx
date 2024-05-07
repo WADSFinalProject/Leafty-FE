@@ -1,4 +1,3 @@
-import "../style/Dashboard.css"
 import { useEffect, useState } from "react";
 // import Sidebar from '../components/Sidebar';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
@@ -131,9 +130,9 @@ function Dashboard() {
                 </span>
 
                 <div className="flex flex-col gap-2">
-                    <LongContainer tablet={tabletMode}></LongContainer>
-                    <LongContainer tablet={tabletMode}></LongContainer>
-                    <LongContainer tablet={tabletMode}></LongContainer>
+                    <LongContainer showWeight={!tabletMode}></LongContainer>
+                    <LongContainer showWeight={!tabletMode}></LongContainer>
+                    <LongContainer showWeight={!tabletMode}></LongContainer>
                 </div>
 
                 {/* <button onClick={() => { setCollapsed(!collapsed) }}>aaa</button> */}

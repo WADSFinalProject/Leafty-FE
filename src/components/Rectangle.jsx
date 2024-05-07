@@ -1,4 +1,4 @@
-function Rectangle(props) {
+function Rectangle(props, className) {
   const style = {
     width: props.width,
     height: props.height,
@@ -14,7 +14,7 @@ function Rectangle(props) {
   
 
   return (
-    <div className="rectangle" style={style}>
+    <div className = {className} style={style}>
       {props.children}
     </div>
   );

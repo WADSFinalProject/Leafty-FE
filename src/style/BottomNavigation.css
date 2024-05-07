@@ -4,4 +4,17 @@
 .MuiBottomNavigationAction-label{
     font-family: Montserrat !important;
     color: #0F7275;
+    font-size: "12px" !important;
 }
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+  
+  /* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+  

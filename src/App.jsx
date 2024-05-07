@@ -7,6 +7,7 @@ import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Approval from "./pages/Approval";
 import DashboardHarbor from "./pages/DashboardHarbor";
+import Example from "./pages/Example";
 
 function App(){
   return (
@@ -18,6 +19,7 @@ function App(){
         <Route path="/dashboard" element = {<Dashboard />}></Route>
         <Route path="/approval" element = {<Approval />}></Route>
         <Route path = "/dashboardHarbor" element = {<DashboardHarbor />} />
+        <Route path = "/test" element = {<Example />}></Route>
       </Routes>
     </Router>
   )
