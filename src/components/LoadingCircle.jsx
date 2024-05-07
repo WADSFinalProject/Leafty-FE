@@ -1,6 +1,6 @@
 // LoadingCircle.js
 import React, { useEffect } from 'react';
-import './LoadingCircle.css'; // You might need to define styles for the loading circle
+import '../style/LoadingCircle.css'; // You might need to define styles for the loading circle
 import logo from '../assets/LeaftyLogo.svg';
 import { animate, motion, useAnimationControls } from "framer-motion";
 

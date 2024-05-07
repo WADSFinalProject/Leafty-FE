@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import VerifImg from '../assets/Verification.svg'
-import './Images.css'
+import '../style/Images.css'
 import { animate, motion, useAnimationControls } from "framer-motion";
 
 function VerificationImage({img, isVisible}) {

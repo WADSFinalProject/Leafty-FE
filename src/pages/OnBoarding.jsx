@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import '../App.css';
+import { Slides } from '../components/Slides.js';
+import CarouselImage from '../components/CarouselImage';
+import '../style/App.css';
 import Circle from '../components/Circle';
 import logo from '../assets/LeaftyLogo.svg';
 import InputField from '../components/InputField';
@@ -15,7 +17,7 @@ import LoadingCircle from '../components/LoadingCircle';
 
 function OnBoarding() {
   const [isLogin, setIsLogin] = useState(false);
-  
+
   const [isSubmit, setIsSubmit] = useState(false);
 
   const [isRegister, setIsRegister] = useState(false);
@@ -27,9 +29,11 @@ function OnBoarding() {
   const controls = useAnimationControls();
   const navigate = useNavigate();
 
+  const [showCarousel, setShowCarousel] = useState(false);
+
   useEffect(() => {
     controls.start("login");
-    if (isSubmit) {
+    if (isSubmit) {4
       if (isLogin) {
         console.log(email)
         const timeout = setTimeout(() => {
@@ -63,6 +67,15 @@ function OnBoarding() {
     setIsSubmit(!isSubmit);
   }
 
+  useEffect(() => {
+    // Set a timeout to show the carousel after 2 seconds
+    const timeout = setTimeout(() => {
+      setShowCarousel(true);
+    }, 500);
+    // Clear the timeout to avoid memory leaks
+    return () => clearTimeout(timeout);
+  }, []);
+
 
   return (
     <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>
@@ -84,7 +97,7 @@ function OnBoarding() {
           <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isRegister ? (isSignUp ? <span className='loading loading-dots loading-sm'></span> : "Sign Up") : (isLogin ? <span className='loading loading-dots loading-sm'></span> : "Sign In")} onClick={isRegister ? handleSignUp : handleLogin}></Button>
         </form>
         <Divider label={"OR"} />
-        <Button border = {"2px solid #0F7275"} background="#F7FAFC" color="#4C4949" label={isRegister ? "Sign up with Google" : "Sign in with Google"} img={Google}></Button>
+        <Button border={"2px solid #0F7275"} background="#F7FAFC" color="#4C4949" label={isRegister ? "Sign up with Google" : "Sign in with Google"} img={Google}></Button>
         <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span>
       </div>
       {/* End of Login Contents */}
@@ -110,13 +123,18 @@ function OnBoarding() {
         }}
         animate={controls}
       >
-        {/* TODO: Image Carousel */}
-        <div className='z-0'>
-          <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
-          <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
-          <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
-        </div>
+        <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
+        <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
+        <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
       </motion.div>
+      {showCarousel && (
+        <CarouselImage initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: "0%" }}
+          transition={{
+            duration: 2.5,
+            type: "spring"
+          }} images={Slides} className={"lg:block hidden"} />
+      )}
       {/* End of Features */}
     </div>
   );

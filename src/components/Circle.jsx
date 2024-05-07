@@ -1,4 +1,4 @@
-import "./Circle.css"
+import "../style/Circle.css"
 
 function Circle ({ color, position, opacity }) {
     const circleWidth = "190vw";

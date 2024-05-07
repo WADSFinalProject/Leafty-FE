@@ -1,0 +1,17 @@
+
+/* Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+@tailwind base;
+
+/* Put all of your font here */
+@layer base {
+    @font-face {
+      font-family: 'LT-Saeada';
+      font-style: bold;
+      font-weight: 400;
+      font-display: swap;
+      src: url(../assets/fonts/lt_saeada/LTSaeada-Bold.otf) format('opentype');
+    }
+}
+

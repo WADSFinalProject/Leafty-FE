@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import '../App.css';
+import '../style/App.css';
 import { FaArrowLeft } from "react-icons/fa";
 
 import Illustration from "../assets/Verification.svg"
@@ -19,7 +19,6 @@ function Verification() {
     const [otp, setOtp] = useState('');
     const [showLoadingCircle, setShowLoadingCircle] = useState(false);
 
-
     const controls = useAnimationControls();
     const location = useLocation();
     const navigate = useNavigate();
@@ -33,9 +32,10 @@ function Verification() {
             setTimeout(() => {controls.start("verifiedOTP"); setIsImageVisible(false);}, 1000);
             setTimeout(() => setShowLoadingCircle(true), 2000);
             setTimeout(() => {
-                setShowLoadingCircle(false);
-                setIsVerified(!isVerified);
-                controls.start("initial");
+                // setShowLoadingCircle(false);
+                // setIsVerified(!isVerified);
+                // controls.start("initial");
+                navigate('/dashboard', { state: { emailAddress: email } })
             }, 10000);
         }
         else{
@@ -78,6 +78,7 @@ function Verification() {
                 {/* <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span> */}
             </div>
             {/* End of Login Contents */}
+            
             {/* Features */}
             <motion.div className='w-1/2 h-screen relative justify-end items-center'
                 initial={{

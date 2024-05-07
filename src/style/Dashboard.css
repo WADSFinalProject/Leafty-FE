@@ -1,0 +1,42 @@
+.custom-menu-item{
+    background: #94c3b3;
+}
+
+.custom-menu-item:hover {
+    background-color: none !important; /* Change the background color to transparent */
+  }
+
+.sidebar{
+    border: 0px solid !important;
+}
+
+.profile-item{
+    background-color: none !important;
+    max-height: 500px !important;
+}
+
+
+.dashboard{
+    background-color: #94c3b3 !important;
+}
+  
+.dashboard-content{
+    background: white;
+    flex: 1;
+    border-radius: 20px;
+    padding: 2rem;
+    display: flex;
+    gap: 1.5rem;
+    justify-content: space-between;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}

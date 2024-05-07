@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import '../App.css';
+import '../style/App.css';
 import { FaArrowLeft } from "react-icons/fa";
 import Illustration from '../assets/Register.svg'
 import Circle from '../components/Circle';
@@ -18,12 +18,15 @@ import InputField from '../components/InputField';
 function Register() {
     const controls = useAnimationControls();
     const navigate = useNavigate();
-    // const location = useLocation();
-
+    const Location = useLocation();
+    
     const [isVerified, setIsVerified] = useState(false);
     const [isImageVisible, setIsImageVisible] = useState(false);
     const [showLoadingCircle, setShowLoadingCircle] = useState(false);
 
+    const { emailAddress } = Location.state || {};
+    
+    const [email, setEmail] = useState(emailAddress);
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [addressDetails, setAddressDetails] = useState("");
@@ -38,6 +41,14 @@ function Register() {
         e.preventDefault();
 
     };
+
+    const handleRegister = () =>{
+        const timeout = setTimeout(() => {
+            navigate('/verify', { state: { emailAddress: email } });
+        }, 1000);
+        // Clean up the timeout to avoid memory leaks
+        return () => clearTimeout(timeout);
+    }
 
     const handleGoBack = (e)=>{
         e.preventDefault();
@@ -60,7 +71,7 @@ function Register() {
                     <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { setPhoneNumber(e.target.value) }} value={phoneNumber} />
                     <InputField type={"text"} icon={location} label={"Address Details"} placeholder={"Jl. Jenderal Sudirman"} onChange={(e) => { setAddressDetails(e.target.value) }} value={addressDetails} />
                     <div className='my-8 flex flex-col'>
-                        <Button type={"submit"} background="#0F7275" color="#F7FAFC" label="Submit"></Button>
+                        <Button type={"submit"} background="#0F7275" color="#F7FAFC" label="Submit" onClick={handleRegister}></Button>
                     </div>
                 </form>
                 {/* <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span> */}

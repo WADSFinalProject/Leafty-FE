@@ -1,0 +1,21 @@
+.bar-chart canvas {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+  
+.bar-chart .chart-bar {
+    fill: #337ab7;
+}
+  
+.bar-chart .chart-bar:hover {
+    fill: #23527c;
+    cursor: pointer;
+}
+  
+.bar-chart .chart-bar-label {
+    fill: #333;
+    font-size: 12px;
+    text-transform: uppercase;
+    text-align: left !important;
+}

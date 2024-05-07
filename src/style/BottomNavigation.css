@@ -1,0 +1,7 @@
+/* Montserrat */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+.MuiBottomNavigationAction-label{
+    font-family: Montserrat !important;
+    color: #0F7275;
+}

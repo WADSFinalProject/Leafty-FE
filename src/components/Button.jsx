@@ -1,4 +1,4 @@
-import "./Button.css"
+import "../style/Button.css"
 
 function Button({type, background, color, label, img, onClick, id, border}){
     return <>
