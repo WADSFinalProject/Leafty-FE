@@ -3,7 +3,7 @@ function CheckBox({label, state}) {
         <div className="form-control">
             <label className="label cursor-pointer flex gap-2 ">
                 <input type="checkbox" checked={state} className="checkbox [--chkbg:#0F7275]"/>
-                <span className="label-text">{label}</span> 
+                <span className="label-text" style = {{color : "#79B2B7"}}>{label}</span> 
             </label>
         </div>
     </>

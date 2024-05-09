@@ -43,11 +43,6 @@ function DashboardHarbor() {
             itemActive: receptionActive,
             label: "Reception"
         },
-        {
-            item: NotificationBell,
-            itemActive: receptionActive,
-            label: "Notification",
-        }
     ]
     const [value, setValue] = useState("");
 
@@ -78,7 +73,10 @@ function DashboardHarbor() {
                         </div>
                     </div>
                     <div className='flex items-center justify-between'>
-                        <div className='flex items-center md:flex-row gap-2'>
+                        <motion.div className='flex items-center md:flex-row gap-2'  initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -20 }}
+                                    transition={{ duration: 0.5}} >
                             <WidgetContainer className={"p-5 h-[13rem] md:h-full"}>
                                 <div className='flex flex-row'>
                                     <div className='flex flex-col'>
@@ -121,7 +119,7 @@ function DashboardHarbor() {
                                     </div>
                                 </WidgetContainer>
                             </div>
-                        </div>
+                        </motion.div>
                     </div>
                     <span className="font-semibold text-base">
                         Recent Verified Shipment
@@ -147,7 +145,8 @@ function DashboardHarbor() {
                                     label={label}
                                     value={label}
                                     icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
-                                    disableRipple={label === null ? true : false}
+                                    // disableRipple={label === null ? true : false}
+                                    disableRipple = {true}
                                 />
                             })}
                         </BottomNavigation>

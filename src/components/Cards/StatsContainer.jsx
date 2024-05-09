@@ -18,8 +18,8 @@ function showModal() {
 function StatsContainer({ label, value, unit, description, modalContent, color }) {
     return <>
         <WidgetContainer padding={false}>
-            <div className="flex flex-row justify-between p-2">
-                <div className="flex flex-col gap-1.5 p-2">
+            <div className="flex flex-row justify-between py-2 pl-2">
+                <div className="flex flex-col gap-1.5">
                     <div className="flex flex-row justify-between">
                         <button className="" onClick={() => document.getElementById('my_modal').showModal()}><img src={information}></img></button>
                         <div></div>

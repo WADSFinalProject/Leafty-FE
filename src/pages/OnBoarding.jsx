@@ -93,6 +93,7 @@ function OnBoarding() {
           <InputField type={"password"} icon={Password} label={"Password"} placeholder={"***********"} onChange={(e) => { setPassword(e.target.value) }} value={password} />
           <div className='flex flex-row justify-between items-center'>
             <CheckBox label={"Remember Me"} />
+            <span className='' style = {{color: "#79B2B7"}}>Forgot Password?</span>
           </div>
           <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isRegister ? (isSignUp ? <span className='loading loading-dots loading-sm'></span> : "Sign Up") : (isLogin ? <span className='loading loading-dots loading-sm'></span> : "Sign In")} onClick={isRegister ? handleSignUp : handleLogin}></Button>
         </form>
@@ -107,7 +108,7 @@ function OnBoarding() {
           left: "75%"
         }}
         transition={{
-          duration: 2.5,
+          duration: 2,
           type: "spring"
         }}
         variants={{
@@ -131,7 +132,7 @@ function OnBoarding() {
         <CarouselImage initial={{ opacity: 0, y: "100%" }}
           animate={{ opacity: 1, y: "0%" }}
           transition={{
-            duration: 2.5,
+            duration: 1.25,
             type: "spring"
           }} images={Slides} className={"lg:block hidden"} />
       )}

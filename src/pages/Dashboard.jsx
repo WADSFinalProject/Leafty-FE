@@ -55,7 +55,7 @@ function Dashboard() {
                 x: -250
             }}
                 transition={{
-                    duration: 2.5,
+                    duration: 2,
                     type: "linear"
                 }} animate={{ x: 0 }} className="hidden sm:block">
                 <Sidebar collapsed={collapsed} className="sidebar" backgroundColor="#94c3b3" color="#94c3b3">
@@ -100,40 +100,60 @@ function Dashboard() {
                 x: 750
             }}
                 transition={{
-                    duration: 2.5,
+                    duration: 1.5,
                     type: "spring"
-                }} animate={{ x: 0 }} className="flex flex-col bg-white border h-full justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar sm:rounded-2xl">
+                }} animate={{ x: 0 }} className="flex flex-col border h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar sm:rounded-2xl" >
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">Dashboard</span>
                     <div className="flex gap-4 flex-row items-center">
-                        <FilterDashboard tablet = {tabletMode}/>
+                        <FilterDashboard tablet={tabletMode} />
                         <Profile />
                     </div>
                 </div>
-                <div className="flex flex-col justify-stretch gap-2 xl:flex-row items-center">
+                <motion.div initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.35, delay: 0.5 }} className="flex flex-col justify-stretch gap-2 xl:flex-row items-center">
                     <div className=" container h-full md:max-w-2xl xl:max-w-4xl"><WidgetContainer title="Total Production">
                         <BarChart />
-                    </WidgetContainer></div>    
+                    </WidgetContainer></div>
                     <div className=" container h-full md:max-w-2xl xl:max-w-sm"><WidgetContainer>
                         <PieChart />
                     </WidgetContainer></div>
-                </div>
+                </motion.div>
 
                 <div className="grid grid-flow-row lg:grid-flow-col gap-4">
-                    <StatsContainer label="Today's Production" value="150" unit="Kg" description="Since Yesterday" color={"#C0CD30"} />
-                    <StatsContainer label="Wet Leaves Collected" value="300" unit="Kg" description="Since Yesterday" color={"#79B2B7"} />
-                    <StatsContainer label="Unscaled Pickups" value="3" unit="" description="Scale Your Pickup!" color={"#0F7275"} />
+                    <motion.div initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35, delay: 1 }}>
+                        <StatsContainer label="Today's Production" value="150" unit="Kg" description="Since Yesterday" color={"#C0CD30"} />
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35, delay: 1.25 }}>
+                        <StatsContainer label="Wet Leaves Collected" value="300" unit="Kg" description="Since Yesterday" color={"#79B2B7"} />
+                    </motion.div>
+                    <motion.div initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35, delay: 1.5 }}>
+                        <StatsContainer label="Unscaled Pickups" value="3" unit="" description="Scale Your Pickup!" color={"#0F7275"} />
+                    </motion.div>
                 </div>
 
-                <span className="text-xl font-bold">
-                    Unscaled Pickups
-                </span>
-
-                <div className="flex flex-col gap-2">
+                <motion.div initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    transition={{ duration: 0.35, delay: 2 }} className="flex flex-col gap-2">
+                    <span className="text-xl font-bold">
+                        Unscaled Pickups
+                    </span>
                     <LongContainer showWeight={!tabletMode}></LongContainer>
                     <LongContainer showWeight={!tabletMode}></LongContainer>
                     <LongContainer showWeight={!tabletMode}></LongContainer>
-                </div>
+                </motion.div>
 
                 {/* <button onClick={() => { setCollapsed(!collapsed) }}>aaa</button> */}
             </motion.div>
