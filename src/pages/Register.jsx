@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import '../style/App.css';
-import { FaArrowLeft } from "react-icons/fa";
-import Illustration from '../assets/Register.svg'
+import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
+import Illustration from '../assets/Register.svg';
 import Circle from '../components/Circle';
 import logo from '../assets/LeaftyLogo.svg';
 import profile from '../assets/icons/profile.svg';
@@ -14,6 +14,7 @@ import Button from '../components/Button';
 import LoadingCircle from '../components/LoadingCircle';
 import VerificationImage from '../components/Images';
 import InputField from '../components/InputField';
+import MyMapComponent from '../components/MyMapComponents'; // Adjust the path as necessary
 
 function Register() {
     const controls = useAnimationControls();
@@ -23,6 +24,8 @@ function Register() {
     const [isVerified, setIsVerified] = useState(false);
     const [isImageVisible, setIsImageVisible] = useState(false);
     const [showLoadingCircle, setShowLoadingCircle] = useState(false);
+    const [showMap, setShowMap] = useState(false); // New state to manage map visibility
+    const [mapKey, setMapKey] = useState(Date.now()); // New state to force remounting of the map
 
     const { emailAddress } = Location.state || {};
 
@@ -34,12 +37,11 @@ function Register() {
     useEffect(() => {
         const timeout = setTimeout(() => {
             setIsImageVisible(true);
-        }, 250)
+        }, 250);
     }, []);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
     };
 
     const handleRegister = () => {
@@ -56,12 +58,15 @@ function Register() {
         navigate(-1);
     }
 
+    const handleOpenMap = () => {
+        setShowMap(true);
+        setMapKey(Date.now()); // Update key to force remounting
+    }
+
     return (
         <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
             <Button id="back" icon={<FaArrowLeft />} onClick={handleGoBack}></Button>
-            {/* Login Contents */}
             <div id="contents" className="flex flex-col w-screen h-screen mx-20 gap-4 max-w-md my-20">
-
                 <img className="w-20 h-20" src={logo} alt="Logo" />
                 <div className='flex flex-col'>
                     <span className='font-bold text-3xl'>Account Details</span>
@@ -70,44 +75,38 @@ function Register() {
                 <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
                     <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => { setUsername(e.target.value) }} value={username} />
                     <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { setPhoneNumber(e.target.value) }} value={phoneNumber} />
-                    <InputField type={"text"} icon={location} label={"Address Details"} placeholder={"Jl. Jenderal Sudirman"} onChange={(e) => { setAddressDetails(e.target.value) }} value={addressDetails} />
+                    <div className="relative">
+                        <InputField type={"text"} icon={location} label={"Address Details"} placeholder={"Jl. Jenderal Sudirman"} onChange={(e) => { setAddressDetails(e.target.value) }} value={addressDetails} />
+                        <button type="button" className="absolute top-0 right-0 mt-4 mr-4" onClick={handleOpenMap}>
+                            <FaMapMarkerAlt size={24} color="#606060" />
+                        </button>
+                    </div>
                     <div className='my-8 flex flex-col'>
                         <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isVerified ? <span className='loading loading-dots loading-sm'></span> : "Submit"} onClick={handleRegister}></Button>
                     </div>
                 </form>
-                {/* <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span> */}
             </div>
-            {/* End of Login Contents */}
-            {/* Features */}
             <motion.div className='w-1/2 h-screen relative justify-end items-center'
-                initial={{
-                    left: "0%"
-                }}
-                transition={{
-                    duration: 2.5,
-                    type: "spring"
-                }}
-                variants={{
-                    initial: {
-                        left: "0%"
-                    },
-                    verifiedOTP: {
-                        left: "-100%"
-                    }
-                }}
+                initial={{ left: "0%" }}
+                transition={{ duration: 2.5, type: "spring" }}
+                variants={{ initial: { left: "0%" }, verifiedOTP: { left: "-100%" } }}
                 animate={controls}
             >
-                {/* TODO: Image Carousel */}
                 <div className='z-0'>
                     <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
                     <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
                     <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
                     <VerificationImage img={Illustration} isVisible={isImageVisible} />
-                    {/* Render the loading circle in the middle of the page */}
                     {showLoadingCircle && <LoadingCircle />}
                 </div>
             </motion.div>
-            {/* End of Features */}
+            {showMap && (
+                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+                    <div className="bg-white p-4 rounded-lg">
+                        <MyMapComponent key={mapKey} setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
+                    </div>
+                </div>
+            )}
         </div>
     );
 }
