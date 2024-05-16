@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { animate, motion, useAnimationControls } from "framer-motion";
+import { motion, useAnimationControls } from "framer-motion";
 import '../style/App.css';
 import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
 import Illustration from '../assets/Register.svg';
@@ -14,7 +14,7 @@ import Button from '../components/Button';
 import LoadingCircle from '../components/LoadingCircle';
 import VerificationImage from '../components/Images';
 import InputField from '../components/InputField';
-import MyMapComponent from '../components/MyMapComponents'; // Adjust the path as necessary
+import MyMapComponent from '../components/MyMapComponents'; 
 
 function Register() {
     const controls = useAnimationControls();
@@ -24,8 +24,7 @@ function Register() {
     const [isVerified, setIsVerified] = useState(false);
     const [isImageVisible, setIsImageVisible] = useState(false);
     const [showLoadingCircle, setShowLoadingCircle] = useState(false);
-    const [showMap, setShowMap] = useState(false); // New state to manage map visibility
-    const [mapKey, setMapKey] = useState(Date.now()); // New state to force remounting of the map
+    const [showMap, setShowMap] = useState(false);
 
     const { emailAddress } = Location.state || {};
 
@@ -60,7 +59,10 @@ function Register() {
 
     const handleOpenMap = () => {
         setShowMap(true);
-        setMapKey(Date.now()); // Update key to force remounting
+    }
+
+    const handleCloseMap = () => {
+        setShowMap(false);
     }
 
     return (
@@ -77,7 +79,7 @@ function Register() {
                     <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { setPhoneNumber(e.target.value) }} value={phoneNumber} />
                     <div className="relative">
                         <InputField type={"text"} icon={location} label={"Address Details"} placeholder={"Jl. Jenderal Sudirman"} onChange={(e) => { setAddressDetails(e.target.value) }} value={addressDetails} />
-                        <button type="button" className="absolute top-0 right-0" onClick={handleOpenMap}>
+                        <button type="button" className="absolute top-0 right-0 mt-4 mr-4" onClick={handleOpenMap}>
                             <FaMapMarkerAlt size={24} color="#606060" />
                         </button>
                     </div>
@@ -100,13 +102,12 @@ function Register() {
                     {showLoadingCircle && <LoadingCircle />}
                 </div>
             </motion.div>
-            {showMap && (
-                <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
-                    <div className="bg-white p-4 rounded-lg">
-                        <MyMapComponent key={mapKey} setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
-                    </div>
+            <div className={`fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center ${showMap ? '' : 'hidden'}`}>
+                <div className="bg-white p-4 rounded-lg">
+                    <MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
+                    <button onClick={handleCloseMap}>Close</button>
                 </div>
-            )}
+            </div>
         </div>
     );
 }
