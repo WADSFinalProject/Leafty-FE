@@ -1,0 +1,73 @@
+.p-sortable-column {
+    background: none;
+    text-align: center;
+}
+
+.p-datatable-thead {
+    border-radius: 25%; /* This could cause visual issues, consider using pixel or rem values */
+    background: #D7DB90;
+}
+
+tr {
+    border-radius: 15px;
+}
+
+.p-datatable-header {
+    background: none;
+    font-size: 20px;
+}
+
+.table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.header-title {
+    margin: 0;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+}
+td, th {
+    padding: 0.5rem; /* Adjust as needed */
+    margin: 0; /* Remove any margin */
+
+
+}
+tr {
+    margin-bottom: 0.5rem; /* Adjust as needed */
+}
+.p-column-header-content{
+    align-items: center;
+    text-align: center;
+}
+.column-header{
+    display: flex;
+    align-items: center;
+    text-align: center;
+}
+.custom-input{
+    background-color: #94C3B3;
+    color:white;
+    margin-right: 10px;
+}
+.custom-input::placeholder{
+    color:white;
+    padding-left: 5px;
+    font-size: 20px;
+}
+
+
+
+.custom-button .p-button-icon {
+    color: red; /* Change color to your desired color */
+  }
+
+.pi-ellipsis-h{
+    color: #79b2b7;
+
+}
