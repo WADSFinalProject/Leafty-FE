@@ -6,20 +6,28 @@ import Verification from "./pages/Verification";
 import Register from "./pages/Register";
 import Dashboard from "./pages/Dashboard";
 import Approval from "./pages/Approval";
-import DashboardHarbor from "./pages/DashboardHarbor";
+import DashboardHarbor from "./pages/Harbor/DashboardHarbor";
 import Example from "./pages/Example";
+import PageNotFound from "./pages/PageNotFound";
+import WetLeaves from "./pages/WetLeaves";
+import DashboardLayout from "./pages/DashboardLayout";
 
 function App(){
   return (
     <Router>
       <Routes>
         <Route path="/" element = {<OnBoarding />}></Route>
-        <Route path="/verify" element = {<Verification />}></Route>
-        <Route path="/register" element = {<Register />}></Route>
-        <Route path="/dashboard" element = {<Dashboard />}></Route>
-        <Route path="/approval" element = {<Approval />}></Route>
+        <Route path="verify" element = {<Verification />}></Route>
+        <Route path="register" element = {<Register />}></Route>
+        <Route path="approval" element = {<Approval />}></Route>
+        <Route path = "*" element = {<PageNotFound />}></Route>
+        <Route path="company" element = {<DashboardLayout/>}>
+          <Route path = "dashboard" element = {<Dashboard />}></Route>
+          <Route path="wetleaves" element = {<WetLeaves />}></Route>
+        </Route>
+
         <Route path = "/dashboardHarbor" element = {<DashboardHarbor />} />
-        <Route path = "/test" element = {<Example />}></Route>
+        {/* <Route path = "/test" element = {<Example />}></Route> */}
       </Routes>
     </Router>
   )

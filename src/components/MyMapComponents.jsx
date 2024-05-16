@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
+import Button from "../components/Button"
 
 const containerStyle = {
   width: '600px',
@@ -48,10 +49,10 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
   };
 
   return (
-    <div>
+    <div className='flex   flex-col'>
       <LoadScript
         googleMapsApiKey="AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk"
-        libraries={['advanced-markers']} 
+        libraries={['advanced-markers']}
       >
         <GoogleMap
           mapContainerStyle={containerStyle}
@@ -64,11 +65,11 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
           ))}
         </GoogleMap>
       </LoadScript>
-      <div>
-        <h3>Selected Location Address:</h3>
-        <p>{address}</p>
-        <button onClick={handleSaveAddress} className="mr-2">Save Address</button>
-        <button onClick={() => setShowMap(false)}>Cancel</button>
+      <h3 className='font-bold'>Selected Location Address:</h3>
+      <span className='font-light'>{address}</span>
+      <div className='flex flex-row justify-between'>
+        <Button background="#0F7275" color="#F7FAFC" label={"Save Address"} onClick={handleSaveAddress}></Button>
+        <Button background="#0F7275" color="#F7FAFC" label={"Cancel"} onClick={() => setShowMap(false)}></Button>
       </div>
     </div>
   );
