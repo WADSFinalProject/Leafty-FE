@@ -9,6 +9,7 @@ import receptionActive from "../../assets/icons/bottombar/reception_active.svg";
 import scan from "../../assets/icons/scan.svg";
 import "../../style/BottomNavigation.css";
 import { Outlet, useNavigate } from "react-router-dom";
+import "../../style/mobile.css"
 import { animate, motion, useAnimationControls } from "framer-motion";
 
 const HarborLayout = () => {
@@ -45,7 +46,7 @@ const HarborLayout = () => {
 
     return (
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">
-            <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
+            <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 no-scrollbar">
                 <div className='flex justify-between items-center'>
                     <span className='font-bold text-3xl'>{value}</span>
                     <div className="flex items-center gap-2">
