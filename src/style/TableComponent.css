@@ -34,8 +34,9 @@
 
 }
 td, th {
-    padding: 0.5rem; 
+    padding: 0.25rem; 
     margin: 0; /* Remove any margin */
+    justify-content: center;
 }
 
 tr {
@@ -45,7 +46,7 @@ tr {
     align-items: center;
     text-align: center;
     color: black !important;
-    
+    justify-content: center;
 }
 
 .column-header{

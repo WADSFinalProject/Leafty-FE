@@ -52,7 +52,7 @@ function DashboardLayout() {
                                 null // If collapsed is true, render nothing
                             ) : (
                                 // Company Name & Email
-                                <div className="flex flex-col justify-center items-center">
+                                <div className="flex flex-col justify-center items-center my-2">
                                     <span className="font-bold text-2xl">XYZ</span>
                                     <span className="text-md">xyzcompany@xyz.com</span>
                                 </div>
