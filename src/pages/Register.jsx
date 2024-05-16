@@ -105,7 +105,6 @@ function Register() {
             <div className={`fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center ${showMap ? '' : 'hidden'}`}>
                 <div className="bg-white p-4 rounded-lg">
                     <MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
-                    <button onClick={handleCloseMap}>Close</button>
                 </div>
             </div>
         </div>
