@@ -2,9 +2,9 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import './WidgetContainer.css';
 
-const WidgetContainer = ({ children, padding = true, className, borderActive = true}) => {
+const WidgetContainer = ({ children, padding = true, className, backgroundColor, border = true, borderRadius }) => {
   return (
-    <div className = {`${className ? className : "flex flex-col container" }  gap-1 rounded-md border-4 ${borderActive ? "border-white" : "border-none"} shadow-lg ${padding ? 'p-2' : ''}`} style={{background: "background:radial-gradient(50%_50%_at_50%_50%,rgb(255,255,255)_0%,rgb(211.65,211.65,211.65)_100%)"}}>
+    <div className={`${className ? className : "flex flex-col container" } gap-1 rounded-md border-white shadow-lg ${padding ? 'p-2' : ''} ${border ? 'border-4' : ''}`} style={{ background: backgroundColor, borderRadius: borderRadius }}>
       {children}
     </div>
   );
@@ -12,6 +12,11 @@ const WidgetContainer = ({ children, padding = true, className, borderActive = t
 
 WidgetContainer.propTypes = {
   children: PropTypes.node.isRequired,
+  padding: PropTypes.bool,
+  className: PropTypes.string,
+  backgroundColor: PropTypes.string,
+  border: PropTypes.bool,
+  borderRadius: PropTypes.string, 
 };
 
 export default WidgetContainer;

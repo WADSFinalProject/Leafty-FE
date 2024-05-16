@@ -8,6 +8,10 @@ import Dashboard from "./pages/Dashboard";
 import Approval from "./pages/Approval";
 import DashboardHarbor from "./pages/DashboardHarbor";
 import Example from "./pages/Example";
+import DashboardCentra from "./pages/Centra/DashboardCentra";
+import WetLeaves from "./pages/Centra/WetLeaves";
+import WetLeavesDetail from "./pages/Centra/WetLeavesDetail";
+import DryLeaves from "./pages/Centra/DryLeaves";
 
 function App(){
   return (
@@ -20,6 +24,11 @@ function App(){
         <Route path="/approval" element = {<Approval />}></Route>
         <Route path = "/dashboardHarbor" element = {<DashboardHarbor />} />
         <Route path = "/test" element = {<Example />}></Route>
+        <Route path = "/dashboardCentra" element = {<DashboardCentra />} />
+        <Route path = "/wetleaves" element = {<WetLeaves />} />
+        <Route path = "/wetleavesdetail" element = {<WetLeavesDetail />} />
+        <Route path = "/dryleaves" element = {<DryLeaves />} />
+
       </Routes>
     </Router>
   )
