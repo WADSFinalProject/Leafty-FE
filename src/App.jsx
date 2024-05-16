@@ -11,6 +11,10 @@ import Example from "./pages/Example";
 import PageNotFound from "./pages/PageNotFound";
 import WetLeaves from "./pages/WetLeaves";
 import DashboardLayout from "./pages/DashboardLayout";
+import DashboardCentra from "./pages/Centra/DashboardCentra";
+import WetLeaves from "./pages/Centra/WetLeaves";
+import WetLeavesDetail from "./pages/Centra/WetLeavesDetail";
+import DryLeaves from "./pages/Centra/DryLeaves";
 
 function App(){
   return (
@@ -27,7 +31,11 @@ function App(){
         </Route>
 
         <Route path = "/dashboardHarbor" element = {<DashboardHarbor />} />
-        {/* <Route path = "/test" element = {<Example />}></Route> */}
+        <Route path = "/dashboardCentra" element = {<DashboardCentra />} />
+        <Route path = "/wetleaves" element = {<WetLeaves />} />
+        <Route path = "/wetleavesdetail" element = {<WetLeavesDetail />} />
+        <Route path = "/dryleaves" element = {<DryLeaves />} />
+
       </Routes>
     </Router>
   )

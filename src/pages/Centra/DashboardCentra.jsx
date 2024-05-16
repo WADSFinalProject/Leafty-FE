@@ -1,0 +1,142 @@
+import React, { useState } from 'react';
+import Profilepic from '../../assets/Profilepic.svg';
+import NotificationBell from "../../assets/NotificationBell.svg";
+import Graph from '../../components/Graph'; 
+import WarningSign from '../../assets/WarningSign.svg';
+import InnerPlugins from'../../assets/InnerPlugins.svg';
+import WidgetContainer from '../../components/Cards/WidgetContainer';
+import LeavesInfo from '../../components/LeavesInfo';
+import BottomNavigation from '@mui/material/BottomNavigation';
+import BottomNavigationAction from '@mui/material/BottomNavigationAction';
+import WetLeavesLogo from "../../assets/WetLeavesLogo.svg";
+import DryLeavesLogo from "../../assets/DryLeavesLogo.svg";
+import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
+import WetLeavesActive from "../../assets/icons/bottombar/wetleaves_active.svg";
+import DryLeavesActive from "../../assets/icons/bottombar/dryleaves_actives.svg";
+import PowderLogo from "../../assets/PowderLogo.svg";
+import ShipmentLogo from "../../assets/ShipmentLogo.svg";
+import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
+import ShipmentActive from"../../assets/icons/bottombar/shipment_active.svg";
+
+function DashboardCentra() {
+  const leavesData = [
+    { image: 'WetLeaves', label: 'Wet Leaves', amount: 243 },
+    { image: 'DryLeaves', label: 'Dry Leaves', amount: 243 },
+    { image: 'Powder', label: 'Powder', amount: 243 },
+    { image: 'PackageSent', label: 'Package Sent', amount: 150 }
+  ];
+  const [value, setValue] = useState("");
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  const LastActivity = [
+    { message: "A batch of wet leaves are about to expire in 1 hour" },
+    { message: "A batch of wet leaves are about to expire in 1 hour" },
+    { message: "A batch of wet leaves are about to expire in 1 hour" }
+  ];
+
+  const navbarContent = [
+    {
+      key: 'wet-leaves',
+      itemActive: WetLeavesLogo,
+      item: WetLeavesActive,
+      label: "Wet Leaves"
+    },
+    {
+      key: 'dry-leaves',
+      itemActive: DryLeavesLogo,
+      item: DryLeavesActive,
+      label: "Dry Leaves"
+    },
+    {
+      key: 'dashboard-centra',
+      item:
+        <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
+            <img src={DashCentra} className="w-10 h-10" />
+        </div>,
+      itemActive: null,
+      label: null,
+    },
+    {
+      key: 'powder',
+      itemActive: PowderLogo,
+      item: PowderActive,
+      label: "Powder"
+    },
+    {
+      key: 'shipment',
+      itemActive: ShipmentLogo,
+      item: ShipmentActive,
+      label: "Shipment"
+    },
+  ];
+
+
+
+
+  return (
+    <div className="w-screen flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto no-scrollbar overflow-x-hidden">
+        <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
+            <div className='flex justify-between items-center '>
+                <span className='font-bold text-3xl'>Dashboard</span>
+                <div className="flex items-center gap-2">
+                <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
+                <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
+                </div>
+            </div>
+
+            <div className='mt-5 '> 
+            <div className="mb-2 flex">
+                <div className="flex flex-grow">
+                <WidgetContainer backgroundColor="#A0C2B5" border={false} borderRadius="20px" className="flex flex-row px-2">
+                    <span className="font-semibold text-xs font-montserrat leading-4 tracking-tighter text-left ml-2 text-gray-100">All time</span>
+                    <img src={InnerPlugins} alt="InnerPlugins" className='w-3 h-auto ml-2' /> 
+                </WidgetContainer>
+                </div>
+            </div>
+
+
+            <WidgetContainer>
+                <Graph />
+            </WidgetContainer>
+
+            </div>
+            <div >      
+            <LeavesInfo leavesData={leavesData} />
+            </div>
+            <div className=''>
+            <span className="font-semibold text-base font-montserrat leading-5 tracking-tighter text-left ">Last Activity</span>
+
+            </div>
+            <div className='grid gap-y-1'>
+                {LastActivity.map((data, index) => (
+                    <WidgetContainer className="flex justify-start" key={index}>
+                      <div className='flex items-center'>
+                        <img src={WarningSign} alt="warning" className='w-10 h-auto ml-1' /> 
+                        <span className='ml-4'>{data.message}</span>
+                      </div>
+                     
+                    </WidgetContainer>
+                ))}
+            </div>
+            
+            <div className="flex justify-center">
+                <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
+                {navbarContent.map(({ key, label, item, itemActive }) => (
+                    <BottomNavigationAction
+                    key={key} // Ensure each item has a unique key
+                    label={label}
+                    value={label}
+                    icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
+                    disableRipple={label === null ? true : false}
+                    />
+                ))}
+                </BottomNavigation>
+            </div>
+        </div>
+      
+    </div>
+  );
+}
+
+export default DashboardCentra;
