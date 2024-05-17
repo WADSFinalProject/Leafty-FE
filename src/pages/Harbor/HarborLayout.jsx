@@ -29,8 +29,7 @@ const HarborLayout = () => {
                     <img src={scan} className="w-10 h-10" alt="scan" />
                 </div>
             ),
-            itemActive: null,
-            label: null,
+            label: "Scanner",
         },
         {
             item: reception,
