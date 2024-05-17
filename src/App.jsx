@@ -17,6 +17,7 @@ import WetLeavesDetail from "./pages/Centra/WetLeavesDetail";
 import DryLeaves from "./pages/Centra/DryLeaves";
 import HarborLayout from "./pages/Harbor/HarborLayout";
 import HarborReception from "./pages/Harbor/HarborReception";
+import HarborScanner from './pages/Harbor/HarborScanner';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
         <Route path="harbor" element = {<HarborLayout />}>
           <Route path="dashboard" element={<DashboardHarbor />} />
           <Route path="reception" element={<HarborReception />} />
+          <Route path="Scanner" element={<HarborScanner />} />
         </Route>
 
         <Route path="/dashboardHarbor" element={<DashboardHarbor />} />
