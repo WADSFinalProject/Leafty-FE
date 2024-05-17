@@ -79,7 +79,7 @@ function Register() {
                     <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { setPhoneNumber(e.target.value) }} value={phoneNumber} />
                     <div className="relative">
                         <InputField type={"text"} icon={location} label={"Address Details"} placeholder={"Jl. Jenderal Sudirman"} onChange={(e) => { setAddressDetails(e.target.value) }} value={addressDetails} />
-                        <button type="button" className="absolute top-0 right-0 mt-4 mr-4" onClick={handleOpenMap}>
+                        <button type="button" className="absolute top-0 right-0" onClick={handleOpenMap}>
                             <FaMapMarkerAlt size={24} color="#606060" />
                         </button>
                     </div>
@@ -105,7 +105,6 @@ function Register() {
             <div className={`fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center ${showMap ? '' : 'hidden'}`}>
                 <div className="bg-white p-4 rounded-lg">
                     <MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
-                    <button onClick={handleCloseMap}>Close</button>
                 </div>
             </div>
         </div>
