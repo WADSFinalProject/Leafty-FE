@@ -11,6 +11,8 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
   const [center, setCenter] = useState({ lat: -3.745, lng: -38.523 });
   const [markers, setMarkers] = useState([]);
   const [address, setAddress] = useState("");
+  const [latitude, setLatitude] = useState(null);
+  const [longitude, setLongitude] = useState(null);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -34,6 +36,9 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
     setCenter(newCenter);
     setMarkers([{ lat: newCenter.lat, lng: newCenter.lng }]); // Reset markers to only include the new one
 
+    setLatitude(newCenter.lat);
+    setLongitude(newCenter.lng);
+
     const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${newCenter.lat},${newCenter.lng}&key=AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk`);
     const data = await response.json();
     if (data.results[0]) {
@@ -49,7 +54,7 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
   };
 
   return (
-    <div className='flex   flex-col'>
+    <div className='flex flex-col'>
       <LoadScript
         googleMapsApiKey="AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk"
         libraries={['advanced-markers']}
@@ -67,6 +72,10 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
       </LoadScript>
       <h3 className='font-bold'>Selected Location Address:</h3>
       <span className='font-light'>{address}</span>
+      <h3 className='font-bold'>Latitude:</h3>
+      <span className='font-light'>{latitude}</span>
+      <h3 className='font-bold'>Longitude:</h3>
+      <span className='font-light'>{longitude}</span>
       <div className='flex flex-row justify-between'>
         <Button background="#0F7275" color="#F7FAFC" label={"Save Address"} onClick={handleSaveAddress}></Button>
         <Button background="#0F7275" color="#F7FAFC" label={"Cancel"} onClick={() => setShowMap(false)}></Button>

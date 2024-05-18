@@ -46,7 +46,7 @@ function OnBoarding() {
       }
       if (isSignUp) {
         const timeout = setTimeout(() => {
-          navigate('/register', { state: { emailAddress: email } });
+          navigate('/register', { state: { emailAddress: email , userPassword: password } });
         }, 3000);
 
         // Clean up the timeout to avoid memory leaks
