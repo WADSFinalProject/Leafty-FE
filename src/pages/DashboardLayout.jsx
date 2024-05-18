@@ -65,8 +65,8 @@ function DashboardLayout() {
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />}> Powder </MenuItem>
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
+                        <MenuItem icon={<img src={pickup} />}>Pickup</MenuItem>
+                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception", {replace: true})}>Reception</MenuItem>
                         <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>

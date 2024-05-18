@@ -33,4 +33,8 @@
               transform: translateX(50%);
     }
   }
+
+.MuiBox-root{
+  padding: 0px !important;
+}
   

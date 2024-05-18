@@ -15,12 +15,12 @@ function HarborScanner() {
     };
 
     const previewStyle = {
-        height: 240,
-        width: 320,
+        height: 480,
+        width: 1920,
     };
 
     return (
-        <div className="flex flex-col items-center justify-center">
+        <div className="flex flex-col">
             <h1>Scanner</h1>
             <div className="flex flex-col items-center">
                 <QrScanner

@@ -29,7 +29,12 @@ const HarborLayout = () => {
                     <img src={scan} className="w-10 h-10" alt="scan" />
                 </div>
             ),
-            label: "Scanner",
+            itemActive: (
+                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
+                    <img src={scan} className="w-10 h-10" alt="scan" />
+                </div>
+            ),
+            label: null,
         },
         {
             item: reception,
@@ -39,8 +44,11 @@ const HarborLayout = () => {
     ];
 
     const handleChange = (event, newValue) => {
-        setValue(newValue);
-        navigate(newValue);
+        if (newValue) {
+            setValue(newValue);
+            navigate(newValue);
+        }
+        else navigate("Scanner");        
     };
 
     return (
@@ -61,7 +69,7 @@ const HarborLayout = () => {
                                 key={label || 'scan'}
                                 label={label}
                                 value={label}
-                                icon={label === null ? item : <img src={value === label ? item: itemActive} alt={label} />}
+                                icon={label === null ? item : <img src={value === label ? item : itemActive} alt={label} />}
                                 disableRipple={true}
                             />
                         ))}
