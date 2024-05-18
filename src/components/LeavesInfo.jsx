@@ -17,7 +17,7 @@ const LeavesInfo = ({ leavesData }) => {
       <div className='flex items-center justify-between w-full mt-2 '>
         {wetDryData.map((data, index) => (
             <div className='ml-5 flex' key={index} style={{ flex: '1' }}>
-            <WidgetContainer className="flex items-center" borderRadius="20px">
+            <WidgetContainer className="flex items-center w-1/2" borderRadius="20px">
                 {data.image === 'WetLeaves' && <img src={WetLeaves} alt="Wet Leaves" className='h-auto ml-2' />}
                 {data.image === 'DryLeaves' && <img src={DryLeaves} alt="Dry Leaves" className='h-auto' />}
                 <div className="flex flex-col justify-center">
@@ -33,7 +33,7 @@ const LeavesInfo = ({ leavesData }) => {
         <div className='flex items-center justify-between w-full mt-2 gap-x-2'>
             {powderPackageData.map((data, index) => (
             <div className='ml-5 flex' key={index} style={{ flex: '1' }}>
-            <WidgetContainer className="flex items-center" borderRadius="20px">
+            <WidgetContainer className="flex items-center  w-1/2" borderRadius="20px">
                 {data.image === 'Powder' && <img src={Powder} alt="Powder" className='h-auto ml-3' />}
                 {data.image === 'PackageSent' && <img src={PackageSent} alt="Package Sent" className='h-auto' />}
                 <div className="flex flex-col justify-center">

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../style/CarouselImage.css"
 import { motion, useAnimationControls } from "framer-motion";
 
-function CarouselImage({ images, className, initial, animate, transition }) {
+function CarouselImage({ images, initial, animate, transition }) {
     const [current, setCurrent] = useState(0);
     const [autoPlay, setAutoPlay] = useState(true);
     let timeOut = null;
@@ -24,7 +24,7 @@ function CarouselImage({ images, className, initial, animate, transition }) {
     return (
         <motion.div initial={initial}
             animate={animate}
-            transition={transition} className={`carousel ${className}`} onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)}>
+            transition={transition} className={`carousel`} onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)}>
             <div className="carousel_wrapper">
                 {images.map((image, index) => (
                     <div

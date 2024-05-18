@@ -1,5 +1,5 @@
 .carousel {
-    position: fixed; /* Ensure the carousel is positioned relative to its container */
+    position: fixed;
     left: 37.5%;
     bottom: 5%;
     height: 100%;
@@ -29,6 +29,7 @@
     pointer-events: none;
     transition: 0.5s ease-in-out;
 }
+
 .carousel_card-active {
     opacity: 1;
     transform: scale(1);

@@ -33,7 +33,8 @@ function OnBoarding() {
 
   useEffect(() => {
     controls.start("login");
-    if (isSubmit) {4
+    if (isSubmit) {
+      4
       if (isLogin) {
         console.log(email)
         const timeout = setTimeout(() => {
@@ -45,7 +46,7 @@ function OnBoarding() {
       }
       if (isSignUp) {
         const timeout = setTimeout(() => {
-          navigate('/register', { state: { emailAddress: email } });
+          navigate('/register', { state: { emailAddress: email , userPassword: password } });
         }, 3000);
 
         // Clean up the timeout to avoid memory leaks
@@ -80,7 +81,7 @@ function OnBoarding() {
   return (
     <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>
       {/* Login Contents */}
-      <div id="contents" className="flex flex-col w-1/2 h-screen mx-20 my-20 gap-2 max-w-md">
+      <div id="contents" className="flex flex-col w-screen h-screen mx-8 my-20 gap-2 lg:max-w-md lg:mx-20 lg:w-1/2">
         <img className="w-20 h-20" src={logo} alt="Logo" />
         <div className='flex flex-col'>
           <span className='font-bold text-3xl'>{isRegister ? "Join Us" : "Welcome Back!"}</span>
@@ -93,7 +94,7 @@ function OnBoarding() {
           <InputField type={"password"} icon={Password} label={"Password"} placeholder={"***********"} onChange={(e) => { setPassword(e.target.value) }} value={password} />
           <div className='flex flex-row justify-between items-center'>
             <CheckBox label={"Remember Me"} />
-            <span className='' style = {{color: "#79B2B7"}}>Forgot Password?</span>
+            <span className='' style={{ color: "#79B2B7" }}>Forgot Password?</span>
           </div>
           <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isRegister ? (isSignUp ? <span className='loading loading-dots loading-sm'></span> : "Sign Up") : (isLogin ? <span className='loading loading-dots loading-sm'></span> : "Sign In")} onClick={isRegister ? handleSignUp : handleLogin}></Button>
         </form>
@@ -103,7 +104,7 @@ function OnBoarding() {
       </div>
       {/* End of Login Contents */}
       {/* Features */}
-      <motion.div className='w-1/2 h-screen relative justify-end items-center'
+      <motion.div className='w-1/2 h-screen relative justify-end items-center hidden md:block'
         initial={{
           left: "75%"
         }}
@@ -127,15 +128,17 @@ function OnBoarding() {
         <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
         <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
         <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
+        
       </motion.div>
       {showCarousel && (
-        <CarouselImage initial={{ opacity: 0, y: "100%" }}
-          animate={{ opacity: 1, y: "0%" }}
-          transition={{
-            duration: 1.25,
-            type: "spring"
-          }} images={Slides} className={"lg:block hidden"} />
+          <CarouselImage initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: "0%" }}
+            transition={{
+              duration: 1.25,
+              type: "spring"
+            }} images={Slides} />
       )}
+
       {/* End of Features */}
     </div>
   );

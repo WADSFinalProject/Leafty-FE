@@ -35,7 +35,7 @@ function Verification() {
                 // setShowLoadingCircle(false);
                 // setIsVerified(!isVerified);
                 // controls.start("initial");
-                navigate('/dashboard', { state: { emailAddress: email } })
+                navigate('/company/dashboard', { state: { emailAddress: email } })
             }, 10000);
         }
         else{

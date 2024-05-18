@@ -8,16 +8,16 @@
     background: #D7DB90;
 }
 
-tr {
-    border-radius: 15px;
-}
-
 .p-datatable-header {
+    padding: 0 !important;
+    margin: 10px 0px !important;
     background: none;
     font-size: 20px;
+    
 }
 
 .table-header {
+    margin: 0 !important;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -25,36 +25,42 @@ tr {
 }
 
 .header-title {
-    margin: 0;
+    margin: 0 !important;
 }
 
 .header-actions {
     display: flex;
     align-items: center;
+
 }
 td, th {
-    padding: 0.5rem; /* Adjust as needed */
+    padding: 0.25rem; 
     margin: 0; /* Remove any margin */
-
-
+    justify-content: center;
 }
+
 tr {
     margin-bottom: 0.5rem; /* Adjust as needed */
 }
 .p-column-header-content{
     align-items: center;
     text-align: center;
+    color: black !important;
+    justify-content: center;
 }
+
 .column-header{
     display: flex;
     align-items: center;
     text-align: center;
 }
+
 .custom-input{
     background-color: #94C3B3;
     color:white;
     margin-right: 10px;
 }
+
 .custom-input::placeholder{
     color:white;
     padding-left: 5px;
