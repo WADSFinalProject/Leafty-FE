@@ -46,30 +46,30 @@ const WetLeaves = () => {
       case "Awaiting":
         backgroundColor = hexToRGBA("#A0C2B5", 0.5);
         textColor = "#79B2B7";
-        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px', marginRight: '5px' }} />;
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px', }} />;
         break;
       case "Processed":
         backgroundColor = hexToRGBA("D4965D", 0.5);
         textColor = "#E28834"; // White text color
-        logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px', marginRight: '5px' }} />;
+        logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px', }} />;
         break;
       case "Expired":
         backgroundColor = hexToRGBA("#D45D5D", 0.5);
         textColor = "#D45D5D"; // White text color
-        logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px', marginRight: '5px' }} />;
+        logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px', }} />;
         break;
       case "Thrown":
         backgroundColor = hexToRGBA("9E2B2B", 0.5);
         textColor = "#9E2B2B"; // White text color
-        logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px', marginRight: '5px' }} />;
+        logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px', }} />;
         break;
       default:
         backgroundColor = "inherit"; // Use default background color
-        textColor = "#333"; // Default text color
+        textColor = "#000000"; // Default text color
     }
 
     return (
-      <div style={{ backgroundColor, color: textColor, borderRadius: "20px" }} className={"flex flex-row items-center justify-around py-1"}>
+      <div style={{ backgroundColor, color: textColor, borderRadius: "10px" }} className={"flex flex-row items-center justify-around py-2 overflow-hidden"}>
           {rowData.status}
           {logo}
       </div>

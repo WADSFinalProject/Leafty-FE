@@ -1,6 +1,6 @@
 import React from 'react';
 
-const CircularButton = ({ imageUrl, backgroundColor }) => {
+const CircularButton = ({ imageUrl, backgroundColor, fixed = false, className }) => {
   const buttonSize = 'calc(10px + 2em)'; 
 
   const buttonStyle = {
@@ -19,7 +19,7 @@ const CircularButton = ({ imageUrl, backgroundColor }) => {
 
   return (
     <button
-      className="rounded-full flex items-center justify-center focus:outline-none"
+      className={`rounded-full ${fixed ? "fixed":"flex"} items-center justify-center focus:outline-none ${className}`}
       style={buttonStyle}
     >
       <img src={imageUrl} alt="Button Image" style={imageStyle} />

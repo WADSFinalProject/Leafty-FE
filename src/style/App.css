@@ -38,3 +38,20 @@
   padding: 0px !important;
 }
   
+h3{
+  color: black !important;
+}
+
+th{
+  background-color: #DEE295 !important;
+
+}
+
+td {
+  text-align: center !important; /* Horizontally centers the text/content */
+  vertical-align: middle !important; /* Vertically centers the text/content */
+}
+
+table{
+  overflow: hidden;
+}

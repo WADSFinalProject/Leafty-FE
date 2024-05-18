@@ -8,7 +8,7 @@ import 'primereact/resources/themes/tailwind-light/theme.css';
 import '../style/TableComponent.css';
 import 'primeicons/primeicons.css';
 
-function  TableComponent({ data, header, columns, ColorConfig }) {
+function TableComponent({ data, header, columns, ColorConfig }) {
   const [globalFilter, setGlobalFilter] = useState('');
 
   const renderHeader = () => {
@@ -16,15 +16,13 @@ function  TableComponent({ data, header, columns, ColorConfig }) {
       <div className="flex flex-row justify-between m-0">
         <h3>{header}</h3>
         <div className="table-header-actions">
-          <span className="p-input-icon-left">
-            <input
-              type="search"
-              onInput={(e) => setGlobalFilter(e.target.value)}
-              placeholder="Search"
-              className="input custom-input input-bordered gap-2 input-sm" 
-            />
-          </span>
-          <Button icon="pi pi-filter" label="Filter" className="p-button-secondary" />
+          <input
+            type="search"
+            onInput={(e) => setGlobalFilter(e.target.value)}
+            placeholder="Search"
+            className="input custom-input input-bordered gap-2 input-sm"
+          />
+          <Button icon="pi pi-filter" label="" className="p-button-secondary" />
         </div>
       </div>
     );
@@ -32,7 +30,17 @@ function  TableComponent({ data, header, columns, ColorConfig }) {
 
   const actionTemplate = (rowData) => {
     return (
-      <Button icon="pi pi-ellipsis-h" className="p-button-warning" />
+      <>
+        <div className="dropdown dropdown-end">
+          <div tabIndex={0} role="button" className="m-0"><Button icon="pi pi-ellipsis-h" className="p-button-warning" /></div>
+          <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
+            <li><a>Details</a></li>
+            <li><a>Edit</a></li>
+            <li><a>Remove</a></li>
+          </ul>
+        </div>
+          
+      </>
     );
   };
 
