@@ -6,9 +6,9 @@ import WidgetContainer from '../components/Cards/WidgetContainer';
 const Countdown = ({ time, color, image }) => {
   return (
     <div className="flex justify-end">
-      <WidgetContainer borderRadius="20px" border={false} backgroundColor={color}>
+      <WidgetContainer borderRadius="20px" border={false} backgroundColor={color} className="">
         <div className='flex justify-end'>
-          <span className="font-montserrat text-xs font-medium leading-14 tracking-normal text-center">
+          <span className="font-montserrat text-xs font-medium leading-14 tracking-normal text-center ">
             {time}
           </span>
           <img src={image} alt="Countdown" className='w-4 h-auto ml-1' /> 

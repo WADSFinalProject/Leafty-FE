@@ -1,0 +1,33 @@
+Custom CSS for TabView component
+
+/* Style for the tab header container */
+.custom-tabview .p-tabview-nav {
+    display: flex;
+}
+
+/* Style for each tab header */
+.custom-tabview .p-tabview-nav li {
+    position: relative;
+    margin-right: 20px; /* Adjust spacing between tab headers */
+    cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+/* Style for the line under each tab header */
+.custom-tabview .custom-tab-line {
+
+}
+
+/* Additional styling for the active line */
+.custom-tabview .custom-tab-line.active {
+    width: 100%; /* Show the line when active */
+}
+
+/* Style for the tab content */
+.custom-tabview .p-tabview-panel {
+    padding: 20px;
+}
+
+/* Style for paragraph elements within tab content */
+.custom-tabview .p-tabview-panel p {
+    margin: 0;
+}

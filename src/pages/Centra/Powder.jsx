@@ -5,12 +5,13 @@ import NotificationBell from "../../assets/NotificationBell.svg";
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';
-import DryLeavesLogo from '../../assets/DryLeaves.svg';
+import PowderLogo from '../../assets/Powder.svg'
 import Countdown from '../../components/Countdown';
 import InnerPlugins from '../../assets/InnerPlugins.svg';
 import Plus from '../../assets/Plus.svg';
 import CountdownIcon from  '../../assets/Countdown.svg';
 import ExpiredWarningIcon from'../../assets/ExpiredWarning.svg';
+import ReadyIcon from '../../assets/ReadyIcon.svg';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import WetLeavesNavbar from "../../assets/WetLeavesLogo.svg";
@@ -18,7 +19,7 @@ import DryLeavesNavbar from "../../assets/DryLeavesLogo.svg";
 import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
 import WetLeavesActive from "../../assets/icons/bottombar/wetleaves_active.svg";
 import DryLeavesActive from "../../assets/icons/bottombar/dryleaves_actives.svg";
-import PowderLogo from "../../assets/PowderLogo.svg";
+import PowderNavbar from "../../assets/PowderLogo.svg";
 import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from"../../assets/icons/bottombar/shipment_active.svg";
@@ -26,12 +27,11 @@ import ShipmentActive from"../../assets/icons/bottombar/shipment_active.svg";
 
 
 
-function DryLeaves() {
+function Powder() {
 
     const data = [
-        { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W232120" },
-        { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W267760" },
-       
+        { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "20 Kg", code: "W543210" },
+        { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "30 Kg", code: "W543210" }
       ];
 
       const [value, setValue] = useState("");
@@ -63,7 +63,7 @@ function DryLeaves() {
         },
         {
           key: 'powder',
-          itemActive: PowderLogo,
+          itemActive: PowderNavbar,
           item: PowderActive,
           label: "Powder"
         },
@@ -80,7 +80,7 @@ function DryLeaves() {
     <div className="w-screen flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto no-scrollbar overflow-x-hidden" >
       <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
         <div className='flex justify-between items-center '>
-                    <span className='font-bold text-3xl'>Dry Leaves</span>
+                    <span className='font-bold text-3xl'>Powder</span>
                     <div className="flex items-center gap-2">
                     <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
                     <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
@@ -107,9 +107,9 @@ function DryLeaves() {
         
         {data.map((item) => (
             <div key={item.code} className=' flex justify-between'>
-                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                <Link to="/dryleavesdetail">
-                    <CircularButton imageUrl={DryLeavesLogo} backgroundColor="#94C3B3" />
+                <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
+                <Link to="/powderdetail">
+                    <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
                 </Link>
                 <div className='flex flex-col ml-3'>
                     <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
@@ -120,7 +120,7 @@ function DryLeaves() {
                     </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                    <Countdown time={item.time} color={item.color} image={item.image} />
+                    <Countdown time={item.time} color={item.color} image={item.image} className="" />
                 </div>
                 </WidgetContainer>
             </div>
@@ -153,4 +153,4 @@ function DryLeaves() {
   );
 }
 
-export default DryLeaves;
+export default Powder;
