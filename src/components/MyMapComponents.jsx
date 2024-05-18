@@ -8,7 +8,7 @@ const containerStyle = {
 };
 
 function MyMapComponent({ setShowMap, setAddressDetails }) {
-  const [center, setCenter] = useState({ lat: -3.745, lng: -38.523 });
+  const [center, setCenter] = useState(null);
   const [markers, setMarkers] = useState([]);
   const [address, setAddress] = useState("");
   const [latitude, setLatitude] = useState(null);
