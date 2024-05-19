@@ -41,8 +41,8 @@ function App() {
           <Route path="dashboard" element={<Dashboard />}></Route>
           <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
           <Route path="reception" element={<Reception />}>
-            <Route path = "centra" eleemnt = {<CentraTabContent />}></Route>
-            <Route path = "harbor" eleemnt = {<HarborTabContent />}></Route>
+            <Route path = "centra" element = {<CentraTabContent />}></Route>
+            <Route path = "harbor" element = {<HarborTabContent />}></Route>
           </Route>
         </Route>
         <Route path="harbor" element = {<HarborLayout />}>

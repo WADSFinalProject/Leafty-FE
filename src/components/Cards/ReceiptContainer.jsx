@@ -3,11 +3,11 @@ import pdf from "../../assets/icons/pdf_file.svg";
 import download from "../../assets/icons/download.svg";
 import open from "../../assets/icons/open_file.svg";
 
-function ReceiptContainer(){
+function ReceiptContainer({role = "Centra", fileName = "Expedition #123456.pdf"}){
     return <>
-        <WidgetContainer className={"justify-center flex flex-col items-center gap-1 m-2 ml-0"}>
-            <span className="font-bold text-lg">Centra Receipt</span>
-            <span>Expedition #123456.pdf</span>
+        <WidgetContainer className={"justify-center flex flex-col items-center gap-1 m-0 p-1"}>
+            <span className="font-bold text-lg">{role} Receipt</span>
+            <span>{fileName}</span>
             <div className="p-4 bg-[#DEE295] rounded-lg">
                 <img src = {pdf}></img>
             </div>

@@ -7,7 +7,7 @@ function HarborTabContent() {
     return (
         <div className='flex flex-row gap-4 flex-wrap my-2'>
             {reception_data.map((value, index) => (
-                <ReceiptContainer key={index} value={value} />
+                <ReceiptContainer key={index} value={value} role = {"Harbor"} fileName={"Expedition #123456.pdf"}/>
             ))}
         </div>
     );
