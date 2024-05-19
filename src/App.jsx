@@ -15,19 +15,16 @@ import DashboardCentra from "./pages/Centra/DashboardCentra";
 import WetLeaves from "./pages/Centra/WetLeaves";
 import WetLeavesDetail from "./pages/Centra/WetLeavesDetail";
 import DryLeaves from "./pages/Centra/DryLeaves";
-<<<<<<< HEAD
 import DryLeavesDetail from "./pages/Centra/DryLeavesDetail";
 import Powder from "./pages/Centra/Powder";
 import PowderDetail from "./pages/Centra/PowderDetail";
 import Shipment from "./pages/Centra/Shipment";
 import ShipmentDetail from "./pages/Centra/ShipmentDetail";
-=======
 import HarborLayout from "./pages/Harbor/HarborLayout";
 import HarborReception from "./pages/Harbor/HarborReception";
 import HarborScanner from './pages/Harbor/HarborScanner';
 import Reception from "./pages/Reception";
 import CentraLayout from "./pages/Centra/CentraLayout";
->>>>>>> cda86cc13e15377e0070e10eb0f14815de8f851d
 
 function App() {
   return (
@@ -52,6 +49,8 @@ function App() {
           <Route path = "Dashboard" element = {<DashboardCentra />}></Route>
           <Route path = "Wet Leaves" element = {<WetLeaves />}></Route>
           <Route path = "Dry Leaves" element = {<DryLeaves />}></Route>
+          <Route path = "Powder" element = {<Powder />}></Route>
+          <Route path = "Shipment" element = {<Shipment />}></Route>
         </Route>
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />

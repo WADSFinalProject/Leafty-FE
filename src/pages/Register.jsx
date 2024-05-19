@@ -14,16 +14,16 @@ import Button from '../components/Button';
 import LoadingCircle from '../components/LoadingCircle';
 import VerificationImage from '../components/Images';
 import InputField from '../components/InputField';
-import MyMapComponent from '../components/MyMapComponents'; 
-import {db, auth, useAuth} from '../firebase';
+import MyMapComponent from '../components/MyMapComponents';
+import { db, auth, useAuth } from '../firebase';
 import axios from 'axios';
 import {
     signInWithEmailAndPassword,
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     signInWithPopup
-  } from "firebase/auth";
-import {collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc} from 'firebase/firestore';
+} from "firebase/auth";
+import { collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
 import { API_URL } from '../App';
 
 axios.defaults.withCredentials = true
@@ -56,11 +56,11 @@ function Register() {
     });
 
 
-    
-    
+
+
     const createUser = async () => {
         try {
-            const response = await axios.post(API_URL+"/users", {
+            const response = await axios.post(API_URL + "/users", {
                 Username: username,
                 Email: email,
                 PhoneNumber: phoneNumber,
@@ -71,7 +71,7 @@ function Register() {
             const user_id = response.data.UserID;
             try {
                 console.log(user_id);
-                const response = await axios.post(API_URL+"/create_session/"+ user_id, {
+                const response = await axios.post(API_URL + "/create_session/" + user_id, {
                 });
             } catch (error) {
                 console.error('Error calling backend function', error);
@@ -82,7 +82,7 @@ function Register() {
 
     };
 
-    
+
 
     useEffect(() => {
         const timeout = setTimeout(() => {
@@ -94,23 +94,23 @@ function Register() {
         e.preventDefault();
     };
 
-    const [value,setValue] = useState('')
-    const handleClick =()=>{
-        signInWithPopup(auth,provider).then((data)=>{
+    const [value, setValue] = useState('')
+    const handleClick = () => {
+        signInWithPopup(auth, provider).then((data) => {
             setValue(data.user.email)
-            localStorage.setItem("email",data.user.email)
+            localStorage.setItem("email", data.user.email)
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setValue(localStorage.getItem('email'))
     })
 
     useEffect(() => {
         auth.onAuthStateChanged((user) => {
-        if (user) {
-            navigate("/dashboard");
-        }
+            if (user) {
+                navigate("/dashboard");
+            }
         });
     }, []);
 
@@ -118,22 +118,22 @@ function Register() {
     const handleRegister = async () => {
         createUser();
         createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
+            auth,
+            email,
+            password
         )
-        
+
         const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
-    
-    
+
+
         });
-        
-          return () => unsubscribeAuth()
-          .then(() => {
-            navigate("/dashboard");
-          })
-          .catch((err) => alert(err.message));
-      };
+
+        return () => unsubscribeAuth()
+            .then(() => {
+                navigate("/dashboard");
+            })
+            .catch((err) => alert(err.message));
+    };
 
     const handleGoBack = (e) => {
         e.preventDefault();
@@ -149,32 +149,34 @@ function Register() {
     }
 
     return (
-        <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
-            <Button id="back" icon={<FaArrowLeft />} onClick={handleGoBack}></Button>
-            {/* <button type="button" onClick={callBackendFunction}>lol</button> */}
-            <div id="contents" className="flex flex-col w-screen h-screen mx-20 gap-4 max-w-md my-20">
+        <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>
+            {/* Login Contents */}
+            <div id="contents" className="flex flex-col w-screen h-screen mx-8 my-20 gap-2 lg:max-w-md lg:mx-20 lg:w-1/2">
+                <Button id="back" icon={<FaArrowLeft />} onClick={handleGoBack}></Button>
+                {/* <button type="button" onClick={callBackendFunction}>lol</button> */}
+
                 <img className="w-20 h-20" src={logo} alt="Logo" />
                 <div className='flex flex-col'>
                     <span className='font-bold text-3xl'>Account Details</span>
                     <span className='text-xl font-medium' style={{ color: "#606060" }}>You are one step away from joining Leafty! Let's set some things up!</span>
                 </div>
                 <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
-                    <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => { 
-                            setUsername(e.target.value);
-                            setRegisterInformation({
-                                ...registerInformation,
-                                username: e.target.value
-                                }) 
-                            }} 
-                            value={username} />
+                    <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => {
+                        setUsername(e.target.value);
+                        setRegisterInformation({
+                            ...registerInformation,
+                            username: e.target.value
+                        })
+                    }}
+                        value={username} />
 
-                    <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { 
+                    <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => {
                         setPhoneNumber(e.target.value);
                         setRegisterInformation({
                             ...registerInformation,
                             phoneNumber: value,
-                          });
-                        }} 
+                        });
+                    }}
                         value={phoneNumber} />
 
                     <div className="relative">
@@ -188,7 +190,7 @@ function Register() {
                     </div>
                 </form>
             </div>
-            <motion.div className='w-1/2 h-screen relative justify-end items-center'
+            <motion.div className='w-1/2 h-screen relative justify-end items-center hidden lg:block'
                 initial={{ left: "0%" }}
                 transition={{ duration: 2.5, type: "spring" }}
                 variants={{ initial: { left: "0%" }, verifiedOTP: { left: "-100%" } }}

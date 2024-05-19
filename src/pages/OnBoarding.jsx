@@ -130,14 +130,14 @@ function OnBoarding() {
         <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
         
       </motion.div>
-      {showCarousel && (
+      {/* {showCarousel && (
           <CarouselImage initial={{ opacity: 0, y: "100%" }}
             animate={{ opacity: 1, y: "0%" }}
             transition={{
               duration: 1.25,
               type: "spring"
             }} images={Slides} />
-      )}
+      )} */}
 
       {/* End of Features */}
     </div>

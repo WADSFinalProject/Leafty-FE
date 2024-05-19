@@ -19,7 +19,6 @@ import ShipmentNavbar from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import ShipmentLogo from '../../assets/ShipmentDetail.svg';
-import '@fontsource/montserrat';
 import PackageCount from '../../assets/Packagecount.svg';
 import Date from '../../assets/Date.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
@@ -112,8 +111,7 @@ function ShipmentDetail(){
                     <WidgetContainer borderRadius="20px">
                         <div className="flex justify-around">
                                                         
-                                    <div className="flex flex-col  ">
-
+                                    <div className="flex flex-col">
                                             <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
                                             <div className='flex pb-2'>
                                                 <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
@@ -127,7 +125,6 @@ function ShipmentDetail(){
                                                 <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
                                                 <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - JNE</span>
                                             </div>
- 
                                     </div>
                                 
                                     <div className="flex flex-col">
