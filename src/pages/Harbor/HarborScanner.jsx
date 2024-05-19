@@ -1,41 +1,46 @@
 import React, { useState } from 'react';
-import QrScanner from 'react-qr-scanner';
+import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
+import './scanner.css'; 
 
 function HarborScanner() {
-    const [scanResult, setScanResult] = useState(null);
+    const [selectedDeviceId, setSelectedDeviceId] = useState(null);
+    const [data, setData] = useState('');
+    const devices = useDeviceList();
 
-    const handleScan = (data) => {
-        if (data) {
-            setScanResult(data.text);
-        }
+    const handleDeviceChange = (event) => {
+        setSelectedDeviceId(event.target.value);
     };
 
-    const handleError = (err) => {
-        console.error(err);
-    };
-
-    const previewStyle = {
-        height: 480,
-        width: 1920,
+    const handleError = (error) => {
+        console.error(error?.message);
     };
 
     return (
-        <div className="flex flex-col">
-            <h1>Scanner</h1>
-            <div className="flex flex-col items-center">
-                <QrScanner
-                    delay={300}
-                    style={previewStyle}
+        <div>
+            {devices.length > 0 && (
+                <div style={{ marginBottom: '10px' }}>
+                    <label htmlFor="cameraSelect">Select Camera:</label>
+                    <select id="cameraSelect" onChange={handleDeviceChange} value={selectedDeviceId || devices[0].deviceId}>
+                        {devices.map((device) => (
+                            <option key={device.deviceId} value={device.deviceId}>
+                                {device.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            )}
+            <div className="scanner-container">
+                <Scanner
+                    onResult={(text) => setData(text)}
                     onError={handleError}
-                    onScan={handleScan}
+                    options={{ deviceId: selectedDeviceId }}
                 />
-                {scanResult && (
-                    <div className="mt-4 p-4 border rounded bg-gray-100">
-                        <h2>Scanned Result:</h2>
-                        <p>{scanResult}</p>
-                    </div>
-                )}
             </div>
+           
+                <div style={{ marginTop: '20px' }}>
+                    <h2>Scanned Data:</h2>
+                    <p>{data}</p>
+                </div>
         </div>
     );
 }
