@@ -8,6 +8,11 @@ import trash from '../assets/icons/trash.svg';
 import IPI from '../assets/icons/IPI.svg';
 import If from '../assets/icons/Wat.svg';
 import Exc from '../assets/icons/Exc.svg';
+import AwaitingLeaves from '../assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '../assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '../assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '../assets/TotalCollectedWet.svg';
+
 
 const data = [
   { status: "Awaiting", id: 1, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', Expiration: "17/08/2024 13:05" },
@@ -34,7 +39,40 @@ const columns = [
   { field: 'weight', header: 'Weight' },
   { field: 'date', header: 'Date' },
 ];
-
+const stats = [
+  {
+    label: "Wasted Leaves",
+    value: "250",
+    unit: "Kg",
+    color: "#0F7275",
+    icon: ExpiredWetLeaves,
+    delay: 1
+  },
+  {
+    label: "Awaiting Leaves",
+    value: "243",
+    unit: "Kg",
+    color: "#C0CD30",
+    icon: AwaitingLeaves,
+    delay: 1.25
+  },
+  {
+    label: "Processed Leaves",
+    value: "243",
+    unit: "Kg",
+    color: "#79B2B7",
+    icon: ProcessedLeaves,
+    delay: 1.5
+  },
+  {
+    label: "Total Wet Leaves",
+    value: "1500",
+    unit: "Kg",
+    color: "#0F7275",
+    icon: TotalCollectedWet,
+    delay: 1.75
+  }
+];
 const WetLeaves = () => {
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
@@ -91,31 +129,27 @@ const WetLeaves = () => {
   return (
     <div className="container mx-auto w-full">
       <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} />
-      <div className="grid grid-flow-row lg:grid-flow-col gap-4">
-        <motion.div initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1 }}>
-          <StatsContainer label="In Process Leaves" value="250" unit="Kg" description="" color={"#0F7275"} />
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.25 }}>
-          <StatsContainer label="Dried Leaves" value="243" unit="Kg" description="" color={"#C0CD30"} />
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.5 }}>
-          <StatsContainer label="Expired Leaves" value="243" unit="Kg" description="" color={"#79B2B7"} />
-        </motion.div>
-        <motion.div initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.75 }}>
-          <StatsContainer label="Total Dry Leaves" value="1500" unit="Kg" description="" color={"#0F7275"} />
-        </motion.div>
+      <div className="flex flex-wrap gap-4 justify-stretch">
+        {stats.map((stat, index) => (
+          <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.35, delay: stat.delay }}
+            className="flex-grow flex-shrink lg:basis-1/5 basis-1/2" // Ensure each item takes equal space
+          >
+            <StatsContainer
+              label={stat.label}
+              value={stat.value}
+              unit={stat.unit}
+              description=""
+              color={stat.color}
+              modal={false}
+              frontIcon={stat.icon}
+            />
+          </motion.div>
+        ))}
       </div>
     </div>
   );
