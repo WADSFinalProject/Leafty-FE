@@ -9,7 +9,7 @@ import InnerPlugins from '../../assets/InnerPlugins.svg';
 import Plus from '../../assets/Plus.svg';
 import CountdownIcon from  '../../assets/Countdown.svg';
 import ExpiredWarningIcon from'../../assets/ExpiredWarning.svg';
-
+import InputField from '../../components/InputField';
 
 
 
@@ -35,7 +35,8 @@ function DryLeaves() {
         
 
         <div className="mt-4  flex justify-center items-center gap-3"> 
-            <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
+            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+            {/* <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
                 <div className='flex justify-start items-center gap-4'>
                 <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
                 <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
@@ -43,12 +44,13 @@ function DryLeaves() {
                 </span>
                 </div>
             </WidgetContainer>
+            */}
 
-            <div className='ml-1'>
+        <div className='ml-1'>
                 <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-auto ' />
+                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
                 </WidgetContainer>
-            </div>
+                </div> 
         </div>
 
         

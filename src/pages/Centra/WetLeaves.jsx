@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';

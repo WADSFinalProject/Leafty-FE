@@ -30,7 +30,7 @@ import Delivered from '../../assets/Delivered.svg';
 import Verified from '../../assets/Verified.svg';
 import Rescalling from '../../assets/Rescalling.svg';
 import Arrived from '../../assets/Arrived.svg';
-
+import InputField from '../../components/InputField';
 
 function Shipment() {
 
@@ -95,22 +95,16 @@ function Shipment() {
             <div className="custom-tabview">
                 <TabView>
                     <TabPanel header="Orders" headerClassName="border-b border-blue-500">
-                        <div className="mt-4  flex justify-center items-center ">
-                            <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
-                                <div className='flex justify-start items-center gap-4'>
-                                    <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
-                                    <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
-                                        Search
-                                    </span>
-                                </div>
-                            </WidgetContainer>
+                    <div className="mt-4  flex justify-center items-center gap-3"> 
+                        <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
 
-                            <div className='ml-1'>
-                                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-auto ' />
-                                </WidgetContainer>
-                            </div>
-                        </div>
+
+                        <div className='ml-1'>
+                            <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
+                                <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
+                            </WidgetContainer>
+                        </div> 
+                    </div>
                         {Orders.map((item, index) => (
                             <div key={`order_${index}`} className=' flex justify-between mt-3'>
                                 <WidgetContainer borderRadius="10px" className="w-full flex items-center">
@@ -133,21 +127,15 @@ function Shipment() {
                         ))}
                     </TabPanel>
                     <TabPanel header="Send" headerClassName="border-b border-blue-500">
-                        <div className="mt-4  flex justify-center items-center ">
-                            <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
-                                <div className='flex justify-start items-center gap-4'>
-                                    <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
-                                    <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
-                                        Search
-                                    </span>
-                                </div>
-                            </WidgetContainer>
+                        <div className="mt-4  flex justify-center items-center gap-3"> 
+                            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+
 
                             <div className='ml-1'>
                                 <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-auto ' />
+                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
                                 </WidgetContainer>
-                            </div>
+                            </div> 
                         </div>
                         {Send.map((item, index) => (
                             <div key={`send_${index}`} className=' flex justify-between mt-3'>
@@ -171,21 +159,15 @@ function Shipment() {
                         ))}
                     </TabPanel>
                     <TabPanel header="Completed" headerClassName="border-b border-blue-500">
-                        <div className="mt-4  flex justify-center items-center ">
-                            <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
-                                <div className='flex justify-start items-center gap-4'>
-                                    <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
-                                    <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
-                                        Search
-                                    </span>
-                                </div>
-                            </WidgetContainer>
+                        <div className="mt-4  flex justify-center items-center gap-3"> 
+                            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+
 
                             <div className='ml-1'>
                                 <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-auto ' />
+                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
                                 </WidgetContainer>
-                            </div>
+                            </div> 
                         </div>
                         {Completed.map((item, index) => (
                             <div key={`completed_${index}`} className=' flex justify-between mt-3'>

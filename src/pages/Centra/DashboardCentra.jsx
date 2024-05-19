@@ -17,6 +17,7 @@ import PowderLogo from "../../assets/PowderLogo.svg";
 import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
+import FilterDashboard from "../../components/filterDashboard"
 
 function DashboardCentra() {
   const leavesData = [
@@ -67,20 +68,13 @@ function DashboardCentra() {
     },
   ];
 
-
+  const [tabletMode, setTabletMode] = useState(false);
 
 
   return (
     <>
       <div className='mt-5 '>
-        <div className="mb-2 flex">
-          <div className="flex flex-grow">
-            <WidgetContainer backgroundColor="#A0C2B5" border={false} borderRadius="20px" className="flex flex-row px-2">
-              <span className="font-semibold text-xs font-montserrat leading-4 tracking-tighter text-left ml-2 text-gray-100">All time</span>
-              <img src={InnerPlugins} alt="InnerPlugins" className='w-3 h-auto ml-2' />
-            </WidgetContainer>
-          </div>
-        </div>
+        <FilterDashboard tablet={tabletMode} />
 
 
         <WidgetContainer>

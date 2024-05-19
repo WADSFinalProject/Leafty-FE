@@ -23,7 +23,7 @@ import PowderNavbar from "../../assets/PowderLogo.svg";
 import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
-
+import InputField from '../../components/InputField';
 
 
 
@@ -78,22 +78,16 @@ function Powder() {
 
   return (
     <>
-      <div className="mt-4  flex justify-center items-center gap-3">
-        <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
-          <div className='flex justify-start items-center gap-4'>
-            <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
-            <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
-              Search
-            </span>
-          </div>
-        </WidgetContainer>
+      <div className="mt-4  flex justify-center items-center gap-3"> 
+            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+
 
         <div className='ml-1'>
-          <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-            <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-auto ' />
-          </WidgetContainer>
+                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
+                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
+                </WidgetContainer>
+                </div> 
         </div>
-      </div>
 
 
       {

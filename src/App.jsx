@@ -59,6 +59,9 @@ function App() {
         </Route>
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
+        <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />
+        <Route path="/powderdetail" element={<Powder />} />
+        <Route path="/shipmentdetail" element={<ShipmentDetail />} />
       </Routes>
     </Router>
   )
