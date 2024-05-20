@@ -33,8 +33,7 @@ function OnBoarding() {
 
   useEffect(() => {
     controls.start("login");
-    if (isSubmit) {
-      4
+    if (isSubmit) { 
       if (isLogin) {
         console.log(email)
         const timeout = setTimeout(() => {

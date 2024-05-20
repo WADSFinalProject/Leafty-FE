@@ -50,6 +50,8 @@ th{
 td {
   text-align: center !important; /* Horizontally centers the text/content */
   vertical-align: middle !important; /* Vertically centers the text/content */
+  border: 1px #94C3B3 !important;
+  border-style: none none solid none!important;
 }
 
 table{

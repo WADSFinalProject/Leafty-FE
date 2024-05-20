@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import StatsContainer from "../components/Cards/StatsContainer";
-import TableComponent from '../components/TableComponent';
+import StatsContainer from "../../components/Cards/StatsContainer";
+import TableComponent from '../../components/TableComponent';
 import { hexToRgb } from '@mui/material';
-import trash from '../assets/icons/trash.svg';
-import IPI from '../assets/icons/IPI.svg';
-import If from '../assets/icons/Wat.svg';
-import Exc from '../assets/icons/Exc.svg';
-import AwaitingLeaves from '../assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '../assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '../assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '../assets/TotalCollectedWet.svg';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
+import trash from '../../assets/icons/trash.svg';
+import IPI from '../../assets/icons/IPI.svg';
+import If from '../../assets/icons/Wat.svg';
+import Exc from '../../assets/icons/Exc.svg';
+import AwaitingLeaves from '../../assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '../../assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '../../assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '../../assets/TotalCollectedWet.svg';
+
 
 const data = [
   { status: "Awaiting", id: 1, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
@@ -30,7 +30,7 @@ const data = [
 ];
 
 
-const header = 'Recently Gained Wet Leaves'; // Example header
+const header = 'Wet Leaves'; // Example header
 
 const columns = [
   { field: 'status', header: 'Status' },
@@ -75,7 +75,7 @@ const stats = [
     delay: 1.75
   }
 ];
-const WetLeaves = () => {
+const AdminWetLeaves = () => {
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
@@ -143,11 +143,9 @@ const WetLeaves = () => {
   const [tabletMode, setTabletMode] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("All Time");
 
-
-
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} />
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {true} />
       <div className="flex flex-wrap gap-4 justify-stretch">
         {stats.map((stat, index) => (
           <motion.div
@@ -174,4 +172,4 @@ const WetLeaves = () => {
   );
 };
 
-export default WetLeaves;
+export default AdminWetLeaves;

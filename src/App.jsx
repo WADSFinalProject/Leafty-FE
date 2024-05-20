@@ -27,6 +27,10 @@ import Reception from "./pages/Reception";
 import CentraLayout from "./pages/Centra/CentraLayout";
 import CentraTabContent from "./pages/CentraTabContent";
 import HarborTabContent from "./pages/HarborTabContent";
+import ShipmentOrders from "./pages/Centra/ShipmentOrders";
+import ShipmentSent from "./pages/Centra/ShipmentSent";
+import ShipmentCompleted from "./pages/Centra/ShipmentCompleted";
+import AdminWetLeaves from "./pages/Admin/AdminWetLeaves";
 
 function App() {
   return (
@@ -55,8 +59,13 @@ function App() {
           <Route path = "Wet Leaves" element = {<WetLeaves />}></Route>
           <Route path = "Dry Leaves" element = {<DryLeaves />}></Route>
           <Route path = "Powder" element = {<Powder />}></Route>
-          <Route path = "Shipment" element = {<Shipment />}></Route>
+          <Route path = "Shipment" element = {<Shipment />}>
+            <Route path = "ShipmentOrder" element = {<ShipmentOrders />}></Route>
+            <Route path = "ShipmentSent" element = {<ShipmentSent />}></Route>
+            <Route path = "ShipmentCompleted" element = {<ShipmentCompleted />}></Route>
+          </Route>
         </Route>
+        <Route path = "wetleavesadmin" element = {<AdminWetLeaves />}></Route>
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
         <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />

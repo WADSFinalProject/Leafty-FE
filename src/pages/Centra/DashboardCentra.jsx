@@ -1,102 +1,73 @@
 import React, { useState } from 'react';
-import Profilepic from '../../assets/Profilepic.svg';
-import NotificationBell from "../../assets/NotificationBell.svg";
 import Graph from '../../components/Graph';
 import WarningSign from '../../assets/WarningSign.svg';
-import InnerPlugins from '../../assets/InnerPlugins.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
-import LeavesInfo from '../../components/LeavesInfo';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import WetLeavesLogo from "../../assets/WetLeavesLogo.svg";
-import DryLeavesLogo from "../../assets/DryLeavesLogo.svg";
-import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
-import WetLeavesActive from "../../assets/icons/bottombar/wetleaves_active.svg";
-import DryLeavesActive from "../../assets/icons/bottombar/dryleaves_actives.svg";
-import PowderLogo from "../../assets/PowderLogo.svg";
-import ShipmentLogo from "../../assets/ShipmentLogo.svg";
-import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
-import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import FilterDashboard from "../../components/filterDashboard"
+import StatsContainer from '../../components/Cards/StatsContainer';
+import WetLeaves from '../../assets/WetLeaves.svg';
+import DryLeaves from "../../assets/DryLeaves.svg";
+import Powder from "../../assets/Powder.svg";
+import PackageSent from "../../assets/PackangeSent.svg";
+import Box from "../../assets/PackageBox.svg";
+
 
 function DashboardCentra() {
-  const leavesData = [
-    { image: 'WetLeaves', label: 'Wet Leaves', amount: 243 },
-    { image: 'DryLeaves', label: 'Dry Leaves', amount: 243 },
-    { image: 'Powder', label: 'Powder', amount: 243 },
-    { image: 'PackageSent', label: 'Package Sent', amount: 150 }
+
+  const statsData = [
+    { label: "Wet Leaves", value: 243, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
+    { label: "Dry Leaves", value: 243, unit: "Kg", frontIcon: DryLeaves, modal: false, color: "#D2D681" },
+    { label: "Powder", value: 243, unit: "Kg", frontIcon: Powder, modal: false, color: "#0F7275" },
+    { label: "Packages Sent", value: 243, icon_unit: Box, frontIcon: PackageSent, modal: false, color: "#A0C2B5" }
   ];
+
   const LastActivity = [
     { message: "A batch of wet leaves are about to expire in 1 hour" },
     { message: "A batch of wet leaves are about to expire in 1 hour" },
     { message: "A batch of wet leaves are about to expire in 1 hour" }
   ];
 
-  const navbarContent = [
-    {
-      key: 'wet-leaves',
-      itemActive: WetLeavesLogo,
-      item: WetLeavesActive,
-      label: "Wet Leaves"
-    },
-    {
-      key: 'dry-leaves',
-      itemActive: DryLeavesLogo,
-      item: DryLeavesActive,
-      label: "Dry Leaves"
-    },
-    {
-      key: 'dashboard-centra',
-      item:
-        <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
-          <img src={DashCentra} className="w-10 h-10" />
-        </div>,
-      itemActive: null,
-      label: null,
-    },
-    {
-      key: 'powder',
-      itemActive: PowderLogo,
-      item: PowderActive,
-      label: "Powder"
-    },
-    {
-      key: 'shipment',
-      itemActive: ShipmentLogo,
-      item: ShipmentActive,
-      label: "Shipment"
-    },
-  ];
-
   const [tabletMode, setTabletMode] = useState(false);
-
 
   return (
     <>
-      <div className='mt-5 '>
-        <FilterDashboard tablet={tabletMode} />
+
+      <FilterDashboard tablet={tabletMode} />
 
 
-        <WidgetContainer>
-          <Graph />
-        </WidgetContainer>
+      <WidgetContainer>
+        <Graph />
+      </WidgetContainer>
 
+
+      <div className='grid grid-cols-2 gap-4'>
+        {statsData.map((stat, index) => (
+          <StatsContainer
+            key={index}
+            label={stat.label}
+            value={stat.value}
+            unit={stat.unit}
+            frontIcon={stat.frontIcon}
+            icon_unit={stat.icon_unit}
+            modal={stat.modal}
+            color={stat.color}
+            round={"lg"}
+          />
+        ))}
       </div>
-      <div >
+      {/* <div >
         <LeavesInfo leavesData={leavesData} />
-      </div>
+      </div> */}
       <div className=''>
         <span className="font-semibold text-base font-montserrat leading-5 tracking-tighter text-left ">Last Activity</span>
 
       </div>
       <div className='grid gap-y-1'>
         {LastActivity.map((data, index) => (
-          <WidgetContainer className="flex justify-start" key={index}>
+          <WidgetContainer key={index}>
             <div className='flex items-center'>
               <img src={WarningSign} alt="warning" className='w-10 h-auto ml-1' />
               <span className='ml-4'>{data.message}</span>
             </div>
-
           </WidgetContainer>
         ))}
       </div>

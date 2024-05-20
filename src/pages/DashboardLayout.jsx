@@ -2,7 +2,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 // import Sidebar from '../components/Sidebar';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { motion } from "framer-motion";
 import axios from 'axios';
 import { API_URL } from '../App';
 import dashboard from '../assets/icons/sidebar/dashboard.svg';
@@ -28,53 +27,53 @@ function DashboardLayout() {
     const [userData, setUserData] = useState(null);
     const [loading, setLoading] = useState(true); 
 
-    async function handleWhoAmI() {
-        try {
-          const response = await axios.get(API_URL + "/whoami")
-          console.log(response.data.user_id)
-          if (response) {
-            return response.data.user_id
-          }
-          return false
-        } catch (error) {
-          console.error("Error while checking session:", error);
-          return false
+    // async function handleWhoAmI() {
+    //     try {
+    //       const response = await axios.get(API_URL + "/whoami")
+    //       console.log(response.data.user_id)
+    //       if (response) {
+    //         return response.data.user_id
+    //       }
+    //       return false
+    //     } catch (error) {
+    //       console.error("Error while checking session:", error);
+    //       return false
      
-        }
-    }
+    //     }
+    // }
 
-    const getUser = async () => {
-        try {
-          const user_id = await handleWhoAmI();
-          console.log("this is user id: " + user_id);
-          if (user_id) {
-            const response = await axios.get(API_URL + `/get_users_by_userid/${user_id}`);
-            console.log(response.data);
-            return response.data; 
-          } else {
-            console.error('User ID not found');
-            return null; 
-          }
-        } catch (error) {
-          console.error('Error calling backend function', error);
-          return null; 
-        }
-    };
+    // const getUser = async () => {
+    //     try {
+    //       const user_id = await handleWhoAmI();
+    //       console.log("this is user id: " + user_id);
+    //       if (user_id) {
+    //         const response = await axios.get(API_URL + `/get_users_by_userid/${user_id}`);
+    //         console.log(response.data);
+    //         return response.data; 
+    //       } else {
+    //         console.error('User ID not found');
+    //         return null; 
+    //       }
+    //     } catch (error) {
+    //       console.error('Error calling backend function', error);
+    //       return null; 
+    //     }
+    // };
    
-    useEffect(() => {
-        const fetchData = async () => {
-            const userData = await getUser();
-            if (userData) {
-                setUserData(userData);
-                setLoading(false); 
-            }
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const userData = await getUser();
+    //         if (userData) {
+    //             setUserData(userData);
+    //             setLoading(false); 
+    //         }
+    //     };
+    //     fetchData();
+    // }, []);
 
-    if (loading) {
-        return <div>Loading...</div>; 
-    }
+    // if (loading) {
+    //     return <div>Loading...</div>; 
+    // }
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
@@ -103,8 +102,10 @@ function DashboardLayout() {
                             <img src={profile_pic} />
                             {!collapsed && (
                                 <div className="flex flex-col justify-center items-center my-2">
-                                    <span className="font-bold text-2xl">{userData.Username}</span>
-                                    <span className="text-md">{userData.Email}</span>
+                                    {/* <span className="font-bold text-2xl">{userData.Username}</span> */}
+                                    {/* <span className="text-md">{userData.Email}</span> */}
+                                    <span className="font-bold text-2xl">XYZ</span>
+                                    <span className="text-md">XYZ@gmail.com</span>
                                 </div>
                             )}
                         </div>
@@ -116,7 +117,7 @@ function DashboardLayout() {
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
                         <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
+                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
                         <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>

@@ -1,17 +1,7 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import Profilepic from '../../assets/Profilepic.svg';
-import NotificationBell from "../../assets/NotificationBell.svg";
-import WidgetContainer from '../../components/Cards/WidgetContainer';
-import SearchLogo from '../../assets/SearchLogo.svg';
+import { Link ,Outlet} from 'react-router-dom';
 import CircularButton from '../../components/CircularButton';
-import PowderLogo from '../../assets/Powder.svg'
-import Countdown from '../../components/Countdown';
-import InnerPlugins from '../../assets/InnerPlugins.svg';
 import Plus from '../../assets/Plus.svg';
-import CountdownIcon from '../../assets/Countdown.svg';
-import ExpiredWarningIcon from '../../assets/ExpiredWarning.svg';
-import ReadyIcon from '../../assets/ReadyIcon.svg';
 import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import WetLeavesNavbar from "../../assets/WetLeavesLogo.svg";
@@ -23,26 +13,15 @@ import PowderNavbar from "../../assets/PowderLogo.svg";
 import ShipmentNavbar from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
-import { TabView, TabPanel } from 'primereact/tabview';
 import "../../style/TabView.css";
-import Shipments from '../../assets/Shipments.svg';
-import Delivered from '../../assets/Delivered.svg';
-import Verified from '../../assets/Verified.svg';
-import Rescalling from '../../assets/Rescalling.svg';
 import Arrived from '../../assets/Arrived.svg';
-import InputField from '../../components/InputField';
+import Box from '@mui/material/Box';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
 
 function Shipment() {
 
-    const Orders = [
-        { time: "Packing", color: "#79B2B7", image: CountdownIcon, weight: "15 Kg", code: "O123456" },
-
-    ];
-    const Send = [
-        { time: "Delivered", color: "#79B2B7", image: Delivered, weight: "15 Kg", code: "O123456" },
-        { time: "Verified", color: "#C0CD30", image: Verified, weight: "15 Kg", code: "O123456" },
-        { time: "Re-Scalling", color: "#D45D5D", image: Rescalling, weight: "15 Kg", code: "O123456" },
-    ]
+    
 
     const Completed = [
         { time: "Arrived", color: "#DEE295", image: Arrived, weight: "15 Kg", code: "O123456" },
@@ -93,104 +72,17 @@ function Shipment() {
     return (
         <>
             <div className="custom-tabview">
-                <TabView>
-                    <TabPanel header="Orders" headerClassName="border-b border-blue-500">
-                    <div className="mt-4  flex justify-center items-center gap-3"> 
-                        <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
-
-
-                        <div className='ml-1'>
-                            <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
-                            </WidgetContainer>
-                        </div> 
-                    </div>
-                        {Orders.map((item, index) => (
-                            <div key={`order_${index}`} className=' flex justify-between mt-3'>
-                                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                                    <Link to="/shipmentdetail">
-                                        <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                                    </Link>
-                                    <div className='flex flex-col ml-3'>
-                                        <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                            {item.weight}
-                                        </span>
-                                        <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                            {item.code}
-                                        </span>
-                                    </div>
-                                    <div className="flex ml-auto items-center">
-                                        <Countdown time={item.time} color={item.color} image={item.image} />
-                                    </div>
-                                </WidgetContainer>
-                            </div>
-                        ))}
-                    </TabPanel>
-                    <TabPanel header="Send" headerClassName="border-b border-blue-500">
-                        <div className="mt-4  flex justify-center items-center gap-3"> 
-                            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
-
-
-                            <div className='ml-1'>
-                                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
-                                </WidgetContainer>
-                            </div> 
-                        </div>
-                        {Send.map((item, index) => (
-                            <div key={`send_${index}`} className=' flex justify-between mt-3'>
-                                <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
-                                    <Link to="/shipmentdetail">
-                                        <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                                    </Link>
-                                    <div className='flex flex-col ml-3'>
-                                        <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                            {item.weight}
-                                        </span>
-                                        <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                            {item.code}
-                                        </span>
-                                    </div>
-                                    <div className="flex ml-auto items-center max-w-22 justify-items-center">
-                                        <Countdown time={item.time} color={item.color} image={item.image} />
-                                    </div>
-                                </WidgetContainer>
-                            </div>
-                        ))}
-                    </TabPanel>
-                    <TabPanel header="Completed" headerClassName="border-b border-blue-500">
-                        <div className="mt-4  flex justify-center items-center gap-3"> 
-                            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
-
-
-                            <div className='ml-1'>
-                                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
-                                </WidgetContainer>
-                            </div> 
-                        </div>
-                        {Completed.map((item, index) => (
-                            <div key={`completed_${index}`} className=' flex justify-between mt-3'>
-                                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                                    <Link to="/shipmentdetail">
-                                        <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                                    </Link>
-                                    <div className='flex flex-col ml-3'>
-                                        <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                            {item.weight}
-                                        </span>
-                                        <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                            {item.code}
-                                        </span>
-                                    </div>
-                                    <div className="flex ml-auto items-center">
-                                        <Countdown time={item.time} color={item.color} image={item.image} />
-                                    </div>
-                                </WidgetContainer>
-                            </div>
-                        ))}
-                    </TabPanel>
-                </TabView>
+                <Box sx={{ width: '100%' }}>
+                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                        <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                            <Tab label="Orders" component={Link} to="ShipmentOrder" />
+                            <Tab label="Sent" component={Link} to="ShipmentSent" />
+                            <Tab label="Completed" component={Link} to="ShipmentCompleted" />
+                        </Tabs>
+                    </Box>
+                    <Outlet />
+                </Box>
+                
             </div>
 
 
