@@ -60,7 +60,7 @@ function Register() {
     
     const createUser = async () => {
         try {
-            const response = await axios.post(API_URL+"/users/", {
+            const response = await axios.post(API_URL+"/user/post", {
                 Username: username,
                 Email: email,
                 PhoneNumber: phoneNumber,
