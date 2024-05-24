@@ -14,6 +14,13 @@ import Google from '../assets/icons/google.svg';
 import Divider from '../components/Divider';
 import Button from '../components/Button';
 import LoadingCircle from '../components/LoadingCircle';
+import { auth, provider } from "../firebase.js";
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  signInWithPopup
+} from "firebase/auth";
 
 function OnBoarding() {
   const [isLogin, setIsLogin] = useState(false);
@@ -31,18 +38,20 @@ function OnBoarding() {
 
   const [showCarousel, setShowCarousel] = useState(false);
 
+
+
   useEffect(() => {
     controls.start("login");
     if (isSubmit) { 
-      if (isLogin) {
-        console.log(email)
-        const timeout = setTimeout(() => {
-          navigate('/verify', { state: { emailAddress: email } });
-        }, 3000);
+      // if (isLogin) {
+      //   console.log(email)
+      //   const timeout = setTimeout(() => {
+      //     navigate('/verify', { state: { emailAddress: email } });
+      //   }, 3000);
 
-        // Clean up the timeout to avoid memory leaks
-        return () => clearTimeout(timeout);
-      }
+      //   // Clean up the timeout to avoid memory leaks
+      //   return () => clearTimeout(timeout);
+      // }
       if (isSignUp) {
         const timeout = setTimeout(() => {
           navigate('/register', { state: { emailAddress: email , userPassword: password } });
@@ -56,6 +65,14 @@ function OnBoarding() {
 
   const handleLogin = () => {
     setIsLogin(!isLogin);
+    signInWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        alert(err.message)
+        setIsLogin(isLogin);
+      });
   };
 
   const handleSignUp = () => {
