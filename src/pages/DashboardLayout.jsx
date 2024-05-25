@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-// import Sidebar from '../components/Sidebar';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
+import { motion } from "framer-motion";
 import axios from 'axios';
 import { API_URL } from '../App';
 import dashboard from '../assets/icons/sidebar/dashboard.svg';
@@ -24,8 +24,8 @@ function DashboardLayout() {
     const [tabletMode, setTabletMode] = useState(false);
     const [title, setTitle] = useState("Dashboard");
     const navigate = useNavigate();
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(true); 
+    const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
+    
 
     // async function handleWhoAmI() {
     //     try {
@@ -47,7 +47,7 @@ function DashboardLayout() {
     //       const user_id = await handleWhoAmI();
     //       console.log("this is user id: " + user_id);
     //       if (user_id) {
-    //         const response = await axios.get(API_URL + `/get_users_by_userid/${user_id}`);
+    //         const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
     //         console.log(response.data);
     //         return response.data; 
     //       } else {
@@ -65,15 +65,12 @@ function DashboardLayout() {
     //         const userData = await getUser();
     //         if (userData) {
     //             setUserData(userData);
-    //             setLoading(false); 
     //         }
     //     };
     //     fetchData();
     // }, []);
 
-    // if (loading) {
-    //     return <div>Loading...</div>; 
-    // }
+    
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
@@ -102,10 +99,8 @@ function DashboardLayout() {
                             <img src={profile_pic} />
                             {!collapsed && (
                                 <div className="flex flex-col justify-center items-center my-2">
-                                    {/* <span className="font-bold text-2xl">{userData.Username}</span> */}
-                                    {/* <span className="text-md">{userData.Email}</span> */}
-                                    <span className="font-bold text-2xl">XYZ</span>
-                                    <span className="text-md">XYZ@gmail.com</span>
+                                    <span className="font-bold text-2xl">{userData.Username}</span>
+                                    <span className="text-md">{userData.Email}</span>
                                 </div>
                             )}
                         </div>
@@ -117,7 +112,7 @@ function DashboardLayout() {
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
                         <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
+                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
                         <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>

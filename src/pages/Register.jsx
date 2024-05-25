@@ -25,6 +25,7 @@ import {
   } from "firebase/auth";
 import {collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc} from 'firebase/firestore';
 import { API_URL } from '../App';
+import bcrypt from 'bcryptjs';
 
 axios.defaults.withCredentials = true
 
@@ -40,9 +41,10 @@ function Register() {
 
     const { emailAddress } = Location.state || {};
     const { userPassword } = Location.state || {};
-
+    
     const [currentUserId, setCurrentUserId] = useState("");
     const [email, setEmail] = useState(emailAddress);
+    
     const [password, setPassword] = useState(userPassword);
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -56,11 +58,22 @@ function Register() {
     });
 
 
-    
+    useEffect(() => {
+        if (userPassword) {
+          const saltRounds = 10;
+          bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
+            if (err) {
+              console.error('Error encrypting password:', err);
+            } else {
+              setPassword(hashedPassword);
+            }
+          });
+        }
+      }, [userPassword]);
     
     const createUser = async () => {
         try {
-            const response = await axios.post(API_URL+"/users/", {
+            const response = await axios.post(API_URL+"/user/post", {
                 Username: username,
                 Email: email,
                 PhoneNumber: phoneNumber,
