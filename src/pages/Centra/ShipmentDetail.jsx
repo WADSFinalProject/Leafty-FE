@@ -26,58 +26,58 @@ import ShipmentWeight from '../../assets/ShipmentWeight.svg';
 import Courier from '../../assets/Courier.svg';
 import Address from '../../assets/Address.svg';
 import ShipmentReceipt from '../../assets/ShipmentReceipt.svg';
-import Download from'../../assets/Download.svg';
+import Download from '../../assets/Download.svg';
 import Upload from '../../assets/Upload.svg';
 import Open from '../../assets/Open.svg';
 
-function ShipmentDetail(){
+function ShipmentDetail() {
 
     const [value, setValue] = useState("");
-      const handleChange = (event, newValue) => {
+    const handleChange = (event, newValue) => {
         setValue(newValue);
-      };
+    };
     const navbarContent = [
         {
-          key: 'wet-leaves',
-          itemActive: WetLeavesNavbar,
-          item: WetLeavesActive,
-          label: "Wet Leaves"
+            key: 'wet-leaves',
+            itemActive: WetLeavesNavbar,
+            item: WetLeavesActive,
+            label: "Wet Leaves"
         },
         {
-          key: 'dry-leaves',
-          itemActive: DryLeavesNavbar,
-          item: DryLeavesActive,
-          label: "Dry Leaves"
+            key: 'dry-leaves',
+            itemActive: DryLeavesNavbar,
+            item: DryLeavesActive,
+            label: "Dry Leaves"
         },
         {
-          key: 'dashboard-centra',
-          item:
-            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
-                <img src={DashCentra} className="w-10 h-10" />
-            </div>,
-          itemActive: null,
-          label: null,
+            key: 'dashboard-centra',
+            item:
+                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
+                    <img src={DashCentra} className="w-10 h-10" />
+                </div>,
+            itemActive: null,
+            label: null,
         },
         {
-          key: 'powder',
-          itemActive: PowderNavbar,
-          item: PowderActive,
-          label: "Powder"
+            key: 'powder',
+            itemActive: PowderNavbar,
+            item: PowderActive,
+            label: "Powder"
         },
         {
-          key: 'shipment',
-          itemActive: ShipmentNavbar,
-          item: ShipmentActive,
-          label: "Shipment"
+            key: 'shipment',
+            itemActive: ShipmentNavbar,
+            item: ShipmentActive,
+            label: "Shipment"
         },
-      ];
+    ];
 
-    return(
+    return (
         <div className="w-screen flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto no-scrollbar overflow-x-hidden">
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
                 <div className='flex justify-between items-center '>
                     <div className="flex items-center mr-4">
-                        <Return destination="/shipment" className="mr-2 text-sm" /> 
+                        <Return destination="/shipment" className="mr-2 text-sm" />
                         <span className='font-bold text-2xl ml-2'>Shipment</span>
                     </div>
 
@@ -88,17 +88,17 @@ function ShipmentDetail(){
                 </div>
                 <div className='flex justify-center'>
                     <img src={ShipmentLogo} alt="Profile" style={{ maxWidth: '100px' }} className='w-full h-auto' />
-                    
+
                 </div>
                 <div className="flex flex-col items-center">
-                    
+
                     <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                         Expedition #0123456
                     </span>
                     <div className="flex space-x-2">
                         <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                            3 Packages 
+                            3 Packages
                         </span>
                         <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
@@ -110,42 +110,41 @@ function ShipmentDetail(){
                 <div className='p-2'>
                     <WidgetContainer borderRadius="20px">
                         <div className="flex justify-around">
-                                                        
-                                    <div className="flex flex-col">
-                                            <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
-                                            <div className='flex pb-2'>
-                                                <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                                <span className="font-montserrat text-16px font-semibold tracking-02em text-center">3 Packages</span>
-                                            </div>
-                                            <div className='flex pb-2'>
-                                                <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                                <span className="font-montserrat text-16px font-semibold tracking-02em text-center">30 Kg</span>
-                                            </div>
-                                            <div className='flex pb-2'>
-                                                <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                                <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - JNE</span>
-                                            </div>
-                                    </div>
-                                
-                                    <div className="flex flex-col">
-                                        
-                                            <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
-                                            <div className='flex pb-2'>
-                                                <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
-                                                <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Unit 1</span>
-                                            </div>
-                                            
-                                            <div className='flex pb-2'>
-                                                <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
-                                                <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Jl.Address</span>
-                                            </div>
-                                    </div>
-                                
-                            
+                            <div className="flex flex-col">
+                                <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
+                                <div className='flex pb-2'>
+                                    <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">3 Packages</span>
+                                </div>
+                                <div className='flex pb-2'>
+                                    <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">30 Kg</span>
+                                </div>
+                                <div className='flex pb-2'>
+                                    <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - JNE</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col">
+
+                                <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
+                                <div className='flex pb-2'>
+                                    <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
+                                    <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Unit 1</span>
+                                </div>
+
+                                <div className='flex pb-2'>
+                                    <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
+                                    <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Jl.Address</span>
+                                </div>
+                            </div>
+
+
                         </div>
                     </WidgetContainer>
                 </div>
-                
+
                 <div className='p-2'>
                     <WidgetContainer borderRadius='20px'>
                         <span className='font-montserrat text-16px font-semibold tracking-02em ml-3'>
@@ -168,21 +167,21 @@ function ShipmentDetail(){
                         </div>
                     </WidgetContainer>
                 </div>
-               
-                
-                
 
-                
+
+
+
+
 
                 <div className="flex justify-center">
                     <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
                         {navbarContent.map(({ key, label, item, itemActive }) => (
                             <BottomNavigationAction
-                            key={key} // Ensure each item has a unique key
-                            label={label}
-                            value={label}
-                            icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
-                            disableRipple={label === null ? true : false}
+                                key={key} // Ensure each item has a unique key
+                                label={label}
+                                value={label}
+                                icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
+                                disableRipple={label === null ? true : false}
                             />
                         ))}
                     </BottomNavigation>
@@ -192,7 +191,7 @@ function ShipmentDetail(){
 
             </div>
         </div>
-        
+
     )
 }
 

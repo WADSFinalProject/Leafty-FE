@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Profilepic from '../../assets/Profilepic.svg';
 import NotificationBell from "../../assets/NotificationBell.svg";
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -14,9 +15,9 @@ import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import { Navigate, Outlet, useNavigate } from 'react-router-dom';
 
-
 function CentraLayout() {
     const navigate = useNavigate();
+    const location = useLocation();
 
     const navbarContent = [
         {
@@ -52,20 +53,40 @@ function CentraLayout() {
             item: ShipmentActive,
             label: "Shipment"
         },
-
     ];
+
+    const [value, setValue] = useState(() => {
+        const storedValue = localStorage.getItem('currentPage');
+        return storedValue || "Dashboard"; // Set default value if there's no stored value
+    });
+
+    useEffect(() => {
+        // Save the current page to localStorage whenever it changes
+        localStorage.setItem('currentPage', value);
+    }, [value]);
+
+    useEffect(() => {
+        // Update the value based on the current location pathname
+        const path = location.pathname.substring(1); // Remove the leading "/"
+        setValue(path.replace('-centra', '') || "Dashboard"); // Set default value if the path is empty and remove "-centra" from path
+    }, [location]);
+
     const handleChange = (event, newValue) => {
         setValue(newValue ? newValue : "Dashboard");
         navigate(newValue ? newValue : "Dashboard");
     };
-    const [value, setValue] = useState("Dashboard");
-    const [key, setKey] = useState("");
+    function capitalizeFirstLetter(string) {
+        return string.replace(/\b\w/g, char => char.toUpperCase());
+    }
+    
 
-    return <>
+    return (
         <div className="w-screen flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto no-scrollbar overflow-x-hidden">
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
                 <div className='flex justify-between items-center '>
-                    <span className='font-bold text-3xl'>{value}</span>
+                    <span className='font-bold text-3xl'>{capitalizeFirstLetter(value.split("/").pop().replace(/%20/g, " "))}</span>
+
+
                     <div className="flex items-center gap-2">
                         <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
                         <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
@@ -76,10 +97,10 @@ function CentraLayout() {
                     <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
                         {navbarContent.map(({ key, label, item, itemActive }) => (
                             <BottomNavigationAction
-                                key={key} // Ensure each item has a unique key
+                                key={key}
                                 label={label}
                                 value={label}
-                                icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
+                                icon={label === null ? item : <img src={value === label ? item : itemActive} alt={label} />}
                                 disableRipple={label === null ? true : false}
                             />
                         ))}
@@ -87,7 +108,7 @@ function CentraLayout() {
                 </div>
             </div>
         </div>
-    </>
+    );
 }
 
 export default CentraLayout;

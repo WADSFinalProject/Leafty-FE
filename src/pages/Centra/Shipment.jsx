@@ -92,7 +92,7 @@ function Shipment() {
                 </Link>
             </div>
 
-            <div className="flex justify-center">
+            {/* <div className="flex justify-center">
                 <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
                     {navbarContent.map(({ key, label, item, itemActive }) => (
                         <BottomNavigationAction
@@ -104,7 +104,7 @@ function Shipment() {
                         />
                     ))}
                 </BottomNavigation>
-            </div>
+            </div> */}
         </>
     );
 }

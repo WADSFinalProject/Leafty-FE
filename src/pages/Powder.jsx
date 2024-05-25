@@ -30,7 +30,7 @@ const data = [
 ];
 
 
-const header = 'Recently Gained Wet Leaves'; // Example header
+const header = 'Recently Gained Powder'; // Example header
 
 const columns = [
   { field: 'status', header: 'Status' },
@@ -143,11 +143,9 @@ const WetLeaves = () => {
   const [tabletMode, setTabletMode] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("All Time");
 
-
-
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {false}/>
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} />
       <div className="flex flex-wrap gap-4 justify-stretch">
         {stats.map((stat, index) => (
           <motion.div

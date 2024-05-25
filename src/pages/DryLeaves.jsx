@@ -30,7 +30,7 @@ const data = [
 ];
 
 
-const header = 'Recently Gained Wet Leaves'; // Example header
+const header = 'Recently Gained Dry Leaves'; // Example header
 
 const columns = [
   { field: 'status', header: 'Status' },
@@ -75,7 +75,7 @@ const stats = [
     delay: 1.75
   }
 ];
-const WetLeaves = () => {
+const DryLeaves = () => {
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
@@ -147,7 +147,7 @@ const WetLeaves = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {false}/>
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} />
       <div className="flex flex-wrap gap-4 justify-stretch">
         {stats.map((stat, index) => (
           <motion.div
@@ -174,4 +174,4 @@ const WetLeaves = () => {
   );
 };
 
-export default WetLeaves;
+export default DryLeaves;

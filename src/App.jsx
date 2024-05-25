@@ -10,6 +10,9 @@ import DashboardHarbor from "./pages/Harbor/DashboardHarbor";
 import Example from "./pages/Example";
 import PageNotFound from "./pages/PageNotFound";
 import WetLeavesXYZ from "./pages/WetLeaves";
+import DryLeavesXYZ from "./pages/DryLeaves";
+import PowderXYZ from "./pages/Powder";
+import ShipmentXYZ from "./pages/Shipment";
 import DashboardLayout from "./pages/DashboardLayout";
 import DashboardCentra from "./pages/Centra/DashboardCentra";
 import WetLeaves from "./pages/Centra/WetLeaves";
@@ -41,31 +44,36 @@ function App() {
         <Route path="register" element={<Register />}></Route>
         <Route path="approval" element={<Approval />}></Route>
         <Route path="*" element={<PageNotFound />}></Route>
+        {/* <Route path="company" element={<PageNotFound />}></Route> */}
         <Route path="company" element={<DashboardLayout />}>
           <Route path="dashboard" element={<Dashboard />}></Route>
           <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
+          <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
+          <Route path="powder" element={<PowderXYZ />}></Route>
+          <Route path="shipment" element={<ShipmentXYZ />}></Route>
           <Route path="reception" element={<Reception />}>
-            <Route path = "centra" element = {<CentraTabContent />}></Route>
-            <Route path = "harbor" element = {<HarborTabContent />}></Route>
+            <Route path="centra" element={<CentraTabContent />}></Route>
+            <Route path="harbor" element={<HarborTabContent />}></Route>
           </Route>
         </Route>
-        <Route path="harbor" element = {<HarborLayout />}>
+        <Route path="harbor" element={<HarborLayout />}>
           <Route path="dashboard" element={<DashboardHarbor />} />
           <Route path="reception" element={<HarborReception />} />
           <Route path="Scanner" element={<HarborScanner />} />
         </Route>
-        <Route path= "centra" element = {<CentraLayout />}>
-          <Route path = "Dashboard" element = {<DashboardCentra />}></Route>
-          <Route path = "Wet Leaves" element = {<WetLeaves />}></Route>
-          <Route path = "Dry Leaves" element = {<DryLeaves />}></Route>
-          <Route path = "Powder" element = {<Powder />}></Route>
-          <Route path = "Shipment" element = {<Shipment />}>
-            <Route path = "ShipmentOrder" element = {<ShipmentOrders />}></Route>
-            <Route path = "ShipmentSent" element = {<ShipmentSent />}></Route>
-            <Route path = "ShipmentCompleted" element = {<ShipmentCompleted />}></Route>
+        <Route path="centra" element={<CentraLayout />}>
+          <Route path="Dashboard" element={<DashboardCentra />}></Route>
+          <Route path="Wet Leaves" element={<WetLeaves />}></Route>
+          <Route path="Dry Leaves" element={<DryLeaves />}></Route>
+          <Route path="Powder" element={<Powder />}></Route>
+          <Route path="Shipment" element={<Shipment />}>
+            <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
+            <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
+            <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
           </Route>
         </Route>
-        <Route path = "wetleavesadmin" element = {<AdminWetLeaves />}></Route>
+
+        <Route path="wetleavesadmin" element={<AdminWetLeaves />}></Route>
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
         <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />

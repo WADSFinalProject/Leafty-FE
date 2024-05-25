@@ -8,8 +8,6 @@ import UnverifiedShipment from '../../assets/UnverifiedShipment.svg';
 import UnverifiedPackages from '../../assets/UnverifiedPackages.svg';
 import "../../style/Dashboard.css";
 
-
-
 function DashboardHarbor() {
     const data = Array(5).fill({ items: "a" });
     const [value, setValue] = useState("Dashboard");

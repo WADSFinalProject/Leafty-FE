@@ -34,7 +34,7 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false }) {
               className="input input-bordered gap-2 input-sm"
             /> */}
           <button className='btn' style = {{background: "#94C3B3"}}><img src={filter}></img></button>
-          <button className='btn' style = {{background: "#94C3B3"}}><img src={plus}></img></button>
+          {admin ? <button className='btn' style = {{background: "#94C3B3"}}><img src={plus}></img></button> : <></>}
         </div>
       </div>
     );
