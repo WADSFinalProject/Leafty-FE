@@ -1,54 +1,54 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import ChartJS from 'chart.js/auto';
-import VectorLeafy from '../../assets/LeaftyLogo.svg'; // Import the image using ES6 import
+import VectorLeafy from '../../assets/LeaftyLogo.svg';
 
-const data = {
-  labels: ['Wet Leaves', 'Dry Leaves', 'Powder'],
-  datasets: [
-    {
-      data: [100, 200, 700],
-      backgroundColor: ['#79b2b7', '#0f7275', '#dee295'],
-      borderColor: ['#79b2b7', '#0f7275', '#dee295'],
-      borderWidth: 0,
-      strokeCap: 'round',
-      spacing:0,
-      borderRadius: 0,
-    },
-  ],
-};
-
-const options = {
-  plugins: {
-    title: {
-      display: true,
-      text: 'Leaves Distribution',
-      align: 'start', // Aligns the title to the left
-      font: {
-        size: 16,
-        family: '"Roboto", sans-serif',
-        weight: 'bold',
+function PieChart({ labels, data }) {
+  const chartData = {
+    labels: labels,
+    datasets: [
+      {
+        data: data,
+        backgroundColor: ['#79b2b7', '#0f7275', '#dee295'],
+        borderColor: ['#79b2b7', '#0f7275', '#dee295'],
+        borderWidth: 0,
+        strokeCap: 'round',
+        spacing: 0,
+        borderRadius: 0,
       },
-      color: '#000000',
-    },
-    legend: {
-      position: 'bottom',
-      labels: {
-        usePointStyle: true,
-        pointStyle: 'circle',
+    ],
+  };
+
+  const options = {
+    plugins: {
+      title: {
+        display: true,
+        text: 'Leaves Distribution',
+        align: 'start', // Aligns the title to the left
+        font: {
+          size: 16,
+          family: '"Roboto", sans-serif',
+          weight: 'bold',
+        },
+        color: '#000000',
+      },
+      legend: {
+        position: 'bottom',
+        labels: {
+          usePointStyle: true,
+          pointStyle: 'circle',
+        },
+      },
+      drawCenterImage: {
+        centerImageSrc: VectorLeafy,
       },
     },
-    drawCenterImage: {
-      centerImageSrc: VectorLeafy, // Use imported image directly
-    },
-  },
-  maintainAspectRatio: false,
-  responsive: true,
-  cutout: '80%',
-};
+    maintainAspectRatio: false,
+    responsive: true,
+    cutout: '80%',
+  };
 
-ChartJS.register(
-  {
+  ChartJS.register({
     id: 'drawCenterImage',
     afterDraw: (chart) => {
       const { ctx, chartArea } = chart;
@@ -68,11 +68,9 @@ ChartJS.register(
       image.onload = () => drawImage(image);
       image.src = centerImageSrc;
     },
-  },
-);
+  });
 
-function PieChart() {
-  return <Doughnut data={data} options={options} height={250}/>;
+  return <Doughnut data={chartData} options={options} height={250} />;
 }
 
 export default PieChart;
