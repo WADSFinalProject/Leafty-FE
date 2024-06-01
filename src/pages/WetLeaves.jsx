@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import StatsContainer from "../components/Cards/StatsContainer";
-import TableComponent from '../components/TableComponent';
+import TableComponent from '../components/LeavesTables/TableComponent';
 import { hexToRgb } from '@mui/material';
 import trash from '../assets/icons/trash.svg';
 import IPI from '../assets/icons/IPI.svg';

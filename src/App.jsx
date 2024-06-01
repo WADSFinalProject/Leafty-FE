@@ -40,6 +40,12 @@ import XYZScanner from './pages/XYZMobile/XYZScanner';
 import DashboardXYZ from "./pages/XYZMobile/DashboardXYZ";
 import XYZShipmentDetail from "./pages/XYZMobile/XYZShipmentDetail";
 import UserSetting from "./pages/XYZResponsive/UserSetting";
+import TempAdmin from "./pages/Admin/TempAdmin";
+import DashboardAdmin from "./pages/Admin/DashboardAdmin";
+import AdminDryLeaves from "./pages/Admin/AdminDryLeaves";
+import AdminPowder from "./pages/Admin/AdminPowder";
+import AdminUserTable from "./pages/Admin/AdminUserTable";
+
 
 function App() {
   return (
@@ -83,7 +89,13 @@ function App() {
           <Route path="Shipment List" element={<XYZShipmentList />} />
           <Route path="Scanner" element={<XYZScanner />} />
         </Route>
-        <Route path="wetleavesadmin" element={<AdminWetLeaves />}></Route>
+        {/* <Route path="Admin" element={<TempAdmin />}> */}
+        <Route path="admindashboard" element={<DashboardAdmin />}/>
+        <Route path="adminwetleaves" element={<AdminWetLeaves />}/>  
+        <Route path="admindryleaves" element={<AdminDryLeaves />}/>  
+        <Route path="adminpowder" element={<AdminPowder />}/>  
+        <Route path="adminusermanagement" element={<AdminUserTable/>}/>  
+        {/* </Route> */}
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
         <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />

@@ -42,7 +42,7 @@ const data = [
 ];
 
 
-const header = 'Recently Gained Wet Leaves';
+const header = 'Recently Gained Powder';
 
 const columns = [
   { field: 'id', header: 'Batch Id' },
@@ -86,7 +86,7 @@ const stats = [
     delay: 1.75
   }
 ];
-const AdminWetLeaves = () => {
+const AdminPowder = () => {
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
@@ -161,4 +161,4 @@ const AdminWetLeaves = () => {
   );
 };
 
-export default AdminWetLeaves;
+export default AdminPowder;
