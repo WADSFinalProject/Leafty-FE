@@ -34,6 +34,12 @@ import ShipmentOrders from "./pages/Centra/ShipmentOrders";
 import ShipmentSent from "./pages/Centra/ShipmentSent";
 import ShipmentCompleted from "./pages/Centra/ShipmentCompleted";
 import AdminWetLeaves from "./pages/Admin/AdminWetLeaves";
+import XYZLayout from "./pages/XYZMobile/XYZLayout";
+import XYZShipmentList from "./pages/XYZMobile/XYZShipmentList";
+import XYZScanner from './pages/XYZMobile/XYZScanner';
+import DashboardXYZ from "./pages/XYZMobile/DashboardXYZ";
+import XYZShipmentDetail from "./pages/XYZMobile/XYZShipmentDetail";
+import UserSetting from "./pages/XYZResponsive/UserSetting";
 
 function App() {
   return (
@@ -72,13 +78,19 @@ function App() {
             <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
           </Route>
         </Route>
-
+        <Route path="xyzmobile" element = {<XYZLayout />}>
+          <Route path="dashboard" element={<DashboardXYZ />} />
+          <Route path="Shipment List" element={<XYZShipmentList />} />
+          <Route path="Scanner" element={<XYZScanner />} />
+        </Route>
         <Route path="wetleavesadmin" element={<AdminWetLeaves />}></Route>
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
         <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />
         <Route path="/powderdetail" element={<Powder />} />
         <Route path="/shipmentdetail" element={<ShipmentDetail />} />
+        <Route path="/xyzshipmentdetail" element={<XYZShipmentDetail />} />
+        <Route path="/usersetting" element={<UserSetting />} />
       </Routes>
     </Router>
   )

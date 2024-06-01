@@ -87,7 +87,7 @@ function Powder() {
                     <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
                 </WidgetContainer>
                 </div> 
-        </div>
+      </div>
 
 
       {

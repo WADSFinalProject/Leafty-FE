@@ -1,7 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion";
 import axios from 'axios';
 import { API_URL } from '../App';
 import dashboard from '../assets/icons/sidebar/dashboard.svg';
