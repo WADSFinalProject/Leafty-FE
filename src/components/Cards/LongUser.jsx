@@ -1,27 +1,27 @@
 import React from "react";
 import PropTypes from "prop-types";
 import WidgetContainer from "./WidgetContainer";
-import unscaled_pickup from "../../assets/icons/unscaled_pickup.svg";
-import Package from "../../assets/icons/package.svg";
-import date from "../../assets/icons/date.svg";
-import weight from "../../assets/icons/weight_scale.svg";
+import Users from "../../assets/icons/Users.svg";
+import At from "../../assets/icons/UserAt.svg";
+import Phone from "../../assets/icons/UserPhone.svg";
+import Mail from "../../assets/icons/UserMail.svg";
 import arrow_square from "../../assets/icons/arrow_square.svg";
 
-function LongContainer({ showWeight, packageCount, weightValue, dateValue, expeditionId }) {
+function LongUser({ showWeight, Atis, Mailis, Phonis, UserId }) {
     const data = [
         {
-            "image": Package,
-            "value": packageCount,
-            "unit": showWeight ? "Packages" : ""
+            "image": At,
+            "value": Atis,
+            "unit":  ""
         },
         {
-            "image": weight,
-            "value": weightValue,
-            "unit": "Kg"
+            "image": Mail,
+            "value": Mailis,
+            "unit": ""
         },
         {
-            "image": date,
-            "value": dateValue,
+            "image": Phone,
+            "value": Phonis,
             "unit": ""
         },
     ];
@@ -32,8 +32,8 @@ function LongContainer({ showWeight, packageCount, weightValue, dateValue, exped
         <div className={`flex flex-col container gap-1 rounded-md border-4 border-white shadow-lg p-2`} style={{ background: "radial-gradient(50%_50%_at_50%_50%,rgb(255,255,255)_0%,rgb(211.65,211.65,211.65)_100%)" }}>
             <div className="flex justify-between flex-row items-center font-semibold text-sm lg:text-base px-2">
                 <div className="flex flex-row justify-center items-center gap-2">
-                    <img src={unscaled_pickup} alt="Unscaled Pickup"></img>
-                    <span className="w-min sm:w-full">Expedition #{expeditionId}</span>
+                    <img src={Users} alt="Unapproved User"></img>
+                    <span className="w-min sm:w-full">User #{UserId}</span>
                 </div>
                 {filteredData.map((e, index) => (
                     <div key={index} className="flex flex-row justify-center items-center gap-2">
@@ -47,11 +47,10 @@ function LongContainer({ showWeight, packageCount, weightValue, dateValue, exped
     );
 }
 
-LongContainer.propTypes = {
-    showWeight: PropTypes.bool.isRequired,
-    packageCount: PropTypes.number.isRequired,
-    weightValue: PropTypes.number.isRequired,
-    dateValue: PropTypes.string.isRequired,
+LongUser.propTypes = {
+    Atis: PropTypes.string.isRequired,
+    Malis: PropTypes.string.isRequired,
+    Phonis: PropTypes.string.isRequired,
 };
 
-export default LongContainer;
+export default LongUser;
