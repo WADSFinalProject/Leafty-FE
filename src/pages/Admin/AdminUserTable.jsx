@@ -46,16 +46,16 @@ const AdminUserTable = () => {
 
     switch (rowData.role) {
       case "Centra":
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-        textColor = "#79B2B7";
+        backgroundColor = hexToRGBA("#0F727580", 0.5);
+        textColor = "#000000";
         break;
       case "Harbor":
-        backgroundColor = hexToRGBA("#D4965D", 0.5);
-        textColor = "#E28834"; 
+        backgroundColor = hexToRGBA("#C0CD30", 0.5);
+        textColor = "#000000"; 
         break;
       case "XYZ":
-        backgroundColor = hexToRGBA("#D45D5D", 0.5);
-        textColor = "#D45D5D"; 
+        backgroundColor = hexToRGBA("#94C3B380", 0.5);
+        textColor = "#000000"; 
         break;
       default:
         backgroundColor = "inherit"; // Use default background color
@@ -73,7 +73,7 @@ const AdminUserTable = () => {
           width: dynamicWidth,
           height: dynamicHeight
         }}
-        className="flex items-center justify-center rounded-md overflow-hidden"
+        className="flex items-center justify-center rounded-3xl overflow-hidden"
       >
         <div className="flex items-center">
           <span>{rowData.role}</span>
