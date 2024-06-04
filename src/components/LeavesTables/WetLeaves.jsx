@@ -1,12 +1,9 @@
 import React from 'react';
-import { DataTable} from 'primereact/datatable';
-import { Button } from 'primereact/button';
-import { Column} from 'primereact/column';
 import 'daisyui/dist/full.css';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import StatsContainer from "../Cards/StatsContainer";
 import TableComponent from './TableComponent';
-import { hexToRgb } from '@mui/material';
+
 import trash from '../../assets/icons/trash.svg';
 import IPI from '../../assets/icons/IPI.svg';
 import If from '../../assets/icons/Wat.svg';
@@ -92,7 +89,7 @@ const WetLeaves = () => {
 
   return (
     <div className="container mx-auto w-full p-4">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate}/>
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} rows={10}/>
       <div className="grid grid-flow-row lg:grid-flow-col gap-4">
         <motion.div initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}

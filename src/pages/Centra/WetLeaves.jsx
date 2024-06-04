@@ -30,14 +30,6 @@ function WetLeaves() {
     <>
       <div className="mt-4  flex justify-center items-center gap-3">
         <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
-        {/* <WidgetContainer borderRadius="20px" className="flex items-center flex-grow">
-          <div className='flex justify-start items-center gap-4'>
-            <img src={SearchLogo} alt="SearchLogo" className="w-8 h-8" />
-            <span className="text-green-900 text-sm font-medium leading-tight py-1 px-2 rounded font-sans">
-              Search
-            </span>
-          </div>
-        </WidgetContainer> */}
 
         <div className='ml-1'>
           <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
