@@ -14,16 +14,16 @@ import Button from '../components/Button';
 import LoadingCircle from '../components/LoadingCircle';
 import VerificationImage from '../components/Images';
 import InputField from '../components/InputField';
-import MyMapComponent from '../components/MyMapComponents'; 
-import {db, auth, useAuth} from '../firebase';
+import MyMapComponent from '../components/MyMapComponents';
+import { db, auth, useAuth } from '../firebase';
 import axios from 'axios';
 import {
     signInWithEmailAndPassword,
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     signInWithPopup
-  } from "firebase/auth";
-import {collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc} from 'firebase/firestore';
+} from "firebase/auth";
+import { collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
 import { API_URL } from '../App';
 import bcrypt from 'bcryptjs';
 
@@ -41,10 +41,10 @@ function Register() {
 
     const { emailAddress } = Location.state || {};
     const { userPassword } = Location.state || {};
-    
+
     const [currentUserId, setCurrentUserId] = useState("");
     const [email, setEmail] = useState(emailAddress);
-    
+
     const [password, setPassword] = useState(userPassword);
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -60,20 +60,20 @@ function Register() {
 
     useEffect(() => {
         if (userPassword) {
-          const saltRounds = 10;
-          bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
-            if (err) {
-              console.error('Error encrypting password:', err);
-            } else {
-              setPassword(hashedPassword);
-            }
-          });
+            const saltRounds = 10;
+            bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
+                if (err) {
+                    console.error('Error encrypting password:', err);
+                } else {
+                    setPassword(hashedPassword);
+                }
+            });
         }
-      }, [userPassword]);
-    
+    }, [userPassword]);
+
     const createUser = async () => {
         try {
-            const response = await axios.post(API_URL+"/user/post", {
+            const response = await axios.post(API_URL + "/user/post", {
                 Username: username,
                 Email: email,
                 PhoneNumber: phoneNumber,
@@ -84,7 +84,7 @@ function Register() {
             const user_id = response.data.UserID;
             try {
                 console.log(user_id);
-                const response = await axios.post(API_URL+"/create_session/"+ user_id, {
+                const response = await axios.post(API_URL + "/create_session/" + user_id, {
                 });
             } catch (error) {
                 console.error('Error calling backend function for session', error);
@@ -97,16 +97,16 @@ function Register() {
 
     async function handleWhoAmI() {
         try {
-          const response = await axios.get(API_URL + "/whoami")
-          console.log("who am i (UUID) : " , response.data.user_id)
-          if (response) {
-            return response.data.user_id
-          }
-          return false
+            const response = await axios.get(API_URL + "/whoami")
+            console.log("who am i (UUID) : ", response.data.user_id)
+            if (response) {
+                return response.data.user_id
+            }
+            return false
         } catch (error) {
-          console.error("Error while checking session:", error);
-          return false
-     
+            console.error("Error while checking session:", error);
+            return false
+
         }
     }
 
@@ -120,46 +120,46 @@ function Register() {
         e.preventDefault();
     };
 
-    const [value,setValue] = useState('')
-    const handleClick =()=>{
-        signInWithPopup(auth,provider).then((data)=>{
+    const [value, setValue] = useState('')
+    const handleClick = () => {
+        signInWithPopup(auth, provider).then((data) => {
             setValue(data.user.email)
-            localStorage.setItem("email",data.user.email)
+            localStorage.setItem("email", data.user.email)
         })
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         setValue(localStorage.getItem('email'))
     })
 
-    useEffect(() => {
-        auth.onAuthStateChanged((user) => {
-        if (user) {
-            navigate("/company/Dashboard");
-        }
-        });
-    }, []);
+    // useEffect(() => {
+    //     auth.onAuthStateChanged((user) => {
+    //         if (user) {
+    //             navigate("/company/Dashboard");
+    //         }
+    //     });
+    // }, []);
 
 
     const handleRegister = async () => {
         createUser();
         createUserWithEmailAndPassword(
-          auth,
-          email,
-          password
+            auth,
+            email,
+            password
         )
         handleWhoAmI()
         const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
-    
-    
+
+
         });
-        
-          return () => unsubscribeAuth()
-          .then(() => {
-            navigate("/dashboard");
-          })
-          .catch((err) => alert(err.message));
-      };
+
+        return () => unsubscribeAuth()
+            .then(() => {
+                navigate("/dashboard");
+            })
+            .catch((err) => alert(err.message));
+    };
 
     const handleGoBack = (e) => {
         e.preventDefault();
@@ -185,22 +185,22 @@ function Register() {
                     <span className='text-xl font-medium' style={{ color: "#606060" }}>You are one step away from joining Leafty! Let's set some things up!</span>
                 </div>
                 <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
-                    <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => { 
-                            setUsername(e.target.value);
-                            setRegisterInformation({
-                                ...registerInformation,
-                                username: e.target.value
-                                }) 
-                            }} 
-                            value={username} />
+                    <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => {
+                        setUsername(e.target.value);
+                        setRegisterInformation({
+                            ...registerInformation,
+                            username: e.target.value
+                        })
+                    }}
+                        value={username} />
 
-                    <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => { 
+                    <InputField type={"text"} icon={phone} label={"Phone Number"} placeholder={"+62 8xx xxxx xxxx"} onChange={(e) => {
                         setPhoneNumber(e.target.value);
                         setRegisterInformation({
                             ...registerInformation,
                             phoneNumber: value,
-                          });
-                        }} 
+                        });
+                    }}
                         value={phoneNumber} />
 
                     <div className="relative">

@@ -67,7 +67,7 @@ function OnBoarding() {
     setIsLogin(!isLogin);
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigate("/dashboard");
+        navigate("/company/dashboard");
       })
       .catch((err) => {
         alert(err.message)
@@ -92,7 +92,6 @@ function OnBoarding() {
     // Clear the timeout to avoid memory leaks
     return () => clearTimeout(timeout);
   }, []);
-
 
   return (
     <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>

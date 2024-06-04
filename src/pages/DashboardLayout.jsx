@@ -1,7 +1,6 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import { motion } from "framer-motion";
 import axios from 'axios';
 import { API_URL } from '../App';
 import dashboard from '../assets/icons/sidebar/dashboard.svg';
@@ -27,48 +26,48 @@ function DashboardLayout() {
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     
 
-    // async function handleWhoAmI() {
-    //     try {
-    //       const response = await axios.get(API_URL + "/whoami")
-    //       console.log(response.data.user_id)
-    //       if (response) {
-    //         return response.data.user_id
-    //       }
-    //       return false
-    //     } catch (error) {
-    //       console.error("Error while checking session:", error);
-    //       return false
+    async function handleWhoAmI() {
+        try {
+          const response = await axios.get(API_URL + "/whoami")
+          console.log(response.data.user_id)
+          if (response) {
+            return response.data.user_id
+          }
+          return false
+        } catch (error) {
+          console.error("Error while checking session:", error);
+          return false
      
-    //     }
-    // }
+        }
+    }
 
-    // const getUser = async () => {
-    //     try {
-    //       const user_id = await handleWhoAmI();
-    //       console.log("this is user id: " + user_id);
-    //       if (user_id) {
-    //         const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
-    //         console.log(response.data);
-    //         return response.data; 
-    //       } else {
-    //         console.error('User ID not found');
-    //         return null; 
-    //       }
-    //     } catch (error) {
-    //       console.error('Error calling backend function', error);
-    //       return null; 
-    //     }
-    // };
+    const getUser = async () => {
+        try {
+          const user_id = await handleWhoAmI();
+          console.log("this is user id: " + user_id);
+          if (user_id) {
+            const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
+            console.log(response.data);
+            return response.data; 
+          } else {
+            console.error('User ID not found');
+            return null; 
+          }
+        } catch (error) {
+          console.error('Error calling backend function', error);
+          return null; 
+        }
+    };
    
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const userData = await getUser();
-    //         if (userData) {
-    //             setUserData(userData);
-    //         }
-    //     };
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const userData = await getUser();
+            if (userData) {
+                setUserData(userData);
+            }
+        };
+        fetchData();
+    }, []);
 
     
 
