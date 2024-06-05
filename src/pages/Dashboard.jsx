@@ -14,6 +14,11 @@ function Dashboard() {
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [currentFilter, setCurrentFilter] = useState("All Time");
+    const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Powder'];
+    const Piedata = [100, 200, 700];
+    const Bartitle = 'Total Production';
+    const Barlabels = ['01/12', '01/13', '01/14', '01/15', '01/16', '01/17', '01/18'];
+    const Bardata = [1200, 1500, 1100, 1700, 1300, 1900, 1400];
 
     useEffect(() => {
         const tabletMediaQuery = window.matchMedia('(max-width: 1024px)');
@@ -41,11 +46,11 @@ function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, delay: 0.5 }} className="flex flex-col justify-stretch gap-2 xl:flex-row items-center">
-            <div className=" container h-full md:max-w-2xl xl:max-w-4xl"><WidgetContainer title="Total Production">
-                <BarChart />
+           <div className=" container h-full md:max-w-2xl xl:max-w-4xl"><WidgetContainer title="Total Production">
+                <BarChart title={Bartitle} labels={Barlabels} data={Bardata} />
             </WidgetContainer></div>
             <div className=" container h-full md:max-w-2xl xl:max-w-sm"><WidgetContainer>
-                <PieChart />
+                <PieChart labels={Pielabels} data={Piedata} />
             </WidgetContainer></div>
         </motion.div>
 

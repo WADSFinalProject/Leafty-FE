@@ -3,17 +3,6 @@ import { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import BarChart from '../../components/Cards/BarChart';
-import dashboard from '../../assets/icons/sidebar/dashboard.svg';
-import dry_leaves from '../../assets/icons/sidebar/dry_leaves.svg';
-import leaves_distribution from '../../assets/icons/sidebar/leaves_distribution.svg';
-import performance from '../../assets/icons/sidebar/performance.svg';
-import pickup from '../../assets/icons/sidebar/pickup.svg';
-import powder from '../../assets/icons/sidebar/powder.svg';
-import reception from '../../assets/icons/sidebar/reception.svg';
-import shipment from '../../assets/icons/sidebar/shipment.svg';
-import wet_leaves from '../../assets/icons/sidebar/wet_leaves.svg';
-import leafty_Logo from '../../assets/LeaftyLogo.svg';
-import profile_pic from '../../assets/icons/sidebar/profile_pic.svg';
 import StatsContainer from "../../components/Cards/StatsContainer";
 import { animate, motion, useAnimationControls } from "framer-motion";
 import LongContainer from "../../components/Cards/LongContainer";
@@ -21,6 +10,7 @@ import PieChart from "../../components/Cards/PieChart";
 import FilterDashboard from "../../components/filterDashboard"
 import Profile from "../../components/Profile";
 import LongUser from "../../components/Cards/LongUser";
+import box from "../../assets/PackageBox.svg";
 
 
 function DashboardAdmin() {
@@ -84,7 +74,7 @@ function DashboardAdmin() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 1.5 }}>
-                <StatsContainer label="Unscaled Pickups" value="3" unit="" description="Scale Your Pickup!" color={"#0F7275"} />
+                <StatsContainer label="Unscaled Pickups" value="3" icon_unit = {box} description="Scale Your Pickup!" color={"#0F7275"} />
             </motion.div>
         </div>
 
@@ -95,6 +85,8 @@ function DashboardAdmin() {
             <span className="text-xl font-bold">
                 Unapproved User
             </span>
+            <LongUser showWeight={!tabletMode} Atis="Example123" Mailis="deez@gmail.com" Phonis="123-456-789" UserId={123456}></LongUser>
+            <LongUser showWeight={!tabletMode} Atis="Example123" Mailis="deez@gmail.com" Phonis="123-456-789" UserId={123456}></LongUser>
             <LongUser showWeight={!tabletMode} Atis="Example123" Mailis="deez@gmail.com" Phonis="123-456-789" UserId={123456}></LongUser>
         </motion.div>
     </>

@@ -13,7 +13,7 @@ import WetLeavesXYZ from "./pages/WetLeaves";
 import DryLeavesXYZ from "./pages/DryLeaves";
 import PowderXYZ from "./pages/Powder";
 import ShipmentXYZ from "./pages/Shipment";
-import DashboardLayout from "./pages/DashboardLayout";
+import DashboardLayout from "./pages/Admin/AdminLayout";
 import DashboardCentra from "./pages/Centra/DashboardCentra";
 import WetLeaves from "./pages/Centra/WetLeaves";
 import WetLeavesDetail from "./pages/Centra/WetLeavesDetail";
@@ -45,7 +45,7 @@ import DashboardAdmin from "./pages/Admin/DashboardAdmin";
 import AdminDryLeaves from "./pages/Admin/AdminDryLeaves";
 import AdminPowder from "./pages/Admin/AdminPowder";
 import AdminUserTable from "./pages/Admin/AdminUserTable";
-
+import AdminLayout from "./pages/Admin/AdminLayout";
 
 function App() {
   return (
@@ -84,17 +84,24 @@ function App() {
             <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
           </Route>
         </Route>
-        <Route path="xyzmobile" element = {<XYZLayout />}>
+        <Route path="xyzmobile" element={<XYZLayout />}>
           <Route path="dashboard" element={<DashboardXYZ />} />
           <Route path="Shipment List" element={<XYZShipmentList />} />
           <Route path="Scanner" element={<XYZScanner />} />
         </Route>
+        <Route path="admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<DashboardAdmin />} />
+          <Route path="wet leaves" element={<AdminWetLeaves />} />
+          <Route path="dry leaves" element={<AdminDryLeaves />} />
+          <Route path="powder" element={<AdminPowder />} />
+          <Route path="user management" element={<AdminUserTable />} />
+        </Route>
         {/* <Route path="Admin" element={<TempAdmin />}> */}
-        <Route path="admindashboard" element={<DashboardAdmin />}/>
-        <Route path="adminwetleaves" element={<AdminWetLeaves />}/>  
-        <Route path="admindryleaves" element={<AdminDryLeaves />}/>  
-        <Route path="adminpowder" element={<AdminPowder />}/>  
-        <Route path="adminusermanagement" element={<AdminUserTable/>}/>  
+        {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}
+        {/* <Route path="adminwetleaves" element={<AdminWetLeaves />} />
+        <Route path="admindryleaves" element={<AdminDryLeaves />} />
+        <Route path="adminpowder" element={<AdminPowder />} />
+        <Route path="adminusermanagement" element={<AdminUserTable />} /> */}
         {/* </Route> */}
 
         <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
