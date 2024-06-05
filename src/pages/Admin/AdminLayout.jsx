@@ -110,9 +110,8 @@ function AdminLayout() {
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />} onClick={() => navigate("/admin/powder", {replace: true})}> Powder </MenuItem>
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
-                        <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
+                        <MenuItem icon={<img src={pickup} />}> User Management </MenuItem>
+                        <MenuItem icon={<img src={reception} />}> User Approval </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>

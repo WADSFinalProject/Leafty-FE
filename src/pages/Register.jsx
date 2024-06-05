@@ -167,6 +167,7 @@ function Register() {
     }
 
     const handleOpenMap = () => {
+        document.getElementById('my_modal_2').showModal()
         setShowMap(true);
     }
 
@@ -228,11 +229,21 @@ function Register() {
                     {showLoadingCircle && <LoadingCircle />}
                 </div>
             </motion.div>
-            <div className={`fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center ${showMap ? '' : 'hidden'}`}>
+            {/* <button className="btn" onClick={() => document.getElementById('my_modal_2').showModal()}>open modal</button> */}
+            <dialog id="my_modal_2" className="modal modal-bottom sm:modal-middle">
+                <div className="modal-box">
+                    <h3 className="font-bold text-lg">Select your Location</h3>
+                    <MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
+                </div>
+                <form method="dialog" className="modal-backdrop">
+                    <button>close</button>
+                </form>
+            </dialog>
+            {/* <div className={`fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center ${showMap ? '' : 'hidden'}`}>
                 <div className="bg-white p-4 rounded-lg">
                     <MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} />
                 </div>
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -3,7 +3,7 @@ import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
 import Button from "../components/Button"
 
 const containerStyle = {
-  width: '600px',
+  width: '100%',
   height: '400px'
 };
 
@@ -70,12 +70,14 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
           ))}
         </GoogleMap>
       </LoadScript>
-      <h3 className='font-bold'>Selected Location Address:</h3>
-      <span className='font-light'>{address}</span>
-      <h3 className='font-bold'>Latitude:</h3>
+      <div className=''>
+        <h3 className='font-bold'>Selected Location Address:</h3>
+        <span className='font-light'>{address}</span>
+      </div>
+      {/* <h3 className='font-bold'>Latitude:</h3>
       <span className='font-light'>{latitude}</span>
       <h3 className='font-bold'>Longitude:</h3>
-      <span className='font-light'>{longitude}</span>
+      <span className='font-light'>{longitude}</span> */}
       <div className='flex flex-row justify-between'>
         <Button background="#0F7275" color="#F7FAFC" label={"Save Address"} onClick={handleSaveAddress}></Button>
         <Button background="#0F7275" color="#F7FAFC" label={"Cancel"} onClick={() => setShowMap(false)}></Button>

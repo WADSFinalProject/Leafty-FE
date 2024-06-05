@@ -24,7 +24,8 @@ import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import InputField from '../../components/InputField';
-
+import AddIcon from '@mui/icons-material/Add';
+import Fab from '@mui/material/Fab';
 
 
 function Powder() {
@@ -78,15 +79,15 @@ function Powder() {
 
   return (
     <>
-      <div className="mt-4  flex justify-center items-center gap-3"> 
-            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+      <div className="mt-4  flex justify-center items-center gap-3">
+        <InputField icon={SearchLogo} placeholder={"Search"} className={"max-w-none"} />
 
 
         <div className='ml-1'>
-                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
-                </WidgetContainer>
-                </div> 
+          <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
+            <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
+          </WidgetContainer>
+        </div>
       </div>
 
 
@@ -112,12 +113,18 @@ function Powder() {
           </div>
         ))
       }
-
-      <div className="flex justify-end">
+      <Fab
+        color="primary"
+        aria-label="add"
+        style={{ position: "fixed", bottom: "75px", right: "16px", zIndex: "1000" }}
+      >
+        <AddIcon />
+      </Fab>
+      {/* <div className="flex justify-end">
         <Link to="/wetleavesdetail">
           <CircularButton imageUrl={Plus} backgroundColor="#94C3B3" />
         </Link>
-      </div>
+      </div> */}
     </>
   );
 }

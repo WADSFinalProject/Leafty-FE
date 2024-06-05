@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import SearchLogo from '../../assets/SearchLogo.svg';
@@ -6,14 +6,12 @@ import CircularButton from '../../components/CircularButton';
 import WetLeavesLogo from '../../assets/WetLeaves.svg';
 import Countdown from '../../components/Countdown';
 import InnerPlugins from '../../assets/InnerPlugins.svg';
-import Plus from '../../assets/Plus.svg';
 import CountdownIcon from '../../assets/Countdown.svg';
 import ExpiredWarningIcon from '../../assets/ExpiredWarning.svg';
 import InputField from '../../components/InputField';
 import { Search } from '@mui/icons-material';
-
-
-
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 function WetLeaves() {
 
@@ -22,14 +20,12 @@ function WetLeaves() {
     { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W267760" },
     { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W543210" },
     { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W543210" },
-
   ];
-
 
   return (
     <>
-      <div className="mt-4  flex justify-center items-center gap-3">
-        <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
+      <div className="mt-4 flex justify-center items-center gap-3">
+        <InputField icon={SearchLogo} placeholder={"Search"} className={"max-w-none"} />
 
         <div className='ml-1'>
           <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
@@ -38,9 +34,8 @@ function WetLeaves() {
         </div>
       </div>
 
-
       {data.map((item) => (
-        <div key={item.code} className=' flex justify-between'>
+        <div key={item.code} className='flex justify-between'>
           <WidgetContainer borderRadius="10px" className="w-full flex items-center">
             <Link to="/wetleavesdetail">
               <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
@@ -59,6 +54,15 @@ function WetLeaves() {
           </WidgetContainer>
         </div>
       ))}
+      <div className="fixed bottom-0 right-0 max-w-screen-md">
+        <Fab
+          color="primary"
+          aria-label="add"
+          style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: "1000" }}
+        >
+          <AddIcon />
+        </Fab>
+      </div>
     </>
   );
 }
