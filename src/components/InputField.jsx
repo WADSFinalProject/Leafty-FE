@@ -1,8 +1,8 @@
 import WidgetContainer from "./Cards/WidgetContainer";
 
-function InputField({ type, label, placeholder, icon, onChange, value, className }) {
+function InputField({ type, label, placeholder, icon, onChange, value, className, maxWidth = true }) {
     return <>
-        <label className={`form-control w-full max-w-md ${className}`}>
+        <label className={`form-control w-full md:max-w-md ${className}`}>
             {label ?
                 <div className="label px-0">
                     <span className="label-text">{label}</span>

@@ -1,19 +1,13 @@
 import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import StatsContainer from "../components/Cards/StatsContainer";
-import TableComponent from '../components/LeavesTables/TableComponent';
-import { hexToRgb } from '@mui/material';
-import trash from '../assets/icons/trash.svg';
-import IPI from '../assets/icons/IPI.svg';
-import If from '../assets/icons/Wat.svg';
-import Exc from '../assets/icons/Exc.svg';
-import AwaitingLeaves from '../assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '../assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '../assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '../assets/TotalCollectedWet.svg';
+import StatsContainer from "@components/Cards/StatsContainer";
+import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import LongContainer from '../components/Cards/LongContainer';
+import LongContainer from '@components/Cards/LongContainer';
 
 function Shipment() {
     const data = [

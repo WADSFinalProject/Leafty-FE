@@ -156,7 +156,7 @@ const AdminWetLeaves = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {true} rows={20}/>
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {true} rows={10}/>
     </div>
   );
 };

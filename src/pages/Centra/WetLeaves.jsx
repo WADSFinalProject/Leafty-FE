@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import SearchLogo from '../../assets/SearchLogo.svg';
@@ -12,8 +12,10 @@ import InputField from '../../components/InputField';
 import { Search } from '@mui/icons-material';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Drawer from '../../components/Drawer';
 
 function WetLeaves() {
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const data = [
     { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W232120" },
@@ -59,6 +61,7 @@ function WetLeaves() {
           color="primary"
           aria-label="add"
           style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: "1000" }}
+          onClick={() => setOpenDrawer(!openDrawer)}
         >
           <AddIcon />
         </Fab>

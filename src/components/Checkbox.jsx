@@ -1,3 +1,5 @@
+import "@style/Checkbox.css"
+
 function CheckBox({label, state}) {
     return <>
         <div className="form-control">

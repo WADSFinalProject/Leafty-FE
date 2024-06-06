@@ -1,15 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useAnimationControls } from "framer-motion";
-import '../style/App.css';
+import '@style/App.css';
 import { FaArrowLeft } from "react-icons/fa";
-
-import Circle from '../components/Circle'; // Import Circle directly
-import logo from '../assets/LeaftyLogo.svg';
-import Button from '../components/Button';
-import Image from '../components/Images';
-import Illustration from "../assets/Approval.svg";
-import UnapprovedIllustration from "../assets/Unapproved.svg"; // Import the new illustration/svg
+import Circle from '@components/Circle'; // Import Circle directly
+import logo from '@assets/LeaftyLogo.svg';
+import Button from '@components/Button';
+import Image from '@components/Images';
+import Illustration from "@assets/Approval.svg";
+import UnapprovedIllustration from "@assets/Unapproved.svg"; // Import the new illustration/svg
 
 function Approval() {
   const [isApproved, setIsApproved] = useState(false);

@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react";
 // import Sidebar from '../components/Sidebar';
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import WidgetContainer from '../components/Cards/WidgetContainer';
-import BarChart from '../components/Cards/BarChart';
-import StatsContainer from "../components/Cards/StatsContainer";
+import WidgetContainer from '@components/Cards/WidgetContainer';
+import BarChart from '@components/Cards/BarChart';
+import StatsContainer from "@components/Cards/StatsContainer";
 import { animate, motion, useAnimationControls } from "framer-motion";
-import LongContainer from "../components/Cards/LongContainer";
-import PieChart from "../components/Cards/PieChart";
-import box from "../assets/PackageBox.svg";
+import LongContainer from "@components/Cards/LongContainer";
+import PieChart from "@components/Cards/PieChart";
+import box from "@assets/PackageBox.svg";
 
 
 function Dashboard() {

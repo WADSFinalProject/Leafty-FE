@@ -1,5 +1,5 @@
 import React from 'react';
-import illustration from "../assets/404.svg";
+import illustration from "@assets/404.svg";
 import {db, auth} from '../firebase';
 import { signOut, onAuthStateChanged } from "firebase/auth";
 import { useLocation, useNavigate } from 'react-router-dom';

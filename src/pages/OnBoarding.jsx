@@ -1,19 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
+import '@style/App.css';
+import Circle from '@components/Circle';
+import logo from '@assets/LeaftyLogo.svg';
+import InputField from '@components/InputField';
+import CheckBox from '@components/Checkbox';
+import Email from '@assets/icons/email.svg';
+import Password from '@assets/icons/password.svg';
+import Google from '@assets/icons/google.svg';
+import Divider from '@components/Divider';
+import Button from '@components/Button';
+import CarouselImage from "@components/CarouselImage.jsx";
 import { Slides } from '../components/Slides.js';
-import CarouselImage from '../components/CarouselImage';
-import '../style/App.css';
-import Circle from '../components/Circle';
-import logo from '../assets/LeaftyLogo.svg';
-import InputField from '../components/InputField';
-import CheckBox from '../components/Checkbox';
-import Email from '../assets/icons/email.svg';
-import Password from '../assets/icons/password.svg';
-import Google from '../assets/icons/google.svg';
-import Divider from '../components/Divider';
-import Button from '../components/Button';
-import LoadingCircle from '../components/LoadingCircle';
 import { auth, provider } from "../firebase.js";
 import {
   signInWithEmailAndPassword,
@@ -37,8 +36,6 @@ function OnBoarding() {
   const navigate = useNavigate();
 
   const [showCarousel, setShowCarousel] = useState(false);
-
-
 
   useEffect(() => {
     controls.start("login");
@@ -145,14 +142,14 @@ function OnBoarding() {
         <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
         
       </motion.div>
-      {/* {showCarousel && (
+      {showCarousel && (
           <CarouselImage initial={{ opacity: 0, y: "100%" }}
             animate={{ opacity: 1, y: "0%" }}
             transition={{
               duration: 1.25,
               type: "spring"
             }} images={Slides} />
-      )} */}
+      )}
 
       {/* End of Features */}
     </div>

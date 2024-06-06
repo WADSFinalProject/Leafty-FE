@@ -54,35 +54,39 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
   };
 
   return (
-    <div className='flex flex-col'>
-      <LoadScript
-        googleMapsApiKey="AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk"
-        libraries={['advanced-markers']}
-      >
-        <GoogleMap
-          mapContainerStyle={containerStyle}
-          center={center}
-          zoom={10}
-          onClick={handleMapClick}
+    <form method="dialog" className="modal-backdrop">
+      <div className='flex flex-col'>
+        <LoadScript
+          googleMapsApiKey="AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk"
+          libraries={['advanced-markers']}
         >
-          {markers.map((marker, index) => (
-            <Marker key={index} position={marker} />
-          ))}
-        </GoogleMap>
-      </LoadScript>
-      <div className=''>
-        <h3 className='font-bold'>Selected Location Address:</h3>
-        <span className='font-light'>{address}</span>
-      </div>
-      {/* <h3 className='font-bold'>Latitude:</h3>
+          <GoogleMap
+            mapContainerStyle={containerStyle}
+            center={center}
+            zoom={10}
+            onClick={handleMapClick}
+          >
+            {markers.map((marker, index) => (
+              <Marker key={index} position={marker} />
+            ))}
+          </GoogleMap>
+        </LoadScript>
+        <div className=''>
+          <h3 className='font-bold'>Selected Location Address:</h3>
+          <span className='font-light text-black'>{address}</span>
+        </div>
+        {/* <h3 className='font-bold'>Latitude:</h3>
       <span className='font-light'>{latitude}</span>
       <h3 className='font-bold'>Longitude:</h3>
       <span className='font-light'>{longitude}</span> */}
-      <div className='flex flex-row justify-between'>
-        <Button background="#0F7275" color="#F7FAFC" label={"Save Address"} onClick={handleSaveAddress}></Button>
-        <Button background="#0F7275" color="#F7FAFC" label={"Cancel"} onClick={() => setShowMap(false)}></Button>
+        <div className='flex flex-row justify-between'>
+          <Button background="#0F7275" color="#F7FAFC" label={"Save Address"} onClick={handleSaveAddress}></Button>
+
+          <Button background="#0F7275" color="#F7FAFC" label={"Cancel"} onClick={() => setShowMap(false)}></Button>
+
+        </div>
       </div>
-    </div>
+    </form>
   );
 }
 

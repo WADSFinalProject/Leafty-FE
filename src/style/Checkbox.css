@@ -1,0 +1,3 @@
+.checkbox:checked{
+    --chkbg: #0F7275 !important;
+}

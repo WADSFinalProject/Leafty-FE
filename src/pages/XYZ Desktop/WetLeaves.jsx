@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import StatsContainer from "../components/Cards/StatsContainer";
-import TableComponent from '../components/LeavesTables/TableComponent';
+import StatsContainer from "@components/Cards/StatsContainer";
+import TableComponent from '@components/LeavesTables/TableComponent';
 import { hexToRgb } from '@mui/material';
-import trash from '../assets/icons/trash.svg';
-import IPI from '../assets/icons/IPI.svg';
-import If from '../assets/icons/Wat.svg';
-import Exc from '../assets/icons/Exc.svg';
-import AwaitingLeaves from '../assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '../assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '../assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '../assets/TotalCollectedWet.svg';
+import trash from '@assets/icons/trash.svg';
+import IPI from '@assets/icons/IPI.svg';
+import If from '@assets/icons/Wat.svg';
+import Exc from '@assets/icons/Exc.svg';
+import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 const data = [
@@ -30,7 +30,7 @@ const data = [
 ];
 
 
-const header = 'Recently Gained Powder'; // Example header
+const header = 'Recently Gained Wet Leaves'; // Example header
 
 const columns = [
   { field: 'status', header: 'Status' },
@@ -143,9 +143,11 @@ const WetLeaves = () => {
   const [tabletMode, setTabletMode] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("All Time");
 
+
+
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} />
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin = {false}/>
       <div className="flex flex-wrap gap-4 justify-stretch">
         {stats.map((stat, index) => (
           <motion.div

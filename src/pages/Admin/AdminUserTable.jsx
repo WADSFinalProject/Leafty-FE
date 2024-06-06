@@ -88,7 +88,7 @@ const AdminUserTable = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={RoleBodyTemplate} admin={true} rows={20} depends='role'/>
+      <TableComponent data={data} header={header} columns={columns} ColorConfig={RoleBodyTemplate} admin={true} rows={10} depends='role'/>
     </div>
   );
 };

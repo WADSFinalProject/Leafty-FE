@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, useAnimationControls } from "framer-motion";
-import '../style/App.css';
+import '@style/App.css';
 import { FaArrowLeft, FaMapMarkerAlt } from "react-icons/fa";
-import Illustration from '../assets/Register.svg';
-import Circle from '../components/Circle';
-import logo from '../assets/LeaftyLogo.svg';
-import profile from '../assets/icons/profile.svg';
-import phone from '../assets/icons/phone.svg';
-import location from '../assets/icons/location.svg';
+import Illustration from '@assets/Register.svg';
+import Circle from '@components/Circle';
+import logo from '@assets/LeaftyLogo.svg';
+import profile from '@assets/icons/profile.svg';
+import phone from '@assets/icons/phone.svg';
+import location from '@assets/icons/location.svg';
 import OtpInput from 'react-otp-input';
-import Button from '../components/Button';
-import LoadingCircle from '../components/LoadingCircle';
-import VerificationImage from '../components/Images';
-import InputField from '../components/InputField';
-import MyMapComponent from '../components/MyMapComponents';
+import Button from '@components/Button';
+import LoadingCircle from '@components/LoadingCircle';
+import VerificationImage from '@components/Images';
+import InputField from '@components/InputField';
+import MyMapComponent from '@components/MyMapComponents';
 import { db, auth, useAuth } from '../firebase';
 import axios from 'axios';
 import {
@@ -179,13 +179,13 @@ function Register() {
         <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
             <Button id="back" icon={<FaArrowLeft />} onClick={handleGoBack}></Button>
             {/* <button type="button" onClick={callBackendFunction}>lol</button> */}
-            <div id="contents" className="flex flex-col w-screen h-screen mx-20 gap-4 max-w-md my-20">
+            <div id="contents" className="flex flex-col w-screen h-screen mx-20 gap-4 my-20 md:max-w-md">
                 <img className="w-20 h-20" src={logo} alt="Logo" />
                 <div className='flex flex-col'>
                     <span className='font-bold text-3xl'>Account Details</span>
                     <span className='text-xl font-medium' style={{ color: "#606060" }}>You are one step away from joining Leafty! Let's set some things up!</span>
                 </div>
-                <form className='flex flex-col gap-2' onSubmit={handleSubmit}>
+                <form className='flex flex-col gap-2 ' onSubmit={handleSubmit}>
                     <InputField type={"text"} icon={profile} label={"Username"} placeholder={"@example"} onChange={(e) => {
                         setUsername(e.target.value);
                         setRegisterInformation({
@@ -215,7 +215,7 @@ function Register() {
                     </div>
                 </form>
             </div>
-            <motion.div className='w-1/2 h-screen relative justify-end items-center'
+            <motion.div className='w-1/2 h-screen relative justify-end items-center hidden md:block'
                 initial={{ left: "0%" }}
                 transition={{ duration: 2.5, type: "spring" }}
                 variants={{ initial: { left: "0%" }, verifiedOTP: { left: "-100%" } }}

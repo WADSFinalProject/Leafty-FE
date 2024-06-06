@@ -1,17 +1,17 @@
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import '../style/App.css';
+import '@style/App.css';
 import { FaArrowLeft } from "react-icons/fa";
 
-import Illustration from "../assets/Verification.svg"
+import Illustration from "@assets/Verification.svg"
 
-import Circle from '../components/Circle';
-import logo from '../assets/LeaftyLogo.svg';
+import Circle from '@components/Circle';
+import logo from '@assets/LeaftyLogo.svg';
 import OtpInput from 'react-otp-input';
-import Button from '../components/Button';
-import LoadingCircle from '../components/LoadingCircle';
-import Image from '../components/Images';
+import Button from '@components/Button';
+import LoadingCircle from '@components/LoadingCircle';
+import Image from '@components/Images';
 
 
 function Verification() {

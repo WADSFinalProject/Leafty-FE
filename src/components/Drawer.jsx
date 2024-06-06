@@ -32,9 +32,9 @@ const Puller = styled('div')(({ theme }) => ({
   left: 'calc(50% - 15px)',
 }));
 
-function Drawer(props) {
+function Drawer(props, openDrawer = false) {
   const { window } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(openDrawer);
 
   const toggleDrawer = (newOpen) => () => {
     console.log('toggleDrawer called', newOpen); // Debugging log

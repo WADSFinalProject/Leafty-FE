@@ -13,7 +13,7 @@ function VerificationImage({img, isVisible}) {
                 type: "spring"
               }}
             src={img}
-            className="image-container hidden lg:block"
+            className="image-container hidden xlx:block"
         />
     </>
 }

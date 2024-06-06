@@ -1,24 +1,22 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
-import axios from 'axios';
-import { API_URL } from '../../App';
-import dashboard from '../../assets/icons/sidebar/dashboard.svg';
-import dry_leaves from '../../assets/icons/sidebar/dry_leaves.svg';
-import leaves_distribution from '../../assets/icons/sidebar/leaves_distribution.svg';
-import performance from '../../assets/icons/sidebar/performance.svg';
-import pickup from '../../assets/icons/sidebar/pickup.svg';
-import powder from '../../assets/icons/sidebar/powder.svg';
-import reception from '../../assets/icons/sidebar/reception.svg';
-import shipment from '../../assets/icons/sidebar/shipment.svg';
-import wet_leaves from '../../assets/icons/sidebar/wet_leaves.svg';
-import leafty_Logo from '../../assets/LeaftyLogo.svg';
-import profile_pic from '../../assets/icons/sidebar/profile_pic.svg';
+import dashboard from '@assets/icons/sidebar/dashboard.svg';
+import dry_leaves from '@assets/icons/sidebar/dry_leaves.svg';
+import leaves_distribution from '@assets/icons/sidebar/leaves_distribution.svg';
+import performance from '@assets/icons/sidebar/performance.svg';
+import pickup from '@assets/icons/sidebar/pickup.svg';
+import powder from '@assets/icons/sidebar/powder.svg';
+import reception from '@assets/icons/sidebar/reception.svg';
+import shipment from '@assets/icons/sidebar/shipment.svg';
+import wet_leaves from '@assets/icons/sidebar/wet_leaves.svg';
+import leafty_Logo from '@assets/LeaftyLogo.svg';
+import profile_pic from '@assets/icons/sidebar/profile_pic.svg';
 import { animate, motion, useAnimationControls } from "framer-motion";
-import FilterDashboard from "../../components/filterDashboard"
-import Profile from "../../components/Profile";
+import FilterDashboard from "@components/filterDashboard"
+import Profile from "@components/Profile";
 
-function AdminLayout() {
+function DashboardLayout() {
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [title, setTitle] = useState("Dashboard");
@@ -26,48 +24,48 @@ function AdminLayout() {
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     
 
-    async function handleWhoAmI() {
-        try {
-          const response = await axios.get(API_URL + "/whoami")
-          console.log(response.data.user_id)
-          if (response) {
-            return response.data.user_id
-          }
-          return false
-        } catch (error) {
-          console.error("Error while checking session:", error);
-          return false
+    // async function handleWhoAmI() {
+    //     try {
+    //       const response = await axios.get(API_URL + "/whoami")
+    //       console.log(response.data.user_id)
+    //       if (response) {
+    //         return response.data.user_id
+    //       }
+    //       return false
+    //     } catch (error) {
+    //       console.error("Error while checking session:", error);
+    //       return false
      
-        }
-    }
+    //     }
+    // }
 
-    const getUser = async () => {
-        try {
-          const user_id = await handleWhoAmI();
-          console.log("this is user id: " + user_id);
-          if (user_id) {
-            const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
-            console.log(response.data);
-            return response.data; 
-          } else {
-            console.error('User ID not found');
-            return null; 
-          }
-        } catch (error) {
-          console.error('Error calling backend function', error);
-          return null; 
-        }
-    };
+    // const getUser = async () => {
+    //     try {
+    //       const user_id = await handleWhoAmI();
+    //       console.log("this is user id: " + user_id);
+    //       if (user_id) {
+    //         const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
+    //         console.log(response.data);
+    //         return response.data; 
+    //       } else {
+    //         console.error('User ID not found');
+    //         return null; 
+    //       }
+    //     } catch (error) {
+    //       console.error('Error calling backend function', error);
+    //       return null; 
+    //     }
+    // };
    
-    useEffect(() => {
-        const fetchData = async () => {
-            const userData = await getUser();
-            if (userData) {
-                setUserData(userData);
-            }
-        };
-        fetchData();
-    }, []);
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const userData = await getUser();
+    //         if (userData) {
+    //             setUserData(userData);
+    //         }
+    //     };
+    //     fetchData();
+    // }, []);
 
     
 
@@ -103,15 +101,16 @@ function AdminLayout() {
                                 </div>
                             )}
                         </div>
-                        <MenuItem icon={<img src={dashboard} />} onClick={() => navigate("/admin/dashboard", {replace: true})}> Dashboard </MenuItem>
+                        <MenuItem icon={<img src={dashboard} />} onClick={() => navigate("/company/dashboard", {replace: true})}> Dashboard </MenuItem>
                         <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} />}>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} />} onClick={() => navigate("/admin/wet leaves", {replace: true})}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />} onClick={() => navigate("/admin/dry leaves", {replace: true})}> Dry Leaves </MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />} onClick={() => navigate("/admin/powder", {replace: true})}> Powder </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} />} onClick={() => navigate("/company/wetleaves", {replace: true})}> Wet Leaves</MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />}> Powder </MenuItem>
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />} onClick={() => navigate("/admin/user management", {replace: true})}> User Management </MenuItem>
-                        <MenuItem icon={<img src={reception} />}> User Approval </MenuItem>
+                        <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
+                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
+                        <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>
@@ -135,4 +134,4 @@ function AdminLayout() {
     );
 }
 
-export default AdminLayout;
+export default DashboardLayout;
