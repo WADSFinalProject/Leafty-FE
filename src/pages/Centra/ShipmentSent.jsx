@@ -11,14 +11,15 @@ import Delivered from '../../assets/Delivered.svg';
 import Verified from '../../assets/Verified.svg';
 import Rescalling from '../../assets/Rescalling.svg';
 import InputField from '../../components/InputField';
-
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 
 function ShipmentSent(){
     const Send = [
-        { time: "Delivered", color: "#79B2B7", image: Delivered, weight: "15 Kg", code: "O123456" },
-        { time: "Verified", color: "#C0CD30", image: Verified, weight: "15 Kg", code: "O123456" },
-        { time: "Re-Scalling", color: "#D45D5D", image: Rescalling, weight: "15 Kg", code: "O123456" },
+        { time: "Delivered", color: "#79B2B7", image: Delivered, weight: "15 Kg", code: "O123454" },
+        { time: "Verified", color: "#C0CD30", image: Verified, weight: "15 Kg", code: "O123453" },
+        { time: "Re-Scalling", color: "#D45D5D", image: Rescalling, weight: "15 Kg", code: "O123452" },
     ]
     return(
         <>

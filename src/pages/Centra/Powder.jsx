@@ -24,15 +24,17 @@ import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import InputField from '../../components/InputField';
-import AddIcon from '@mui/icons-material/Add';
-import Fab from '@mui/material/Fab';
+import Drawer from '../../components/Drawer';
+import Date from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
+import PackageCount from '../../assets/Packagecount.svg';
 
 
 function Powder() {
 
   const data = [
-    { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "20 Kg", code: "W543210" },
-    { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "30 Kg", code: "W543210" }
+    { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "20 Kg", code: "W563210" },
+    { time: "Ready ", color: "#C0CD30", image: ReadyIcon, weight: "30 Kg", code: "W553210" }
   ];
 
   const [value, setValue] = useState("");
@@ -113,18 +115,7 @@ function Powder() {
           </div>
         ))
       }
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: "fixed", bottom: "75px", right: "16px", zIndex: "1000" }}
-      >
-        <AddIcon />
-      </Fab>
-      {/* <div className="flex justify-end">
-        <Link to="/wetleavesdetail">
-          <CircularButton imageUrl={Plus} backgroundColor="#94C3B3" />
-        </Link>
-      </div> */}
+      <Drawer includeFourthSection={false} showThirdInput={true} firstText="Expiry Date" secondText="Weight" thirdText="Dry leaves" firstImgSrc={Date} secondImgSrc={WeightLogo} />
     </>
   );
 }

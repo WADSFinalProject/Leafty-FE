@@ -12,16 +12,19 @@ import InputField from '../../components/InputField';
 import { Search } from '@mui/icons-material';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import Date from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
+import PackageCount from '../../assets/Packagecount.svg';
 import Drawer from '../../components/Drawer';
 
 function WetLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const data = [
-    { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W232120" },
-    { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W267760" },
-    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W543210" },
-    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W543210" },
+    { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W332120" },
+    { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W261760" },
+    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W643210" },
+    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W443210" },
   ];
 
   return (
@@ -66,6 +69,7 @@ function WetLeaves() {
           <AddIcon />
         </Fab>
       </div>
+      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
 }

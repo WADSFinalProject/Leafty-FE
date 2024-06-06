@@ -9,11 +9,12 @@ import CountdownIcon from '../../assets/Countdown.svg';
 import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import InputField from '../../components/InputField';
-
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 function ShipmentOrders() {
     const Orders = [
-        { time: "Packing", color: "#79B2B7", image: CountdownIcon, weight: "15 Kg", code: "O123456" },
+        { time: "Packing", color: "#79B2B7", image: CountdownIcon, weight: "15 Kg", code: "O123486" },
 
     ];
     return (

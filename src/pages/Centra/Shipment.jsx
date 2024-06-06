@@ -75,6 +75,10 @@ function Shipment() {
                     <CircularButton imageUrl={Plus} backgroundColor="#94C3B3" />
                 </Link>
             </div>
+
+
+            <Drawer includeFourthSection={true} showThirdInput={true} firstText="Total Packages" secondText="Schedule Deliver" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={PackageCount} secondImgSrc={Date} thirdImgSrc={WeightLogo} />
+
         </ThemeProvider>
     );
 }
