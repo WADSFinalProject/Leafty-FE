@@ -9,12 +9,13 @@ import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import Arrived from '../../assets/Arrived.svg';
 import InputField from '../../components/InputField';
-
+import Fab from '@mui/material/Fab';
+import AddIcon from '@mui/icons-material/Add';
 
 
 function ShipmentCompleted(){
     const Completed = [
-        { time: "Arrived", color: "#DEE295", image: Arrived, weight: "15 Kg", code: "O123456" },
+        { time: "Arrived", color: "#DEE295", image: Arrived, weight: "15 Kg", code: "O123457" },
 
     ]
     return(
@@ -49,6 +50,7 @@ function ShipmentCompleted(){
                                 </WidgetContainer>
                             </div>
                         ))}
+                        
                         </>
     )
 

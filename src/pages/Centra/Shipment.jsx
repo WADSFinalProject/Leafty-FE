@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import { Link ,Outlet} from 'react-router-dom';
-import CircularButton from '../../components/CircularButton';
-import Plus from '../../assets/Plus.svg';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import WetLeavesNavbar from "../../assets/WetLeavesLogo.svg";
 import DryLeavesNavbar from "../../assets/DryLeavesLogo.svg";
 import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
@@ -18,6 +14,10 @@ import Arrived from '../../assets/Arrived.svg';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
+import Drawer from '../../components/Drawer';
+import Date from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
+import PackageCount from '../../assets/Packagecount.svg';
 
 function Shipment() {
 
@@ -86,25 +86,9 @@ function Shipment() {
             </div>
 
 
-            <div className="flex justify-end">
-                <Link to="/wetleavesdetail">
-                    <CircularButton imageUrl={Plus} backgroundColor="#94C3B3" />
-                </Link>
-            </div>
+            <Drawer includeFourthSection={true} showThirdInput={true} firstText="Total Packages" secondText="Schedule Deliver" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={PackageCount} secondImgSrc={Date} thirdImgSrc= {WeightLogo}/>
 
-            {/* <div className="flex justify-center">
-                <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
-                    {navbarContent.map(({ key, label, item, itemActive }) => (
-                        <BottomNavigationAction
-                            key={key} // Ensure each item has a unique key
-                            label={label}
-                            value={label}
-                            icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
-                            disableRipple={label === null ? true : false}
-                        />
-                    ))}
-                </BottomNavigation>
-            </div> */}
+            
         </>
     );
 }

@@ -30,6 +30,7 @@ import Download from '../../assets/Download.svg';
 import Upload from '../../assets/Upload.svg';
 import Open from '../../assets/Open.svg';
 
+
 function ShipmentDetail() {
 
     const [value, setValue] = useState("");

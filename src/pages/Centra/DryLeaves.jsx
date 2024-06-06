@@ -12,12 +12,16 @@ import ExpiredWarningIcon from '../../assets/ExpiredWarning.svg';
 import InputField from '../../components/InputField';
 import AddIcon from '@mui/icons-material/Add';  
 import Fab from '@mui/material/Fab';
+import Drawer from '../../components/Drawer';
+import Date from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
+import PackageCount from '../../assets/Packagecount.svg';
 
 function DryLeaves() {
 
     const data = [
-        { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W232120" },
-        { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W267760" },
+        { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W232122" },
+        { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W267710" },
 
     ];
 
@@ -76,13 +80,8 @@ function DryLeaves() {
 
 
 
-            <Fab
-                color="primary"
-                aria-label="add"
-                style={{ position: "fixed", bottom: "75px", right: "16px", zIndex: "1000" }}
-            >
-                <AddIcon />
-            </Fab>
+            <Drawer includeFourthSection={false} showThirdInput={true} firstText="Expiry Date" secondText="Weight" thirdText="Wet leaves" firstImgSrc={Date} secondImgSrc={WeightLogo} />
+            
 
 
         </>
