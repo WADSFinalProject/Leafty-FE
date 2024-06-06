@@ -9,6 +9,7 @@ import DryLeaves from "../../assets/DryLeaves.svg";
 import Powder from "../../assets/Powder.svg";
 import PackageSent from "../../assets/PackangeSent.svg";
 import Box from "../../assets/PackageBox.svg";
+import Fab from '@mui/material/Fab';
 
 
 function DashboardCentra() {
@@ -70,7 +71,9 @@ function DashboardCentra() {
             </div>
           </WidgetContainer>
         ))}
+        
       </div>
+      
     </>
   );
 }
