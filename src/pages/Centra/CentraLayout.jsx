@@ -76,7 +76,7 @@ function CentraLayout() {
                         className="fixed bottom-0 w-screen justify-center"
                         value={value}
                         onChange={handleChange}
-                        style={{ background: "#94C3B3" }}
+                        style={{ background: "#94C3B3", zIndex: 1200 }} // Ensure navbar is above other content
                     >
                         {navbarContent.map(({ label, item, itemActive, value: navValue }) => (
                             <BottomNavigationAction
