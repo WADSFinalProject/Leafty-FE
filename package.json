@@ -17,6 +17,7 @@
     "@mui/material": "^5.15.19",
     "@mui/x-charts": "^7.3.2",
     "@react-google-maps/api": "^2.19.3",
+    "@types/bcrypt": "^5.0.2",
     "@yudiel/react-qr-scanner": "^2.0.2",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
