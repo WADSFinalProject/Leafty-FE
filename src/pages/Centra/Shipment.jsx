@@ -1,24 +1,26 @@
 import React, { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
-import CircularButton from '../../components/CircularButton';
-import Plus from '../../assets/Plus.svg';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
+import Drawer from '../../components/Drawer';
+import Date from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
+import PackageCount from '../../assets/Packagecount.svg';
 
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#0F7275', // Green color
+            main: '#0F7275', 
         },
     },
 });
 
 const BoldTab = styled(Tab)({
     fontWeight: '600',
-    fontSize: '20px',
+    fontSize: '15px',
     textTransform: 'capitalize',
     fontFamily: 'montserrat',
     flex: 1
@@ -71,9 +73,7 @@ function Shipment() {
             </Box>
 
             <div className="flex justify-end mt-4">
-                <Link to="/wetleavesdetail">
-                    <CircularButton imageUrl={Plus} backgroundColor="#94C3B3" />
-                </Link>
+                
             </div>
 
 

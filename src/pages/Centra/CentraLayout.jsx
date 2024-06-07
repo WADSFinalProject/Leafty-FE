@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, Outlet } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, Outlet, useLocation } from 'react-router-dom';
 import Profilepic from '../../assets/Profilepic.svg';
 import NotificationBell from "../../assets/NotificationBell.svg";
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -13,11 +13,17 @@ import PowderLogo from "../../assets/PowderLogo.svg";
 import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
+import Return from '../../components/Return';
 
 function CentraLayout() {
     const [value, setValue] = useState("Dashboard");
-
     const navigate = useNavigate();
+    const location = useLocation();
+    const [showReturn, setShowReturn] = useState(false);
+
+    useEffect(() => {
+        setShowReturn(location.pathname.includes('detail'));
+    }, [location.pathname]);
 
     const navbarContent = [
         {
@@ -64,7 +70,10 @@ function CentraLayout() {
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 no-scrollbar">
                 <div className='flex justify-between items-center'>
-                    <span className='font-bold text-3xl'>{value}</span>
+                    <div className="flex items-center">
+                        {showReturn && <Return destination="/centra/Wet%20Leaves" className="mr-2 text-sm" />}
+                        <span className='font-bold text-3xl'>{value}</span>
+                    </div>
                     <div className="flex items-center gap-2">
                         <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
                         <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />

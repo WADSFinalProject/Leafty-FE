@@ -30,19 +30,19 @@ function WetLeaves() {
   return (
     <>
       <div className="mt-4 flex justify-center items-center gap-3">
-        <InputField icon={SearchLogo} placeholder={"Search"} className={"max-w-none"} />
+        <InputField icon={SearchLogo} placeholder={"Search"} className={"w-full"}  />
 
         <div className='ml-1'>
           <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-            <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
+            <img src={InnerPlugins} alt="InnerPlugins" className='w-full h-8 ' />
           </WidgetContainer>
         </div>
       </div>
 
       {data.map((item) => (
         <div key={item.code} className='flex justify-between'>
-          <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-            <Link to="/wetleavesdetail">
+          <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
+            <Link to="/centra/wet-leaves/detail">
               <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
             </Link>
             <div className='flex flex-col ml-3'>
@@ -59,16 +59,7 @@ function WetLeaves() {
           </WidgetContainer>
         </div>
       ))}
-      <div className="fixed bottom-0 right-0 max-w-screen-md">
-        <Fab
-          color="primary"
-          aria-label="add"
-          style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: "1000" }}
-          onClick={() => setOpenDrawer(!openDrawer)}
-        >
-          <AddIcon />
-        </Fab>
-      </div>
+
       <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
