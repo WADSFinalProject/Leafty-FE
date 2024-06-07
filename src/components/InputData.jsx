@@ -3,7 +3,7 @@ import WidgetContainer from '../components/Cards/WidgetContainer';
 
 const InputData = ({ firstp, secondp, thirdp, fourthp, firstimg, secondimg, thirdimg, includeFourthSection,showThirdInput }) => {
   return (
-    <div className='w-full max-w mt-4 p-4'>
+    <div className='w-full max-w mt-4 p-4 '>
       <div className='mb-4'>
         <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>{firstp}</p>
         <WidgetContainer backgroundColor="#FFFFFF" borderRadius="20px" borderWidth="" borderColor="" className='mt-2'>

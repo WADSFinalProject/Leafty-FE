@@ -22,10 +22,10 @@ import {
     onAuthStateChanged,
     createUserWithEmailAndPassword,
     signInWithPopup
-} from "firebase/auth";
-import { collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc } from 'firebase/firestore';
+  } from "firebase/auth";
+import {collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc} from 'firebase/firestore';
+import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
-import bcrypt from 'bcryptjs';
 
 axios.defaults.withCredentials = true
 
@@ -60,14 +60,15 @@ function Register() {
 
     useEffect(() => {
         if (userPassword) {
-            const saltRounds = 10;
-            bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
-                if (err) {
-                    console.error('Error encrypting password:', err);
-                } else {
-                    setPassword(hashedPassword);
-                }
-            });
+            setPassword(userPassword);
+            // const saltRounds = 10;
+            // bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
+            //     if (err) {
+            //         console.error('Error encrypting password:', err);
+            //     } else {
+            //         setPassword(hashedPassword);
+            //     }
+            // });
         }
     }, [userPassword]);
 
@@ -77,15 +78,15 @@ function Register() {
                 Username: username,
                 Email: email,
                 PhoneNumber: phoneNumber,
-                RoleID: 2,
+                RoleID: 5,
                 Password: password,
             });
             console.log(response.data);
             const user_id = response.data.UserID;
             try {
-                console.log(user_id);
                 const response = await axios.post(API_URL + "/create_session/" + user_id, {
                 });
+                console.log("session created")
             } catch (error) {
                 console.error('Error calling backend function for session', error);
             }
@@ -102,9 +103,11 @@ function Register() {
             if (response) {
                 return response.data.user_id
             }
-            return false
         } catch (error) {
             console.error("Error while checking session:", error);
+            console.error(err.response.data);    // ***
+            console.error(err.response.status);  // ***
+            console.error(err.response.headers);
             return false
 
         }
@@ -132,13 +135,13 @@ function Register() {
         setValue(localStorage.getItem('email'))
     })
 
-    // useEffect(() => {
-    //     auth.onAuthStateChanged((user) => {
-    //         if (user) {
-    //             navigate("/company/Dashboard");
-    //         }
-    //     });
-    // }, []);
+    useEffect(() => {
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                navigate("/dashboard");
+            }
+        });
+    }, []);
 
 
     const handleRegister = async () => {
@@ -148,7 +151,6 @@ function Register() {
             email,
             password
         )
-        handleWhoAmI()
         const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
 
 

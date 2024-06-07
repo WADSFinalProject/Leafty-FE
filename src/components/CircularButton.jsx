@@ -5,9 +5,9 @@ const CircularButton = ({ imageUrl, backgroundColor, onClick }) => {
     <button
       style={{ backgroundColor }}
       onClick={onClick}
-      className="rounded-full p-2"
+      className="rounded-full p-4"
     >
-      <img src={imageUrl} alt="button icon" className="w-8 h-8" />
+      <img src={imageUrl} alt="button icon" className="w-7 h-7" />
     </button>
   );
 };

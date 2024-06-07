@@ -67,37 +67,17 @@ function WetLeavesDetail(){
       ];
 
     return(
-        <div className="w-screen flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto no-scrollbar overflow-x-hidden">
-            <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
-                <div className='flex justify-between items-center '>
-                    <div className="flex items-center mr-4">
-                        <Return destination="/centra/Wet%20Leaves" className="mr-2 text-sm" /> 
-                        <span className='font-bold text-2xl ml-2'>Wet Leaves</span>
-                    </div>
+      <>
+        
+            
 
-                    <div className="flex items-center gap-2 ml-auto">
-                        <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
-                        <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
-                    </div>
-                </div>
                 <LeavesType imageSrc={WetLeavesLogo} text={leavesText} />
                 <ExpiredIn expired={expired} />
                 <LeavesDetail date={date} time={time} weight={weight} />
-                <div className="flex justify-center">
-                    <BottomNavigation className="fixed bottom-0 w-screen justify-center " value={value} onChange={handleChange} style={{ background: "#94C3B3" }}>
-                        {navbarContent.map(({ key, label, item, itemActive }) => (
-                            <BottomNavigationAction
-                            key={key} // Ensure each item has a unique key
-                            label={label}
-                            value={label}
-                            icon={label === null ? item : <img src={value === label ? item : itemActive}></img>}
-                            disableRipple={label === null ? true : false}
-                            />
-                        ))}
-                    </BottomNavigation>
-                </div>
-            </div>
-        </div>
+                
+            
+        
+      </>
         
     )
 }

@@ -20,6 +20,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithPopup
 } from "firebase/auth";
+import axios from 'axios';
+import * as bcrypt from 'bcryptjs';
+import { API_URL } from '../App';
 
 function OnBoarding() {
   const [isLogin, setIsLogin] = useState(false);
@@ -31,10 +34,10 @@ function OnBoarding() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loginPassword, setLogInPassword] = useState();
 
   const controls = useAnimationControls();
   const navigate = useNavigate();
-
   const [showCarousel, setShowCarousel] = useState(false);
 
   useEffect(() => {
@@ -60,16 +63,59 @@ function OnBoarding() {
     }
   }, [isSubmit, isLogin, isSignUp]);
 
-  const handleLogin = () => {
-    setIsLogin(!isLogin);
-    signInWithEmailAndPassword(auth, email, password)
+  async function handleUserSignIn() {
+    try {
+        const response = await axios.get(API_URL + "/user/get_user_email/" + email);
+        const role = response.data.RoleID;
+        console.log(role);
+        if (role == 1) {
+            navigate('/centra/Dashboard')
+        }
+        if (role == 2) {
+            navigate('/harbor/Dashboard')
+        }
+        if (role == 3) {
+            navigate('/company/Dashboard')
+        }
+        if (role == 4) {
+          navigate('/admin/Dashboard')
+        }
+        if (role == 5) {
+          navigate('/approval')
+        }
+    } catch (error) {
+        console.error("Error while checking session:", error);
+        return false
+    }
+}
+
+  useEffect(() => {
+    if (loginPassword) {
+      // bcrypt.compare(myPlaintextPassword, hash, function(err, result) {
+      //   // result == true
+      // })
+      signInWithEmailAndPassword(auth, email, loginPassword)
       .then(() => {
-        navigate("/company/dashboard");
+        handleUserSignIn();
       })
       .catch((err) => {
         alert(err.message)
         setIsLogin(isLogin);
       });
+    }
+  }, [loginPassword]);
+
+  const handleLogin = () => {
+    setIsLogin(!isLogin);
+    const saltRounds = 10;
+    setLogInPassword(password);
+    // bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
+    //   if (err) {
+    //     console.error('Error encrypting password:', err);
+    //   } else {
+    //     setLogInPassword(hashedPassword);
+    //   }
+    // });   
   };
 
   const handleSignUp = () => {

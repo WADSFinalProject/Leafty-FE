@@ -82,6 +82,7 @@ function App() {
             <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
             <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
           </Route>
+          <Route path="wet-leaves/detail" element={<WetLeavesDetail />} />
         </Route>
         <Route path="xyzmobile" element={<XYZLayout />}>
           <Route path="dashboard" element={<DashboardXYZ />} />
@@ -103,9 +104,9 @@ function App() {
         <Route path="adminusermanagement" element={<AdminUserTable />} /> */}
         {/* </Route> */}
 
-        <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
+        {/* <Route path="/wetleavesdetail" element={<WetLeavesDetail />} /> */}
         <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />
-        <Route path="/powderdetail" element={<Powder />} />
+        <Route path="/powderdetail" element={<PowderDetail />} />
         <Route path="/shipmentdetail" element={<ShipmentDetail />} />
         <Route path="/xyzshipmentdetail" element={<XYZShipmentDetail />} />
         <Route path="/usersetting" element={<UserSetting />} />

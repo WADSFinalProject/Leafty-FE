@@ -1,12 +1,10 @@
 import React from 'react';
-import { styled } from '@mui/material/styles';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import Date from '../assets/Date.svg';
-import WeightLogo from '../assets/Weight.svg';
-import PackageCount from '../assets/Packagecount.svg';
 import InputData from './InputData';
+import "./Drawer.css";
 
 const drawerBleeding = 56;
 
@@ -14,6 +12,7 @@ const Root = styled('div')(({ theme }) => ({
   height: '100%',
   backgroundColor: 'transparent',
   zIndex: 1,
+  borderRadius:'30px'
 }));
 
 const StyledBox = styled('div')(({ theme }) => ({
@@ -21,7 +20,6 @@ const StyledBox = styled('div')(({ theme }) => ({
   borderRadius: '30px',
   
 }));
-
 
 const Puller = styled('div')(({ theme }) => ({
   width: 30,
@@ -33,62 +31,65 @@ const Puller = styled('div')(({ theme }) => ({
   left: 'calc(50% - 15px)',
 }));
 
-function Drawer(props, openDrawer = false) {
-  const { window, includeFourthSection ,showThirdInput,firstText, secondText, thirdText, fourthText,firstImgSrc,secondImgSrc,thirdImgSrc} = props;
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#0F7275', // Green color
+    },
+  },
+});
 
-  const [open, setOpen] = React.useState(openDrawer);
+function Drawer(props) {
+  const { window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection } = props;
+  const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
     setOpen(newOpen);
   };
 
-  const handleContentChange = (newContent) => {
-    setContent(newContent);
-  };
-
   const container = window !== undefined ? () => window().document.body : undefined;
 
   return (
-    <Root>
-      <Fab
-        color="primary"
-        aria-label="add"
-        style={{ position: 'fixed', bottom: '75px', right: '16px', zIndex: '1000' }}
-        onClick={toggleDrawer(true)}
-      >
-        <AddIcon />
-      </Fab>
-      <SwipeableDrawer
-        container={container}
-        anchor="bottom"
-        open={open}
-        onClose={toggleDrawer(false)}
-        onOpen={toggleDrawer(true)}
-        swipeAreaWidth={drawerBleeding}
-        disableSwipeToOpen={false}
-        ModalProps={{
-          keepMounted: true,
-        }}
-      >
-        <StyledBox>
-          <InputData
-            firstp={firstText}
-            secondp={secondText}
-            thirdp={thirdText}
-            fourthp={fourthText}
-            firstimg={firstImgSrc}
-            secondimg={secondImgSrc}
-            showThirdInput={showThirdInput}
-            thirdimg={thirdImgSrc}
-            includeFourthSection={includeFourthSection}
-          />
-        </StyledBox>
-        {/* Puller */}
-        <Puller />
-      </SwipeableDrawer>
-    </Root>
+    <ThemeProvider theme={theme}>
+      <Root>
+        <Fab
+          color="primary" // Ensure it uses the primary color from the theme
+          aria-label="add"
+          style={{ position: 'fixed', bottom: '75px', right: '16px', zIndex: '1000' }}
+          onClick={toggleDrawer(true)}
+        >
+          <AddIcon />
+        </Fab>
+        <SwipeableDrawer
+          container={container}
+          anchor="bottom"
+          open={open}
+          onClose={toggleDrawer(false)}
+          onOpen={toggleDrawer(true)}
+          swipeAreaWidth={drawerBleeding}
+          disableSwipeToOpen={false}
+          ModalProps={{
+            keepMounted: true,
+          }}
+        >
+          <StyledBox>
+            <InputData
+              firstp={firstText}
+              secondp={secondText}
+              thirdp={thirdText}
+              fourthp={fourthText}
+              firstimg={firstImgSrc}
+              secondimg={secondImgSrc}
+              showThirdInput={showThirdInput}
+              thirdimg={thirdImgSrc}
+              includeFourthSection={includeFourthSection}
+            />
+          </StyledBox>
+          <Puller />
+        </SwipeableDrawer>
+      </Root>
+    </ThemeProvider>
   );
 }
 
 export default Drawer;
-
