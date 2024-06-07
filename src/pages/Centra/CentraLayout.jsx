@@ -85,6 +85,26 @@ function CentraLayout() {
                                 icon={navValue === "Dashboard" ? item : <img src={value === (navValue || label) ? item : itemActive} alt={label} />}
                                 disableRipple={true}
                                 label={navValue === "Dashboard" ? "" : label}
+                                sx={{
+                                    '& .MuiBottomNavigationAction-label': {
+                                        fontSize: '0.9rem', // Default font size for mobile
+                                        '&.Mui-selected': {
+                                            fontSize: '0.9rem', // Ensure the selected label also has the appropriate font weight
+                                        },
+                                        '@media (min-width:600px)': { // Adjust font size for larger screens
+                                            fontSize: '0.9rem',
+                                            '&.Mui-selected': {
+                                                fontSize: '0.9rem',
+                                            },
+                                        },
+                                        '@media (max-width:600px)': { // Adjust font size for mobile screens
+                                            fontSize: label && label.includes('Leaves') ? '0.5rem' : '0.75rem',
+                                            '&.Mui-selected': {
+                                                fontSize: label && label.includes('Leaves') ? '0.5rem' : '0.75rem',
+                                            },
+                                        },
+                                    }
+                                  }}
                             />
                         ))}
                     </BottomNavigation>

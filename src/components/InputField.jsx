@@ -1,6 +1,6 @@
 import WidgetContainer from "./Cards/WidgetContainer";
 
-function InputField({ type, label, placeholder, icon, onChange, value, className, maxWidth = true }) {
+function InputField({ type, label, placeholder, icon, onChange, value, className }) {
     return <>
         <label className={`form-control w-full md:max-w-md ${className}`}>
             {label ?

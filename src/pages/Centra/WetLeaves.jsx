@@ -59,17 +59,7 @@ function WetLeaves() {
           </WidgetContainer>
         </div>
       ))}
-      <div className="fixed bottom-0 right-0 max-w-screen-md">
-        <Fab
-          color="primary"
-          aria-label="add"
-          style={{ position: "absolute", bottom: "80px", right: "16px", zIndex: "1000" }}
-          onClick={() => setOpenDrawer(!openDrawer)}
-        >
-          <AddIcon />
-        </Fab>
-      </div>
-      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
+      <Drawer includeFourthSection={false} showThirdInput={false} firstText={"Date"} secondText={"Weight"} firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
 }

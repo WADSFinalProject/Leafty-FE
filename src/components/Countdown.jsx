@@ -11,11 +11,11 @@ const Countdown = ({ time, color, image }) => {
         backgroundColor={color} 
         className="w-28 sm:w-32 md:w-36  max-w-sm "  
       >
-        <div className="flex justify-center items-center mr-1">
-          <span className=" font-montserrat text-xs font-medium leading-14 tracking-normal text-center truncate flex items-center mr-2">
+        <div className="flex justify-center items-center mr-1 gap-2">
+          <span className=" font-montserrat text-xs font-medium leading-14 tracking-normal text-center truncate flex items-center">
             {time}
           </span>
-          <img src={image} alt="Countdown" className="w-4 h-auto " /> 
+          <img src={image} alt="Countdown" className="w-4 h-4" /> 
         </div>
       </WidgetContainer>
     </div>

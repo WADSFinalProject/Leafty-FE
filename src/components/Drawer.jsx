@@ -19,7 +19,7 @@ const Root = styled('div')(({ theme }) => ({
 const StyledBox = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderRadius: '30px',
-  border: '2px solid red',
+  
 }));
 
 
@@ -34,7 +34,8 @@ const Puller = styled('div')(({ theme }) => ({
 }));
 
 function Drawer(props, openDrawer = false) {
-  const { window } = props;
+  const { window, includeFourthSection ,showThirdInput,firstText, secondText, thirdText, fourthText,firstImgSrc,secondImgSrc,thirdImgSrc} = props;
+
   const [open, setOpen] = React.useState(openDrawer);
 
   const toggleDrawer = (newOpen) => () => {
