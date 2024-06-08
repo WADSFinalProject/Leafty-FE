@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import 'daisyui/dist/full.css';
-import TableComponent from '../../components/LeavesTables/TableComponent';
-import trash from '../../assets/icons/trash.svg';
-import IPI from '../../assets/icons/IPI.svg';
-import If from '../../assets/icons/Wat.svg';
-import Exc from '../../assets/icons/Exc.svg';
-import AwaitingLeaves from '../../assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '../../assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '../../assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '../../assets/TotalCollectedWet.svg';
+import TableComponent from '@components/LeavesTables/TableComponent';
+import trash from '@assets/icons/trash.svg';
+import IPI from '@assets/icons/IPI.svg';
+import If from '@assets/icons/Wat.svg';
+import Exc from '@assets/icons/Exc.svg';
+import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import { API_URL } from '../../App';
 import dayjs from 'dayjs';
+import LeavesPopup from '@components/Popups/LeavesPopup';
 
 const header = 'Recently Gained Wet Leaves';
 
@@ -54,13 +55,16 @@ const stats = [
     value: "1500",
     unit: "Kg",
     color: "#0F7275",
-    icon: TotalCollectedWet,
     delay: 1.75
   }
 ];
 
 const AdminWetLeaves = () => {
   const [data, setData] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const leavesModalRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +76,7 @@ const AdminWetLeaves = () => {
           weight: item.Weight,
           date: formatDate(item.ReceivedTime),
           expiration: formatDate(addMonth(item.ReceivedTime)),
-          status: item.status // Assuming status is a part of the response
+          status: "Awaiting" // Assuming status is a part of the response
         })));
         setData(processedData);
       } catch (error) {
@@ -81,6 +85,11 @@ const AdminWetLeaves = () => {
     };
 
     fetchData();
+
+    // Clean up
+    return () => {
+      setData([]);
+    };
   }, []);
 
   const getUser = async (userId) => {
@@ -89,7 +98,7 @@ const AdminWetLeaves = () => {
       return response.data.Username;
     } catch (error) {
       console.error('Error fetching user data', error);
-      return null;
+      return 'Unknown User';
     }
   };
 
@@ -108,6 +117,12 @@ const AdminWetLeaves = () => {
     } catch (error) {
       console.error('Error deleting wet leaves data', error);
     }
+  };
+
+  const handleDetailsClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setModalVisible(true);
+    leavesModalRef.current.showModal();
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -173,7 +188,26 @@ const AdminWetLeaves = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={true} rows={10} onDelete={handleDelete} />
+      <TableComponent
+        data={data}
+        header={header}
+        columns={columns}
+        ColorConfig={statusBodyTemplate}
+        admin={true}
+        rows={10}
+        onDelete={handleDelete}
+        onDetailsClick={handleDetailsClick}
+      />
+      {modalVisible && (
+        <LeavesPopup
+          weight={selectedRowData.weight}
+          centra_name={selectedRowData.name}
+          collectedDate={selectedRowData.date}
+          expiredDate={selectedRowData.expiration}
+          ref={leavesModalRef}
+          leavesid={selectedRowData.id}
+        />
+      )}
     </div>
   );
 };

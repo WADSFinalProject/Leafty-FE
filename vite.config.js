@@ -14,7 +14,8 @@ export default defineConfig({
     alias: {
       '@components': path.resolve(__dirname, 'src/components'),
       '@assets': path.resolve(__dirname, 'src/assets'),
-      '@style': path.resolve(__dirname, 'src/style')
+      '@style': path.resolve(__dirname, 'src/style'),
+      '@API':path.resolve(__dirname, 'src/App.jsx')
     }
   }
 })

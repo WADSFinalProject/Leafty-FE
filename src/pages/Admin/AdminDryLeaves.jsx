@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'daisyui/dist/full.css';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import TableComponent from '../../components/LeavesTables/TableComponent';
-import IPI from '../../assets/icons/IPI.svg';
-import If from '../../assets/icons/Wat.svg';
-import Exc from '../../assets/icons/Exc.svg';
-import trash from '../../assets/icons/trash.svg';
-import AwaitingLeaves from '../../assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '../../assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '../../assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '../../assets/TotalCollectedWet.svg';
-import { API_URL } from '../../App';
+import TableComponent from '@components/LeavesTables/TableComponent';
+import IPI from '@assets/icons/IPI.svg';
+import If from '@assets/icons/Wat.svg';
+import Exc from '@assets/icons/Exc.svg';
+import trash from '@assets/icons/trash.svg';
+import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
+import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
+import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
+import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
+import { API_URL } from '@API';
+import LeavesPopup from '@components/Popups/LeavesPopup'; // Import the LeavesPopup component
 
 const header = 'Recently Gained Dry Leaves';
 
@@ -45,7 +46,6 @@ const stats = [
     value: "243",
     unit: "Kg",
     color: "#79B2B7",
-    icon: ProcessedLeaves,
     delay: 1.5
   },
   {
@@ -60,9 +60,10 @@ const stats = [
 
 const AdminDryLeaves = () => {
   const [data, setData] = useState([]);
-  const [collapsed, setCollapsed] = useState(false);
-  const [tabletMode, setTabletMode] = useState(false);
-  const [currentFilter, setCurrentFilter] = useState("All Time");
+  const [selectedRowData, setSelectedRowData] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const leavesModalRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -71,7 +72,7 @@ const AdminDryLeaves = () => {
         const processedData = await Promise.all(response.data.map(async item => ({
           id: item.DryLeavesID,
           name: await getUser(item.UserID),
-          weight: item.Weight,
+          weight: item.Processed_Weight + " Kg",
           date: formatDate(item.ReceivedTime),
           expiration: formatDate(addMonth(item.ReceivedTime)),
         })));
@@ -109,6 +110,12 @@ const AdminDryLeaves = () => {
     } catch (error) {
       console.error('Error deleting dryleave data', error);
     }
+  };
+
+  const handleDetailsClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setModalVisible(true);
+    console.log(rowData)
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -174,7 +181,26 @@ const AdminDryLeaves = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={data} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={true} rows={20} onDelete={handleDelete} />
+      <TableComponent
+        data={data}
+        header={header}
+        columns={columns}
+        ColorConfig={statusBodyTemplate}
+        admin={true}
+        rows={20}
+        onDelete={handleDelete}
+        onDetailsClick={handleDetailsClick}
+      />
+      {modalVisible && (
+        <LeavesPopup
+          weight={selectedRowData.Processed_Weight}
+          centra_name={selectedRowData.name}
+          collectedDate={selectedRowData.date}
+          expiredDate={selectedRowData.expiration}
+          ref={leavesModalRef}
+          leavesid={selectedRowData.id}
+        />
+      )}
     </div>
   );
 };
