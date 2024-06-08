@@ -42,7 +42,7 @@ function OnBoarding() {
 
   useEffect(() => {
     controls.start("login");
-    if (isSubmit) { 
+    if (isSubmit) {
       // if (isLogin) {
       //   console.log(email)
       //   const timeout = setTimeout(() => {
@@ -54,7 +54,7 @@ function OnBoarding() {
       // }
       if (isSignUp) {
         const timeout = setTimeout(() => {
-          navigate('/register', { state: { emailAddress: email , userPassword: password } });
+          navigate('/register', { state: { emailAddress: email, userPassword: password } });
         }, 3000);
 
         // Clean up the timeout to avoid memory leaks
@@ -65,29 +65,36 @@ function OnBoarding() {
 
   async function handleUserSignIn() {
     try {
-        const response = await axios.get(API_URL + "/user/get_user_email/" + email);
-        const role = response.data.RoleID;
-        console.log(role);
-        if (role == 1) {
-            navigate('/centra/Dashboard')
-        }
-        if (role == 2) {
-            navigate('/harbor/Dashboard')
-        }
-        if (role == 3) {
-            navigate('/company/Dashboard')
-        }
-        if (role == 4) {
-          navigate('/admin/Dashboard')
-        }
-        if (role == 5) {
-          navigate('/approval')
-        }
+      const response = await axios.get(API_URL + "/user/get_user_email/" + email);
+      const role = response.data.RoleID;
+      const UserID = response.data.UserID;
+      try {
+        axios.post(API_URL + "/create_session/" + UserID, {
+        });
+        console.log("session created")
+      } catch (error) {
+        console.error('Error calling backend function for session', error);
+      }
+      if (role == 1) {
+        navigate('/centra/Dashboard')
+      }
+      if (role == 2) {
+        navigate('/harbor/Dashboard')
+      }
+      if (role == 3) {
+        navigate('/company/Dashboard')
+      }
+      if (role == 4) {
+        navigate('/admin/Dashboard')
+      }
+      if (role == 5) {
+        navigate('/approval')
+      }
     } catch (error) {
-        console.error("Error while checking session:", error);
-        return false
+      console.error("Error while checking session:", error);
+      return false
     }
-}
+  }
 
   useEffect(() => {
     if (loginPassword) {
@@ -95,13 +102,13 @@ function OnBoarding() {
       //   // result == true
       // })
       signInWithEmailAndPassword(auth, email, loginPassword)
-      .then(() => {
-        handleUserSignIn();
-      })
-      .catch((err) => {
-        alert(err.message)
-        setIsLogin(isLogin);
-      });
+        .then(() => {
+          handleUserSignIn();
+        })
+        .catch((err) => {
+          alert(err.message)
+          setIsLogin(isLogin);
+        });
     }
   }, [loginPassword]);
 
@@ -186,15 +193,15 @@ function OnBoarding() {
         <Circle color="#94C3B3" opacity={"50%"} position={{ left: "0%", bottom: "-45%" }} />
         <Circle color="#94C3B3" opacity={"50%"} position={{ left: "7.5%", bottom: "-45%" }} />
         <Circle color="#94C3B3" opacity={"100%"} position={{ left: "15%", bottom: "-45%" }} />
-        
+
       </motion.div>
       {showCarousel && (
-          <CarouselImage initial={{ opacity: 0, y: "100%" }}
-            animate={{ opacity: 1, y: "0%" }}
-            transition={{
-              duration: 1.25,
-              type: "spring"
-            }} images={Slides} />
+        <CarouselImage initial={{ opacity: 0, y: "100%" }}
+          animate={{ opacity: 1, y: "0%" }}
+          transition={{
+            duration: 1.25,
+            type: "spring"
+          }} images={Slides} />
       )}
 
       {/* End of Features */}

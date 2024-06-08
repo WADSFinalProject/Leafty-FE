@@ -10,7 +10,7 @@ import search from "../../assets/SearchLogo.svg";
 import filter from "../../assets/icons/filter.svg";
 import plus from "../../assets/Plus.svg";
 
-function TableComponent({ data, header, columns, ColorConfig, admin = false, rows = 10, depends='status', onDetailsClick, onEditClick }) {
+function TableComponent({ data, header, columns, ColorConfig, admin = false, rows = 10, depends = 'status', onDetailsClick, onEditClick, onDelete }) {
   const [globalFilter, setGlobalFilter] = useState('');
 
   const renderHeader = () => {
@@ -38,7 +38,7 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
             <li tabIndex={2}><a onClick={() => onDetailsClick(rowData)}>Details</a></li>
             {admin ? <>
               <li tabIndex={3}><a onClick={() => onEditClick(rowData)}>Edit</a></li>
-              <li tabIndex={4}><a>Remove</a></li>
+              <li tabIndex={4}><a onClick={() => onDeleteClick(rowData.id)}>Remove</a></li>
             </> : null}
           </ul>
         </div>
@@ -55,7 +55,7 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
         tableStyle={{ minWidth: '65rem'}}
         globalFilter={globalFilter}
         header={renderHeader()}
-        size = "large"
+        size="large"
       >
         {columns.map((column, i) => (
           <Column key={i} field={column.field} header={column.header} sortable body={column.field === depends ? ColorConfig : null} />

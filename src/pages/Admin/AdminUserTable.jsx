@@ -45,6 +45,10 @@ const AdminUserTable = () => {
     setEditable(true);
   };
 
+  const handleDeleteClick = (user) =>{
+    
+  }
+
   useEffect(() => {
     const dialog = modalRef.current;
     if (selectedUser && dialog) {
