@@ -45,6 +45,9 @@ import AdminDryLeaves from "./pages/Admin/AdminDryLeaves";
 import AdminPowder from "./pages/Admin/AdminPowder";
 import AdminUserTable from "./pages/Admin/AdminUserTable";
 import AdminLayout from "./pages/Admin/AdminLayout";
+import Performance from "./pages/XYZ Desktop/Performance";
+import WetLeavesOverview from "./pages/XYZ Desktop/WetLeavesOverview";
+import AdminUserApproval from "./pages/Admin/AdminUserApproval";
 
 function App() {
   return (
@@ -59,9 +62,11 @@ function App() {
         <Route path="company" element={<DashboardLayout />}>
           <Route path="dashboard" element={<Dashboard />}></Route>
           <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
+          <Route path="wetoverview" element={<WetLeavesOverview />}></Route>
           <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
           <Route path="powder" element={<PowderXYZ />}></Route>
           <Route path="shipment" element={<ShipmentXYZ />}></Route>
+          <Route path="performance" element={<Performance />}></Route>
           <Route path="reception" element={<Reception />}>
             <Route path="centra" element={<CentraTabContent />}></Route>
             <Route path="harbor" element={<HarborTabContent />}></Route>
@@ -95,6 +100,7 @@ function App() {
           <Route path="dry leaves" element={<AdminDryLeaves />} />
           <Route path="powder" element={<AdminPowder />} />
           <Route path="user management" element={<AdminUserTable />} />
+          <Route path="user approval" element={<AdminUserApproval />} />
         </Route>
         {/* <Route path="Admin" element={<TempAdmin />}> */}
         {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}

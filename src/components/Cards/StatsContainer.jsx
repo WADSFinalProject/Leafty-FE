@@ -15,12 +15,12 @@ const settings = {
 function showModal() {
 
 }
-function StatsContainer({ label, value, unit = false, icon_unit = false, description, modalContent, color, modal = true, frontIcon = false, backIcon = false, round }) {
+function StatsContainer({ row = true, label, value, unit = false, icon_unit = false, description, modalContent, color, modal = true, frontIcon = false, backIcon = false, round }) {
     return <>
         <WidgetContainer padding={false} round = {round}>
             <div className="flex flex-row justify-between py-2 pl-2 items-center">
                 {frontIcon ? <img src={frontIcon} className="w-1/6"></img> : <></>}
-                <div className="flex flex-col gap-1.5">
+                <div className={`flex ${row ? "flex-col":"flex-row"} gap-1.5`}>
                     <div className="flex flex-row justify-between items-center">
                         {modal ? <button className="" onClick={() => document.getElementById('my_modal').showModal()}><img src={information}></img></button> : <></>}
                         <div></div>
@@ -28,7 +28,7 @@ function StatsContainer({ label, value, unit = false, icon_unit = false, descrip
                     <span style={{ color: "#6B6A6A" }}>
                         {label ? label : <></>}
                     </span>
-                    <span className="font-bold text-3xl">
+                    <span className="font-bold text-2xl">
                         {value && unit ? value + " " + unit : null}
                         {value && icon_unit ? (
                             <>

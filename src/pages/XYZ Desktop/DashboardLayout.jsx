@@ -104,13 +104,13 @@ function DashboardLayout() {
                         <MenuItem icon={<img src={dashboard} />} onClick={() => navigate("/company/dashboard", {replace: true})}> Dashboard </MenuItem>
                         <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} />}>
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} />} onClick={() => navigate("/company/wetleaves", {replace: true})}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />}> Dry Leaves </MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />}> Powder </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />} onClick={() => navigate("/company/dryleaves", {replace: true})}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />} onClick={() => navigate("/company/powder", {replace: true})}> Powder </MenuItem>
                         </SubMenu>
-                        <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
-                        <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
+                        <MenuItem icon={<img src={shipment} />} onClick={() => navigate("/company/shipment", {replace: true})}> Shipment </MenuItem>
+                        <MenuItem icon={<img src={pickup} />} onClick={() => navigate("/company/pickup", {replace: true})}> Pickup </MenuItem>
+                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
+                        <MenuItem icon={<img src={performance} />} onClick={() => navigate("/company/performance", {replace: true})}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>

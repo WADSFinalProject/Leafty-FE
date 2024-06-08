@@ -13,7 +13,7 @@ function modal({ id, title, desc }) {
           <div className='flex flex-col gap-2 mx-2'>
             <h3 className="font-bold text-lg">{title}</h3>
             <p className="">{desc}</p>
-          x</div>
+          </div>
         </div>
         <div className="modal-action">
           <form method="dialog">
