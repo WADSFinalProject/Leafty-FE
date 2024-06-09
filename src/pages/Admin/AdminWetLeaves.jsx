@@ -62,14 +62,13 @@ const stats = [
 const AdminWetLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const [editable, setEditable] = useState(false);
   const leavesModalRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(API_URL + `/wetleaves/get`);
+        const response = await axios.get(`${API_URL}/wetleaves/get`);
         const processedData = await Promise.all(response.data.map(async item => ({
           id: item.WetLeavesID,
           name: await getUser(item.UserID),
@@ -86,7 +85,6 @@ const AdminWetLeaves = () => {
 
     fetchData();
 
-    // Clean up
     return () => {
       setData([]);
     };
@@ -94,7 +92,7 @@ const AdminWetLeaves = () => {
 
   const getUser = async (userId) => {
     try {
-      const response = await axios.get(API_URL + `/user/get_user/${userId}`);
+      const response = await axios.get(`${API_URL}/user/get_user/${userId}`);
       return response.data.Username;
     } catch (error) {
       console.error('Error fetching user data', error);
@@ -121,8 +119,18 @@ const AdminWetLeaves = () => {
 
   const handleDetailsClick = (rowData) => {
     setSelectedRowData(rowData);
-    setModalVisible(true);
-    leavesModalRef.current.showModal();
+    setEditable(false);
+    if (leavesModalRef.current) {
+      leavesModalRef.current.showModal();
+    }
+  };
+
+  const handleEditClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setEditable(true);
+    if (leavesModalRef.current) {
+      leavesModalRef.current.showModal();
+    }
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -196,16 +204,19 @@ const AdminWetLeaves = () => {
         admin={true}
         rows={10}
         onDelete={handleDelete}
+        onEditClick={handleEditClick}
         onDetailsClick={handleDetailsClick}
       />
-      {modalVisible && (
+      {selectedRowData && (
         <LeavesPopup
           weight={selectedRowData.weight}
           centra_name={selectedRowData.name}
           collectedDate={selectedRowData.date}
           expiredDate={selectedRowData.expiration}
           ref={leavesModalRef}
+          wet_leaves={true}
           leavesid={selectedRowData.id}
+          editable={editable}
         />
       )}
     </div>

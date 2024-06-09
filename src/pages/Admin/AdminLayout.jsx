@@ -14,11 +14,11 @@ import shipment from '@assets/icons/sidebar/shipment.svg';
 import wet_leaves from '@assets/icons/sidebar/wet_leaves.svg';
 import leafty_Logo from '@assets/LeaftyLogo.svg';
 import profile_pic from '@assets/icons/sidebar/profile_pic.svg';
-import { animate, motion, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import FilterDashboard from "@components/filterDashboard";
 import Profile from "@components/Profile";
 import Button from "@components/Button";
-import LeavesPopup from '@components/Popups/LeavesPopup';
+import Popup from '@components/Popups/Popup'; // Ensure the import path is correct
 
 function AdminLayout() {
     const [collapsed, setCollapsed] = useState(false);
@@ -26,7 +26,7 @@ function AdminLayout() {
     const [title, setTitle] = useState("Dashboard");
     const navigate = useNavigate();
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
-    const leavesModalRef = useRef(null);
+    const modalRef = useRef(null);
 
     async function handleWhoAmI() {
         try {
@@ -67,14 +67,11 @@ function AdminLayout() {
         fetchData();
     }, []);
 
-    const openLeavesModal = () => {
-        if (leavesModalRef.current) {
-            leavesModalRef.current.showModal();
+    const openModal = () => {
+        if (modalRef.current) {
+            modalRef.current.showModal();
         }
     };
-
-    const collectedDate = new Date();
-    const expiredDate = new Date(collectedDate.getTime() + 100 * 1000);
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
@@ -121,12 +118,12 @@ function AdminLayout() {
                     <div className="flex gap-4 flex-row items-center">
                         <FilterDashboard tablet={tabletMode} />
                         <Profile />
-                        <Button onClick={openLeavesModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" />
+                        <Button onClick={openModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" />
                     </div>
                 </div>
                 <Outlet />
             </motion.div>
-            <LeavesPopup weight = {30} centra_name = {"John Doe"} collectedDate = {collectedDate} expiredDate = {expiredDate} ref={leavesModalRef} leavesid="leavesModal" wet_leaves={10} dry_leaves={20} powder={30} />
+            <Popup ref={modalRef} leavesid="errorModal" info={true} description = {"You are deleting a data. Are you sure?"} confirm = {true} />
         </div>
     );
 }
