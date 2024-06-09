@@ -8,6 +8,7 @@ import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import LongContainer from '@components/Cards/LongContainer';
+import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io'; // Import arrow icons from react-icons
 
 function Shipment() {
     const data = [
@@ -24,6 +25,33 @@ function Shipment() {
         { status: "Expired", id: 5, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
         { status: "Processed", id: 6, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
     ];
+
+    const [currentPage, setCurrentPage] = useState(0);
+    const [itemsPerPage, setItemsPerPage] = useState(8); // Default value
+
+    const handlePageClick = (event) => {
+        setCurrentPage(event.selected);
+    };
+
+    const calculateItemsPerPage = () => {
+        const pageHeight = window.innerHeight;
+        const itemHeight = 70;
+        const headerHeight = 100;
+        const footerHeight = 100;
+        const availableHeight = pageHeight - headerHeight - footerHeight;
+        const calculatedItems = Math.floor(availableHeight / itemHeight);
+        setItemsPerPage(calculatedItems);
+    };
+
+    useEffect(() => {
+        calculateItemsPerPage();
+        window.addEventListener('resize', calculateItemsPerPage);
+        return () => window.removeEventListener('resize', calculateItemsPerPage);
+    }, []);
+
+    const offset = currentPage * itemsPerPage;
+    const currentPageData = data.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(data.length / itemsPerPage);
 
     const stats = [
         {
@@ -62,18 +90,46 @@ function Shipment() {
 
     return (
         <div className="container mx-auto w-full">
+            <span className="text-xl font-bold">
+                Unscaled Pickups
+            </span>
             <div className='flex flex-col gap-2'>
-                {data.map((item, index) => (
+                {currentPageData.map((item, index) => (
                     <motion.div
-                        key={index}
+                        key={item.id}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
-                        <LongContainer showWeight={true} />
+                        <LongContainer
+                            showWeight={true}
+                            packageCount={item.packageCount}
+                            weightValue={item.weight}
+                            dateValue={item.date}
+                            expeditionId={item.id}
+                        />
                     </motion.div>
                 ))}
+            </div>
+            <div className="flex justify-between items-center mt-4 gapMapping">
+                <button 
+                    onClick={() => handlePageClick({ selected: currentPage - 1 })}
+                    disabled={currentPage === 0}
+                    className="cursor-pointer greening-paginator"
+                >
+                    <IoIosArrowBack size={24} />
+                </button>
+                <div className="greening-paginator">
+                    Page {currentPage + 1} of {pageCount}
+                </div>
+                <button 
+                    onClick={() => handlePageClick({ selected: currentPage + 1 })}
+                    disabled={currentPage + 1 === pageCount}
+                    className="cursor-pointer greening-paginator"
+                >
+                    <IoIosArrowForward size={24} />
+                </button>
             </div>
             <div className="flex flex-wrap gap-4 justify-stretch">
                 {stats.map((stat, index) => (
@@ -97,7 +153,7 @@ function Shipment() {
                     </motion.div>
                 ))}
             </div>
-        </div>
+        </div >
     );
 };
 
