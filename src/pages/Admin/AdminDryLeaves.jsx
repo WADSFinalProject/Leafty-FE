@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from 'react';
-import 'daisyui/dist/full.css';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import dayjs from 'dayjs';
+import 'daisyui/dist/full.css';
 import TableComponent from '@components/LeavesTables/TableComponent';
+import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
-import trash from '@assets/icons/trash.svg';
 import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
 import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
 import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
-import { API_URL } from '@API';
-import LeavesPopup from '@components/Popups/LeavesPopup'; // Import the LeavesPopup component
+import { API_URL } from '../../App';
+import dayjs from 'dayjs';
+import LeavesPopup from '@components/Popups/LeavesPopup';
 
 const header = 'Recently Gained Dry Leaves';
 
@@ -22,6 +22,7 @@ const columns = [
   { field: 'weight', header: 'Weight' },
   { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
+  { field: 'status', header: 'Status' }
 ];
 
 const stats = [
@@ -46,14 +47,14 @@ const stats = [
     value: "243",
     unit: "Kg",
     color: "#79B2B7",
+    icon: ProcessedLeaves,
     delay: 1.5
   },
   {
-    label: "Total Wet Leaves",
+    label: "Total Dry Leaves",
     value: "1500",
     unit: "Kg",
     color: "#0F7275",
-    icon: TotalCollectedWet,
     delay: 1.75
   }
 ];
@@ -61,8 +62,7 @@ const stats = [
 const AdminDryLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
-  const [modalVisible, setModalVisible] = useState(false);
-
+  const [editable, setEditable] = useState(false);
   const leavesModalRef = useRef(null);
 
   useEffect(() => {
@@ -75,6 +75,7 @@ const AdminDryLeaves = () => {
           weight: item.Processed_Weight + " Kg",
           date: formatDate(item.ReceivedTime),
           expiration: formatDate(addMonth(item.ReceivedTime)),
+          status: "Awaiting" // Assuming status is a part of the response
         })));
         setData(processedData);
       } catch (error) {
@@ -83,6 +84,11 @@ const AdminDryLeaves = () => {
     };
 
     fetchData();
+
+    // Clean up
+    return () => {
+      setData([]);
+    };
   }, []);
 
   const getUser = async (userId) => {
@@ -91,7 +97,7 @@ const AdminDryLeaves = () => {
       return response.data.Username;
     } catch (error) {
       console.error('Error fetching user data', error);
-      return null;
+      return 'Unknown User';
     }
   };
 
@@ -100,7 +106,7 @@ const AdminDryLeaves = () => {
   };
 
   const addMonth = (dateString) => {
-    return dayjs(dateString).add(2, 'day').format('MM/DD/YYYY HH:mm');
+    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
   };
 
   const handleDelete = async (id) => {
@@ -108,14 +114,24 @@ const AdminDryLeaves = () => {
       await axios.delete(`${API_URL}/dryleaves/delete/${id}`);
       setData(data.filter(item => item.id !== id));
     } catch (error) {
-      console.error('Error deleting dryleave data', error);
+      console.error('Error deleting dry leaves data', error);
     }
   };
 
   const handleDetailsClick = (rowData) => {
     setSelectedRowData(rowData);
-    setModalVisible(true);
-    console.log(rowData)
+    setEditable(false);
+    if (leavesModalRef.current) {
+      leavesModalRef.current.showModal();
+    }
+  };
+
+  const handleEditClick = (rowData) => {
+    setSelectedRowData(rowData);
+    setEditable(true);
+    if (leavesModalRef.current) {
+      leavesModalRef.current.showModal();
+    }
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -179,6 +195,39 @@ const AdminDryLeaves = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
+  const handleEditSubmit = async (updatedData) => {
+    try {
+      const { id, name, weight, date, expiration } = updatedData;
+      await axios.put(`${API_URL}/dryleaves/update/${id}`, {
+        UserID: await getUserID(name), // Function to get user ID from name
+        Processed_Weight: weight.replace(' Kg', ''),
+        ReceivedTime: new Date(date).toISOString(),
+        ExpirationTime: new Date(expiration).toISOString(),
+      });
+
+      // Update the local state
+      setData((prevData) =>
+        prevData.map((item) =>
+          item.id === id ? { ...item, name, weight, date, expiration } : item
+        )
+      );
+      leavesModalRef.current.close();
+      setEditable(false);
+    } catch (error) {
+      console.error('Error updating dry leaves data', error);
+    }
+  };
+
+  const getUserID = async (username) => {
+    try {
+      const response = await axios.get(`${API_URL}/user/get_user_id/${username}`);
+      return response.data.UserID;
+    } catch (error) {
+      console.error('Error fetching user ID', error);
+      return null;
+    }
+  };
+
   return (
     <div className="container mx-auto w-full">
       <TableComponent
@@ -187,18 +236,22 @@ const AdminDryLeaves = () => {
         columns={columns}
         ColorConfig={statusBodyTemplate}
         admin={true}
-        rows={20}
+        rows={10}
         onDelete={handleDelete}
+        onEditClick={handleEditClick}
         onDetailsClick={handleDetailsClick}
       />
-      {modalVisible && (
+      {selectedRowData && (
         <LeavesPopup
-          weight={selectedRowData.Processed_Weight}
+          weight={selectedRowData.weight}
           centra_name={selectedRowData.name}
           collectedDate={selectedRowData.date}
           expiredDate={selectedRowData.expiration}
           ref={leavesModalRef}
+          dry_leaves={true}
           leavesid={selectedRowData.id}
+          editable={editable}
+          onSubmit={handleEditSubmit}
         />
       )}
     </div>
