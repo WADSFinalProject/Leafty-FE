@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
+import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
 import './scanner.css'; 
 
 function HarborScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
-    const devices = useDevices();
+    const devices = useDeviceList();
 
     const handleDeviceChange = (event) => {
         setSelectedDeviceId(event.target.value);

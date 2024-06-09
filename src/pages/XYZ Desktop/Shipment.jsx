@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
-import { animate, motion, useAnimationControls } from "framer-motion";
+import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
 import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
 import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
@@ -8,7 +8,7 @@ import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import LongContainer from '@components/Cards/LongContainer';
-import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io'; // Import arrow icons from react-icons
+import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 
 function Shipment() {
     const data = [
@@ -18,19 +18,19 @@ function Shipment() {
         { status: "Thrown", id: 4, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
         { status: "Expired", id: 5, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
         { status: "Processed", id: 6, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Awaiting", id: 1, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
-        { status: "Awaiting", id: 2, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Awaiting", id: 3, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Thrown", id: 4, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Expired", id: 5, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Processed", id: 6, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
+        { status: "Awaiting", id: 7, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
+        { status: "Awaiting", id: 8, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
+        { status: "Awaiting", id: 9, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
+        { status: "Thrown", id: 10, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
+        { status: "Expired", id: 11, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
+        { status: "Processed", id: 12, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
     ];
 
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(8); // Default value
+    const [itemsPerPage, setItemsPerPage] = useState(8);
 
-    const handlePageClick = (event) => {
-        setCurrentPage(event.selected);
+    const handlePageClick = (newPage) => {
+        setCurrentPage(newPage);
     };
 
     const calculateItemsPerPage = () => {
@@ -91,7 +91,7 @@ function Shipment() {
     return (
         <div className="container mx-auto w-full">
             <span className="text-xl font-bold">
-                Unscaled Pickups
+                Shipment
             </span>
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
@@ -104,7 +104,6 @@ function Shipment() {
                     >
                         <LongContainer
                             showWeight={true}
-                            packageCount={item.packageCount}
                             weightValue={item.weight}
                             dateValue={item.date}
                             expeditionId={item.id}
@@ -114,7 +113,7 @@ function Shipment() {
             </div>
             <div className="flex justify-between items-center mt-4 gapMapping">
                 <button 
-                    onClick={() => handlePageClick({ selected: currentPage - 1 })}
+                    onClick={() => handlePageClick(currentPage - 1)}
                     disabled={currentPage === 0}
                     className="cursor-pointer greening-paginator"
                 >
@@ -124,7 +123,7 @@ function Shipment() {
                     Page {currentPage + 1} of {pageCount}
                 </div>
                 <button 
-                    onClick={() => handlePageClick({ selected: currentPage + 1 })}
+                    onClick={() => handlePageClick(currentPage + 1)}
                     disabled={currentPage + 1 === pageCount}
                     className="cursor-pointer greening-paginator"
                 >
@@ -138,8 +137,8 @@ function Shipment() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.35, delay: stat.delay }}
-                        className="flex-grow flex-shrink lg:basis-1/5 basis-1/2" // Ensure each item takes equal space
+                        transition={{ duration: 0.1, delay: stat.delay }}
+                        className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
                     >
                         <StatsContainer
                             label={stat.label}
@@ -153,7 +152,7 @@ function Shipment() {
                     </motion.div>
                 ))}
             </div>
-        </div >
+        </div>
     );
 };
 
