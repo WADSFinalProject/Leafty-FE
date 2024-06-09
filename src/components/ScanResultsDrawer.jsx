@@ -3,6 +3,7 @@ import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import HistoryIcon from '@mui/icons-material/History';
 import "./Drawer.css";
 
 const drawerBleeding = 56;
@@ -52,7 +53,7 @@ function ScanResultsDrawer(props) {
           style={{ position: 'fixed', bottom: '75px', right: '16px', zIndex: '1000' }}
           onClick={toggleDrawer(true)}
         >
-          <AddIcon />
+          <HistoryIcon />
         </Fab>
         <SwipeableDrawer
           container={container}
