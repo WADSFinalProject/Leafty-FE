@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
@@ -9,9 +9,12 @@ import 'primeicons/primeicons.css';
 import search from "../../assets/SearchLogo.svg";
 import filter from "../../assets/icons/filter.svg";
 import plus from "../../assets/Plus.svg";
+import Popup from '@components/Popups/Popup';
 
 function TableComponent({ data, header, columns, ColorConfig, admin = false, rows = 10, depends = 'status', onDetailsClick, onEditClick, onDelete }) {
   const [globalFilter, setGlobalFilter] = useState('');
+  const [selectedRowForDeletion, setSelectedRowForDeletion] = useState(null);
+  const popupRef = useRef(null);
 
   const renderHeader = () => {
     return (
@@ -29,6 +32,30 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
     );
   };
 
+  const handleDeleteClick = (rowData) => {
+    setSelectedRowForDeletion(rowData);
+    if (popupRef.current) {
+      popupRef.current.showModal();
+    }
+  };
+
+  const handleConfirmDelete = () => {
+    if (selectedRowForDeletion) {
+      onDelete(selectedRowForDeletion.id);
+      setSelectedRowForDeletion(null);
+    }
+    if (popupRef.current) {
+      popupRef.current.close();
+    }
+  };
+
+  const handleCancelDelete = () => {
+    setSelectedRowForDeletion(null);
+    if (popupRef.current) {
+      popupRef.current.close();
+    }
+  };
+
   const actionTemplate = (rowData) => {
     return (
       <div className="relative">
@@ -38,7 +65,7 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
             <li tabIndex={2}><a onClick={() => onDetailsClick(rowData)}>Details</a></li>
             {admin ? <>
               <li tabIndex={3}><a onClick={() => onEditClick(rowData)}>Edit</a></li>
-              <li tabIndex={4}><a onClick={() => onDeleteClick(rowData.id)}>Remove</a></li>
+              <li tabIndex={4}><a onClick={() => handleDeleteClick(rowData)}>Remove</a></li>
             </> : null}
           </ul>
         </div>
@@ -62,6 +89,16 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
         ))}
         <Column key="action" header="Action" body={actionTemplate} />
       </DataTable>
+
+      <Popup
+        ref={popupRef}
+        warning={true}
+        leavesid="delete-confirm-popup"
+        description="Are you sure you want to delete this item?"
+        confirm={true}
+        onConfirm={handleConfirmDelete}
+        onCancel={handleCancelDelete}
+      />
     </div>
   );
 }
