@@ -41,6 +41,7 @@ function PerformanceMap({ setShowMap, setAddressDetails }) {
     // Generate 10 random markers within Indonesia
     const newMarkers = Array.from({ length: 10 }, () => getRandomCoordinates());
     setMarkers(newMarkers);
+    console.log(markers)
   }, []);
 
   const handleMapClick = async (event) => {
