@@ -19,6 +19,11 @@ const UserDetails = forwardRef(({ userid, username, phone, email, role, editable
         ref.current.close();
     };
 
+    const handleRejectClick = () => {
+        approveUser(UserID, 'Rejected');
+        ref.current.close();
+    };
+
     return (
         <dialog ref={ref} id={userid} className="modal">
             <div className="modal-box rounded-lg flex items-center flex-col gap-3">
@@ -38,7 +43,7 @@ const UserDetails = forwardRef(({ userid, username, phone, email, role, editable
                     {role === "Unverified" ? (
                         <div className='gap-2 w-full flex flex-col items-center'>
                             <Button className="w-full flex-grow p-0" type="submit" background="#0F7275" color="#F7FAFC" label="Approve" onClick={handleApproveClick}></Button>
-                            <Button className="w-full flex-grow" type="cancel" background="#94C3B3" color="#F7FAFC" label="Reject"></Button>
+                            <Button className="w-full flex-grow" type="cancel" background="#94C3B3" color="#F7FAFC" label="Reject" onClick={handleRejectClick}></Button>
                         </div>
                     ) : ""}
                 </div>
