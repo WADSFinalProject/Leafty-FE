@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
+import React, { useState, useEffect } from 'react';
+import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
+import ScanResultsDrawer from '@components/ScanResultsDrawer';
 import './scanner.css'; 
 
 function XYZScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
-    const devices = useDevices();
+    const [open, setOpen] = useState(false);
+    const devices = useDeviceList();
 
     const handleDeviceChange = (event) => {
         setSelectedDeviceId(event.target.value);
@@ -14,6 +16,16 @@ function XYZScanner() {
     const handleError = (error) => {
         console.error(error?.message);
     };
+
+    const handleToggleDrawer = (isOpen) => () => {
+        setOpen(isOpen);
+    };
+
+    useEffect(() => {
+        if (data) {
+            setOpen(true);
+        }
+    }, [data]);
 
     return (
         <div>
@@ -36,11 +48,11 @@ function XYZScanner() {
                     options={{ deviceId: selectedDeviceId }}
                 />
             </div>
-           
-                <div style={{ marginTop: '20px' }}>
-                    <h2>Scanned Data:</h2>
-                    <p>{data}</p>
-                </div>
+            <ScanResultsDrawer 
+                open={open} 
+                toggleDrawer={handleToggleDrawer} 
+                data={data} 
+            />
         </div>
     );
 }

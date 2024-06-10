@@ -3,7 +3,7 @@ import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
-import InputData from './InputData';
+import HistoryIcon from '@mui/icons-material/History';
 import "./Drawer.css";
 
 const drawerBleeding = 56;
@@ -18,7 +18,7 @@ const Root = styled('div')(({ theme }) => ({
 const StyledBox = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderRadius: '30px',
-
+  padding: theme.spacing(2)
 }));
 
 const Puller = styled('div')(({ theme }) => ({
@@ -34,18 +34,13 @@ const Puller = styled('div')(({ theme }) => ({
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#0F7275', // Green color
+      main: '#0F7275',
     },
   },
 });
 
-function Drawer(props) {
-  const { window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
-  const [open, setOpen] = React.useState(false);
-
-  const toggleDrawer = (newOpen) => () => {
-    setOpen(newOpen);
-  };
+function ScanResultsDrawer(props) {
+  const { window, open, toggleDrawer, data } = props;
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -53,12 +48,12 @@ function Drawer(props) {
     <ThemeProvider theme={theme}>
       <Root>
         <Fab
-          color="primary" // Ensure it uses the primary color from the theme
+          color="primary"
           aria-label="add"
           style={{ position: 'fixed', bottom: '75px', right: '16px', zIndex: '1000' }}
           onClick={toggleDrawer(true)}
         >
-          <AddIcon />
+          <HistoryIcon />
         </Fab>
         <SwipeableDrawer
           container={container}
@@ -73,23 +68,13 @@ function Drawer(props) {
           }}
         >
           <StyledBox>
-            <InputData
-              firstp={firstText}
-              secondp={secondText}
-              thirdp={thirdText}
-              fourthp={fourthText}
-              firstimg={firstImgSrc}
-              secondimg={secondImgSrc}
-              showThirdInput={showThirdInput}
-              thirdimg={thirdImgSrc}
-              includeFourthSection={includeFourthSection}
-            />
+            <Puller />
+            <div>{data}</div>
           </StyledBox>
-          <Puller />
         </SwipeableDrawer>
       </Root>
     </ThemeProvider>
   );
 }
 
-export default Drawer;
+export default ScanResultsDrawer;

@@ -16,6 +16,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import MyMapComponent from '@components/MyMapComponents';
 import LongContainer from '../../components/Cards/LongContainer';
+import PerformanceMap from '../../components/PerformanceMap';
 
 const stats = [
     {
@@ -84,7 +85,7 @@ const Performance = () => {
                 ))}
             </div>
             <span className='font-bold text-xl'>Map Distribution</span>
-            <WidgetContainer><MyMapComponent setShowMap={setShowMap} setAddressDetails={setAddressDetails} /></WidgetContainer>
+            <WidgetContainer padding = {false}><PerformanceMap setShowMap={setShowMap} setAddressDetails={setAddressDetails} /></WidgetContainer>
             <div className='flex flex-row'>
                 <div className='flex flex-col w-1/2 gap-2'>
                     <div className='flex flex-row justify-between items-center'>
