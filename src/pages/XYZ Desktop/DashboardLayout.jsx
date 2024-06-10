@@ -120,7 +120,7 @@ function DashboardLayout() {
                 transition={{
                     duration: 1.5,
                     type: "spring"
-                }} animate={{ x: 0 }} className="flex flex-col border h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl" >
+                }} animate={{ x: 0 }} className="flex flex-col border w-full h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl" >
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">

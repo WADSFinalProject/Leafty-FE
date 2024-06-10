@@ -49,6 +49,7 @@ import Performance from "./pages/XYZ Desktop/Performance";
 import WetLeavesOverview from "./pages/XYZ Desktop/WetLeavesOverview";
 import AdminUserApproval from "./pages/Admin/AdminUserApproval";
 import Pickup from "./pages/XYZ Desktop/PickUp";
+import ShipmentDetails from "./pages/XYZ Desktop/ShipmentDetails";
 
 function App() {
   return (
@@ -69,6 +70,7 @@ function App() {
           <Route path="shipment" element={<ShipmentXYZ />}></Route>
           <Route path="performance" element={<Performance />}></Route>
           <Route path="pickup" element={<Pickup />}></Route>
+          <Route path="shipmentdetails" element={<ShipmentDetails />}></Route>
           <Route path="reception" element={<Reception />}>
             <Route path="centra" element={<CentraTabContent />}></Route>
             <Route path="harbor" element={<HarborTabContent />}></Route>
