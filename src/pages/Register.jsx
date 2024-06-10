@@ -135,15 +135,6 @@ function Register() {
         setValue(localStorage.getItem('email'))
     })
 
-    // useEffect(() => {
-    //     auth.onAuthStateChanged((user) => {
-    //         if (user) {
-    //             navigate("/dashboard");
-    //         }
-    //     });
-    // }, []);
-
-
     const handleRegister = async () => {
         createUser();
         createUserWithEmailAndPassword(

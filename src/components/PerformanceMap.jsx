@@ -80,7 +80,6 @@ function PerformanceMap({ setShowMap, setAddressDetails }) {
           <Marker key={index} position={marker} />
         ))}
       </GoogleMap>
-      <Button onClick={handleSaveAddress}>Save Address</Button>
     </LoadScript>
   );
 }
