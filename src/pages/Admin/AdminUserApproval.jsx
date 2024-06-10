@@ -1,29 +1,14 @@
 import { useState, useEffect, useRef } from 'react';
 import 'daisyui/dist/full.css';
-import { animate, motion, useAnimationControls } from "framer-motion";
+import axios from 'axios';
 import TableComponent from '../../components/LeavesTables/TableComponent';
 import UserDetails from '../../components/Popups/UserDetails';
-
-const data = [
-  { userid: "1", username: 'john_doe', email: 'john.doe@example.com', phone: '123-456-7890', role: "unverified" },
-  { userid: "2", username: 'jane_smith', email: 'jane.smith@example.com', phone: '987-654-3210', role: "unverified" },
-  { userid: "3", username: 'alexander_wang', email: 'alex.wang@example.com', phone: '456-789-0123', role: 'unverified' },
-  { userid: "4", username: 'emily_miller', email: 'emily.miller@example.com', phone: '789-012-3456', role: "unverified" },
-  { userid: "5", username: 'sarah_jones', email: 'sarah.jones@example.com', phone: '012-345-6789', role: "unverified" },
-  { userid: "6", username: 'michael_brown', email: 'michael.brown@example.com', phone: '234-567-8901', role: "unverified" },
-  { userid: "7", username: 'olivia_wilson', email: 'olivia.wilson@example.com', phone: '567-890-1234', role: "unverified" },
-  { userid: "8", username: 'william_taylor', email: 'william.taylor@example.com', phone: '890-123-4567', role: "unverified" },
-  { userid: "9", username: 'ava_jackson', email: 'ava.jackson@example.com', phone: '345-678-9012', role: "unverified" },
-  { userid: "10", username: 'ethan_thomas', email: 'ethan.thomas@example.com', phone: '678-901-2345', role: "unverified" },
-  { userid: "11", username: 'emma_white', email: 'emma.white@example.com', phone: '901-234-5678', role: "unverified" },
-  { userid: "12", username: 'noah_clark', email: 'noah.clark@example.com', phone: '123-456-7890', role: "unverified" },
-  { userid: "13", username: 'mia_robinson', email: 'mia.robinson@example.com', phone: '987-654-3210', role: "unverified" },
-  { userid: "14", username: 'james_hall', email: 'james.hall@example.com', phone: '456-789-0123', role: "unverified" },
-];
+import { API_URL } from '../../App';
 
 const header = 'User Approval';
 
 const columns = [
+  { field: 'userid', header: 'UserID' },
   { field: 'username', header: 'Username' },
   { field: 'email', header: 'Email' },
   { field: 'phone', header: 'Phone Number' },
@@ -31,9 +16,33 @@ const columns = [
 ];
 
 const AdminUserApproval = () => {
+  const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [editable, setEditable] = useState(false);
   const modalRef = useRef(null);
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/user/get`);
+        const users = Array.isArray(response.data) ? response.data : response.data.users;
+        const filteredUsers = users.filter(user => user.role.RoleName === 'Unverified' || user.role.RoleName === 'Rejected');
+        console.log(filteredUsers)
+        const mappedUsers = filteredUsers.map(user => ({
+          userid: user.UserID,
+          username: user.Username,
+          email: user.Email,
+          phone: user.PhoneNumber,
+          role: user.role.RoleName,
+        }));
+        setUsers(mappedUsers);
+      } catch (error) {
+        console.error('Error fetching users:', error);
+      }
+    };
+
+    fetchUsers();
+  }, []);
 
   const handleDetailsClick = (user) => {
     setSelectedUser(user);
@@ -45,22 +54,38 @@ const AdminUserApproval = () => {
     setEditable(true);
   };
 
+  const approveUser = async (userId, newRole) => {
+    console.log(`Updating role for user ${userId} to ${newRole}`);
+    try {
+      const response = await axios.put(`${API_URL}/user/update_role/${userId}`, { RoleName: newRole });
+      if (response.status === 200) {
+        setUsers(prevUsers => 
+          prevUsers
+            .map(user => user.userid === userId ? { ...user, role: newRole } : user)
+            .filter(user => user.role === 'Unverified' || user.role === 'Rejected')
+        );
+      }
+    } catch (error) {
+      console.error('Error updating user role:', error);
+    }
+  };
+
   useEffect(() => {
     const dialog = modalRef.current;
     if (selectedUser && dialog) {
       dialog.showModal();
-      console.log(selectedUser)
       dialog.addEventListener('close', () => {
-        setSelectedUser(null); // Reset selectedUser when dialog is closed
+        setSelectedUser(null);
       });
     }
   }, [selectedUser]);
 
   const RoleBodyTemplate = (rowData) => {
+    let roleName = rowData.role;
     let backgroundColor;
     let textColor;
 
-    switch (rowData.role) {
+    switch (roleName) {
       case "Centra":
         backgroundColor = "rgba(15, 114, 117, 0.5)";
         textColor = "#000000";
@@ -73,7 +98,7 @@ const AdminUserApproval = () => {
         backgroundColor = "rgba(148, 195, 179, 0.5)";
         textColor = "#000000";
         break;
-      case "unverified":
+      case "Unverified":
         backgroundColor = "#D4D4D4";
         textColor = "#000000";
         break;
@@ -96,7 +121,7 @@ const AdminUserApproval = () => {
         className="flex items-center justify-center rounded-3xl overflow-hidden"
       >
         <div className="flex items-center">
-          <span>{rowData.role}</span>
+          <span>{roleName}</span>
         </div>
       </div>
     );
@@ -105,7 +130,7 @@ const AdminUserApproval = () => {
   return (
     <div className="container mx-auto w-full">
       <TableComponent
-        data={data}
+        data={users}
         header={header}
         columns={columns}
         ColorConfig={RoleBodyTemplate}
@@ -123,6 +148,7 @@ const AdminUserApproval = () => {
           phone={selectedUser.phone}
           email={selectedUser.email}
           role={selectedUser.role}
+          approveUser={approveUser}
         />
       )}
     </div>
