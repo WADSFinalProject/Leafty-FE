@@ -19,7 +19,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
     return <>
         <WidgetContainer padding={false} round = {round}>
             <div className="flex flex-row justify-between py-2 pl-2 items-center">
-                {frontIcon ? <img src={frontIcon} className="w-1/6"></img> : <></>}
+                {frontIcon ? <img src={frontIcon} className="w-1/4"></img> : <></>}
                 <div className={`flex ${row ? "flex-col":"flex-row"} gap-1.5`}>
                     <div className="flex flex-row justify-between items-center">
                         {modal ? <button className="" onClick={() => document.getElementById('my_modal').showModal()}><img src={information}></img></button> : <></>}
