@@ -42,9 +42,24 @@ function CentraLayout() {
         }
       }
 
-    useEffect(() =>{
-        handleWhoAmI()
-    },[])
+    useEffect(() => {
+        let intervalId;
+
+        async function checkUserID() {
+            const success = await handleWhoAmI();
+            if (!success) {
+                intervalId = setTimeout(checkUserID, 5000); // Retry after 5 seconds if not successful
+            }
+        }
+
+        checkUserID();
+
+        return () => {
+            if (intervalId) {
+                clearTimeout(intervalId);
+            }
+        };
+    }, []);
 
     useEffect(() => {
         const pathname = location.pathname;

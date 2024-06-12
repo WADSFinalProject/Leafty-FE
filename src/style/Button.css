@@ -5,3 +5,8 @@
     left: 4%;
     background: none;
 }
+
+/* In your global CSS file, e.g., src/index.css */
+.hidden-important {
+    display: none !important;
+}
