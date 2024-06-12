@@ -8,6 +8,7 @@ import WetLeavesLogo from '../../assets/WetLeavesDetail.svg';
 import ExpiredIn from '../../components/ExpiredIn';
 import LeavesDetail from '../../components/LeavesDetail';
 import LeavesType from '../../components/LeavesType';
+import { API_URL } from '../../App';
 
 function WetLeavesDetail() {
   const { id } = useParams();
@@ -16,7 +17,7 @@ function WetLeavesDetail() {
   useEffect(() => {
     const fetchWetLeaves = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/wetleaves/get/${id}`);
+        const response = await axios.get(API_URL+`/wetleaves/get/${id}`);
         setWetLeaves(response.data);
       } catch (error) {
         console.error('Error fetching wet leaves detail:', error);
