@@ -11,7 +11,21 @@ import filter from "../../assets/icons/filter.svg";
 import plus from "../../assets/Plus.svg";
 import Popup from '@components/Popups/Popup';
 
-function TableComponent({ data, header, columns, ColorConfig, admin = false, rows = 10, depends = 'status', onDetailsClick, onEditClick, onDelete }) {
+function TableComponent({
+  data,
+  header,
+  columns,
+  ColorConfig,
+  admin = false,
+  rows = 10,
+  paginator = true,
+  depends = 'status',
+  onDetailsClick,
+  onEditClick,
+  onDelete,
+  showSearch = true,
+  showFilter = true
+}) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedRowForDeletion, setSelectedRowForDeletion] = useState(null);
   const popupRef = useRef(null);
@@ -21,12 +35,22 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
       <div className="flex flex-row justify-between m-0 items-center">
         <h3>{header}</h3>
         <div className="table-header-actions flex flex-row gap-4 items-center justify-center">
-          <label className="input input-bordered flex items-center gap-2 input-md ">
-            <img src={search} className="w-4 h-4" alt="search"/>
-            <input type="search" className="grow" placeholder="Search" onChange={(e) => setGlobalFilter(e.target.value)} value={globalFilter} />
-          </label>
-          <button className='btn' style={{ background: "#94C3B3" }}><img src={filter} alt="filter"/></button>
-          {admin ? <button className='btn' style={{ background: "#94C3B3" }}><img src={plus} alt="add"/></button> : null}
+          {showSearch && (
+            <label className="input input-bordered flex items-center gap-2 input-md">
+              <img src={search} className="w-4 h-4" alt="search" />
+              <input type="search" className="grow" placeholder="Search" onChange={(e) => setGlobalFilter(e.target.value)} value={globalFilter} />
+            </label>
+          )}
+          {showFilter && (
+            <button className='btn' style={{ background: "#94C3B3" }}>
+              <img src={filter} alt="filter" />
+            </button>
+          )}
+          {admin && (
+            <button className='btn' style={{ background: "#94C3B3" }}>
+              <img src={plus} alt="add" />
+            </button>
+          )}
         </div>
       </div>
     );
@@ -74,12 +98,12 @@ function TableComponent({ data, header, columns, ColorConfig, admin = false, row
   };
 
   return (
-    <div className="container w-full">
+    <div className="container">
       <DataTable
         value={data}
-        paginator
-        rows={rows}
-        tableStyle={{ minWidth: '65rem'}}
+        paginator={paginator}
+        rows={paginator ? rows : undefined}
+        tableStyle={{ minWidth: '65rem' }}
         globalFilter={globalFilter}
         header={renderHeader()}
         size="large"

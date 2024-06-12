@@ -36,7 +36,7 @@ function ShipmentLongContainer({ showWeight }) { // Destructure props to access 
         <div className={`flex flex-col container gap-1 rounded-md border-4 border-white shadow-lg p-2`} style={{ background: "radial-gradient(50%_50%_at_50%_50%,rgb(255,255,255)_0%,rgb(211.65,211.65,211.65)_100%)" }}>
             <div className="flex justify-between flex-row items-center font-semibold text-sm lg:text-base px-2">
                 <div className="flex flex-row justify-center items-center gap-2">
-                    <Link to="/xyzshipmentdetail">
+                    <Link to="/xyzmobile/Tracker">
                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
                     </Link>
                     <span className="w-min sm:w-full">Expedition #0123456</span>

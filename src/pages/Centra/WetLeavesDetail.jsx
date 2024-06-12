@@ -8,17 +8,6 @@ import WetLeavesLogo from '../../assets/WetLeavesDetail.svg';
 import ExpiredIn from '../../components/ExpiredIn';
 import LeavesDetail from '../../components/LeavesDetail';
 import LeavesType from '../../components/LeavesType';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import WetLeavesNavbar from "../../assets/WetLeavesLogo.svg";
-import DryLeavesLogo from "../../assets/DryLeavesLogo.svg";
-import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
-import WetLeavesActive from "../../assets/icons/bottombar/wetleaves_active.svg";
-import DryLeavesActive from "../../assets/icons/bottombar/dryleaves_actives.svg";
-import PowderLogo from "../../assets/PowderLogo.svg";
-import ShipmentLogo from "../../assets/ShipmentLogo.svg";
-import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
-import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 
 function WetLeavesDetail() {
   const { id } = useParams();

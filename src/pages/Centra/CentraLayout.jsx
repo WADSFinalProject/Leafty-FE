@@ -47,7 +47,21 @@ function CentraLayout() {
     },[])
 
     useEffect(() => {
-        setShowReturn(location.pathname.includes('detail'));
+        const pathname = location.pathname;
+        const hasDetail = pathname.includes('detail');
+        setShowReturn(hasDetail);
+
+        if (hasDetail) {
+            if (pathname.includes('wet-leaves/detail')) {
+                setReturnDestination("/centra/Wet%20Leaves");
+            } else if (pathname.includes('dry-leaves/detail')) {
+                setReturnDestination("/centra/Dry%20Leaves");
+            } else if (pathname.includes('powderdetail')) {
+                setReturnDestination("/centra/Powder");
+            } else if (pathname.includes('shipmentdetail')) {
+                setReturnDestination("/centra/Shipment/ShipmentOrder");
+            }
+        }
     }, [location.pathname]);
 
     const navbarContent = [
@@ -99,8 +113,8 @@ function CentraLayout() {
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 no-scrollbar">
                 <div className='flex justify-between items-center'>
-                    <div className="flex items-center">
-                        {showReturn && <Return destination="/centra/Wet%20Leaves" className="mr-2 text-sm" />}
+                    <div className="flex items-center gap-3">
+                        {showReturn && <Return destination={returnDestination} className="mr-2 text-sm" />}
                         <span className='font-bold text-3xl'>{value}</span>
                     </div>
                     <div className="flex items-center gap-2">

@@ -11,7 +11,7 @@ const LineChart = ({ xAxisLabel, yAxisLabel, datasets, width, height }) => {
       label: dataset.label || `Dataset ${index + 1}`,
       backgroundColor: dataset.backgroundColor || defaultColors[index % defaultColors.length],
       borderColor: dataset.borderColor || defaultColors[index % defaultColors.length],
-      borderWidth: 4,
+      borderWidth: 2,
       pointBorderColor: dataset.borderColor || defaultColors[index % defaultColors.length],
       pointBackgroundColor: dataset.pointBackgroundColor || defaultColors[index % defaultColors.length],
       pointBorderWidth: 3,
@@ -36,7 +36,7 @@ const LineChart = ({ xAxisLabel, yAxisLabel, datasets, width, height }) => {
           text: yAxisLabel,
         },
         ticks: {
-          maxTicksLimit: 4,  // Limit the number of y-axis ticks to 4
+          maxTicksLimit: 5,  // Limit the number of y-axis ticks to 4
         },
       },
     },
@@ -48,7 +48,7 @@ const LineChart = ({ xAxisLabel, yAxisLabel, datasets, width, height }) => {
     },
   };
 
-  return <Line data={chartData} options={options} width={width} height={height} />;
+  return <Line data={chartData} options={options} width={200} height={300} />;
 };
 
 export default LineChart;

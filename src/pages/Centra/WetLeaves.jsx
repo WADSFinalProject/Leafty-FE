@@ -40,11 +40,10 @@ function WetLeaves() {
   return (
     <>
       <div className="mt-4 flex justify-center items-center gap-3">
-        <InputField icon={SearchLogo} placeholder={"Search"} className={"w-full"}  />
-
+        <InputField icon={SearchLogo} placeholder="Search" className="w-full" />
         <div className='ml-1'>
           <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-            <img src={InnerPlugins} alt="InnerPlugins" className='w-full h-8 ' />
+            <img src={InnerPlugins} alt="Inner Plugins" className='w-full h-8' />
           </WidgetContainer>
         </div>
       </div>

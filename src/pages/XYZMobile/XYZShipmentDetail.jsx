@@ -10,7 +10,6 @@ import WidgetContainer from '../../components/Cards/WidgetContainer';
 import ShipmentWeight from '../../assets/ShipmentWeight.svg';
 import Courier from '../../assets/Courier.svg';
 import Address from '../../assets/Address.svg';
-
 import HarborReception from '../../components/HarborReception';
 import VerificationWait from '../../components/VerificationWait';
 import ReceptionDetail from '../../components/ReceptionDetail';
@@ -36,7 +35,7 @@ function XYZShipmentDetail() {
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 overflow-hidden">
                 <div className='flex justify-between items-center '>
                     <div className="flex items-center mr-4">
-                        <Return destination="/xyzmobile/dashboard" className="mr-2 text-sm" />
+                        <Return destination="/xyzmobile/Tracker" className="mr-2 text-sm" />
                         <span className='font-bold text-2xl ml-2'>Shipment</span>
                     </div>
 

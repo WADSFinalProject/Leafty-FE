@@ -33,7 +33,7 @@ function ShipmentCompleted(){
                         {Completed.map((item, index) => (
                             <div key={`completed_${index}`} className=' flex justify-between mt-3'>
                                 <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                                    <Link to="/shipmentdetail">
+                                    <Link to={`/centra/shipmentdetail/${item.code}`}>
                                         <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
                                     </Link>
                                     <div className='flex flex-col ml-3'>
