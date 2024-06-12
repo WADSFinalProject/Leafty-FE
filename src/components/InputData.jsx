@@ -64,9 +64,9 @@ const InputData = ({ firstp, secondp, thirdp, fourthp, firstimg, secondimg, thir
       <div className='flex items-center justify-center mt-12'>
         <WidgetContainer backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full  mr-2'>
           <button
-            className='flex items-center justify-center w-full h-full font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg'
+            className='flex items-center justify-center w-full h-8 font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg'
           >
-            save
+            Save
           </button>
         </WidgetContainer>
       </div>

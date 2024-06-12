@@ -38,39 +38,27 @@ function WetLeaves() {
           </WidgetContainer>
         </div>
       </div>
-      {data.map((item) => {
-        console.log("Item:", item); // Add this line
-        return (
-          <div key={item.code} className='flex justify-between'>
-            <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-            <Link
-              to={{
-                pathname: `/centra/wet-leaves/detail/${item.code}/${item.time}/${item.weight}`,
-               
-              }}
-            >
-
-
-                <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
-              </Link>
-              <div className='flex flex-col ml-3'>
-                <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                  {item.weight}
-                </span>
-                <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                  {item.code}
-                </span>
-              </div>
-              <div className="flex ml-auto items-center">
-                <Countdown time={item.time} color={item.color} image={item.image} />
-              </div>
-            </WidgetContainer>
-          </div>
-        );
-      })}
-
-
-      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo} />
+      {data.map((item) => (
+        <div key={item.code} className='flex justify-between'>
+          <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
+            <Link to="/centra/wet-leaves/detail">
+              <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
+            </Link>
+            <div className='flex flex-col ml-3'>
+              <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                {item.weight}
+              </span>
+              <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                {item.code}
+              </span>
+            </div>
+            <div className="flex ml-auto items-center">
+              <Countdown time={item.time} color={item.color} image={item.image} />
+            </div>
+          </WidgetContainer>
+        </div>
+      ))}
+      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
 }

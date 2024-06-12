@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
+import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
 import './scanner.css'; 
 
 function HarborScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
-    const devices = useDevices();
+    const devices = useDeviceList();
 
     const handleDeviceChange = (event) => {
         setSelectedDeviceId(event.target.value);
@@ -16,9 +16,9 @@ function HarborScanner() {
     };
 
     return (
-        <div>
+        <div className="scanner-wrapper">
             {devices.length > 0 && (
-                <div style={{ marginBottom: '10px' }}>
+                <div className="camera-select-container">
                     <label htmlFor="cameraSelect">Select Camera:</label>
                     <select id="cameraSelect" onChange={handleDeviceChange} value={selectedDeviceId || devices[0].deviceId}>
                         {devices.map((device) => (
@@ -35,12 +35,16 @@ function HarborScanner() {
                     onError={handleError}
                     options={{ deviceId: selectedDeviceId }}
                 />
+                {/* <div className="scanner-overlay">
+                    <div className="scanner-frame">
+                        <div className="scanner-guide">Align the QR code within the frame to scan</div>
+                    </div>
+                </div> */}
             </div>
-           
-                <div style={{ marginTop: '20px' }}>
-                    <h2>Scanned Data:</h2>
-                    <p>{data}</p>
-                </div>
+            <div className="scanned-data-container">
+                <h2>Scanned Data:</h2>
+                <p>{data}</p>
+            </div>
         </div>
     );
 }

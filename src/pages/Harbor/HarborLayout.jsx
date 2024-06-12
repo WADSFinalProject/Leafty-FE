@@ -71,6 +71,14 @@ const HarborLayout = () => {
                                 value={label}
                                 icon={label === null ? item : <img src={value === label ? item : itemActive} alt={label} />}
                                 disableRipple={true}
+                                sx={{
+                                    '& .MuiBottomNavigationAction-label': {
+                                        fontSize: '0.75rem', // Adjust the font size as needed
+                                        '&.Mui-selected': {
+                                            fontSize: '0.75rem' // Ensure the selected label also has the smaller font size
+                                        }
+                                    }
+                                }}
                             />
                         ))}
                     </BottomNavigation>

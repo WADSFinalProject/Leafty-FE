@@ -1,16 +1,17 @@
 import WidgetContainer from "./Cards/WidgetContainer";
+import "@style/InputField.css"
 
-function InputField({ type, label, placeholder, icon, onChange, value, className, maxWidth = true }) {
+function InputField({ type, label, placeholder, icon, onChange, value, className, green = false, disabled = false, padding = true}) {
     return <>
         <label className={`form-control w-full md:max-w-md ${className}`}>
             {label ?
-                <div className="label px-0">
+                <div className={`px-0 ${padding ? "py-1":""}`}>
                     <span className="label-text">{label}</span>
                 </div> : <></>}
 
-            <label className="input input-bordered flex items-center gap-2 ">
-                <img src={icon} className="w-5 h-5"></img>
-                <input type={type} className="grow" placeholder={placeholder} onChange={onChange} value={value} />
+            <label className={`input input-bordered flex items-center gap-2 input-md ${green ? "green" : ""}`}>
+                {icon ? <img src={icon} className="w-5 h-5"></img> : null}
+                <input type={type} className="grow" placeholder={placeholder}  onChange={!disabled ? onChange : undefined}  value={value} />
             </label>
 
             {/* <div className="label">

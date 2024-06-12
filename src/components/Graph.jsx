@@ -107,9 +107,9 @@ function Graph() {
   }, []);
 
   return (
-    <div className="flex-1">
+    
       <canvas ref={chartContainer}></canvas>
-    </div>
+    
   );
 }
 

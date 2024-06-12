@@ -104,13 +104,13 @@ function DashboardLayout() {
                         <MenuItem icon={<img src={dashboard} />} onClick={() => navigate("/company/dashboard", {replace: true})}> Dashboard </MenuItem>
                         <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} />}>
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} />} onClick={() => navigate("/company/wetleaves", {replace: true})}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />}> Dry Leaves </MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />}> Powder </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />} onClick={() => navigate("/company/dryleaves", {replace: true})}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />} onClick={() => navigate("/company/powder", {replace: true})}> Powder </MenuItem>
                         </SubMenu>
-                        <MenuItem icon={<img src={shipment} />}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />}> Reception </MenuItem>
-                        <MenuItem icon={<img src={performance} />}> Performance </MenuItem>
+                        <MenuItem icon={<img src={shipment} />} onClick={() => navigate("/company/shipment", {replace: true})}> Shipment </MenuItem>
+                        <MenuItem icon={<img src={pickup} />} onClick={() => navigate("/company/pickup", {replace: true})}> Pickup </MenuItem>
+                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
+                        <MenuItem icon={<img src={performance} />} onClick={() => navigate("/company/performance", {replace: true})}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>
@@ -120,7 +120,7 @@ function DashboardLayout() {
                 transition={{
                     duration: 1.5,
                     type: "spring"
-                }} animate={{ x: 0 }} className="flex flex-col border h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl" >
+                }} animate={{ x: 0 }} className="flex flex-col border w-full h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl" >
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">

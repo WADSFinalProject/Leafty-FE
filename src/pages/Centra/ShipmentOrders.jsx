@@ -19,11 +19,11 @@ function ShipmentOrders() {
     ];
     return (
         <>
-            <div className="mt-4 flex justify-center items-center gap-3">
-                <InputField icon={SearchLogo} placeholder={"Search"} className={"max-w-none"} />
+            <div className="mt-4 flex justify-center items-center gap-3 grow">
+                <InputField icon={SearchLogo} placeholder={"Search"} className={""} />
                 <div className='ml-1'>
                     <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                        <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
+                        <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8' />
                     </WidgetContainer>
                 </div>
             </div>

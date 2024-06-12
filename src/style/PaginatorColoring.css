@@ -1,0 +1,19 @@
+.greening-paginator{
+    color:#0F7275;
+}
+
+@media (min-width:1450px) {
+    .gapMapping{
+        gap: 35svw;
+    }
+}
+@media (min-width:1250px) {
+    .gapMapping{
+        gap: 25svw;
+    }
+}
+@media (min-width:1650px) {
+    .gapMapping{
+        gap: 35svw;
+    }
+}
