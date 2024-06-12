@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Link, useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';
@@ -16,16 +16,26 @@ import Date from '../../assets/Date.svg';
 import WeightLogo from '../../assets/Weight.svg';
 import PackageCount from '../../assets/Packagecount.svg';
 import Drawer from '../../components/Drawer';
+import axios from 'axios';
+import { API_URL } from '../../App';
 
 function WetLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [wetLeavesData, setWetLeavesData] = useState([]);
+  const UserID = useOutletContext();
 
-  const data = [
-    { time: "01h05m", color: "#79B2B7", image: CountdownIcon, weight: "30 Kg", code: "W332120" },
-    { time: "01h45m", color: "#79B2B7", image: CountdownIcon, weight: "20 Kg", code: "W261760" },
-    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W643210" },
-    { time: "Expired", color: "#D45D5D", image: ExpiredWarningIcon, weight: "40 Kg", code: "W443210" },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(API_URL+`/wetleaves/get_by_user/${UserID}`);
+        setWetLeavesData(response.data);
+      } catch (error) {
+        console.error('Error fetching wet leaves data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <>
@@ -39,27 +49,27 @@ function WetLeaves() {
         </div>
       </div>
 
-      {data.map((item) => (
-        <div key={item.code} className='flex justify-between'>
+      {wetLeavesData.map((item) => (
+        <div key={item.WetLeavesID} className='flex justify-between'>
           <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
-            <Link to="/centra/wet-leaves/detail">
+            <Link to={`/centra/wet-leaves/detail/${item.WetLeavesID}`}>
               <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
             </Link>
             <div className='flex flex-col ml-3'>
               <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                {item.weight}
+                {item.Weight} Kg
               </span>
               <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                {item.code}
+                {item.WetLeavesID}
               </span>
             </div>
             <div className="flex ml-auto items-center">
-              <Countdown time={item.time} color={item.color} image={item.image} />
+              <Countdown receivedTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
             </div>
           </WidgetContainer>
         </div>
       ))}
-      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
+      <Drawer WetLeaves UserID = {UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
 }

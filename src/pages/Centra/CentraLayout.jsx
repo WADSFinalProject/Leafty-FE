@@ -14,12 +14,37 @@ import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import Return from '../../components/Return';
+import axios from 'axios';
+import LoadingCircle from "@components/LoadingCircle"
+import { API_URL } from '../../App';
 
 function CentraLayout() {
     const [value, setValue] = useState("Dashboard");
     const navigate = useNavigate();
     const location = useLocation();
     const [showReturn, setShowReturn] = useState(false);
+    const [UserID, setUserID] = useState(null);
+    
+    async function handleWhoAmI() {
+        try {
+          const response = await axios.get(API_URL + "/whoami");
+          if (response && response.data) {
+            console.log(response.data.user_id);
+            setUserID(response.data.user_id);
+            return true;
+          } else {
+            console.error("No response or response data");
+            return false;
+          }
+        } catch (error) {
+          console.error("Error while checking session:", error);
+          return false;
+        }
+      }
+
+    useEffect(() =>{
+        handleWhoAmI()
+    },[])
 
     useEffect(() => {
         setShowReturn(location.pathname.includes('detail'));
@@ -65,6 +90,10 @@ function CentraLayout() {
             navigate("Dashboard");
         }
     };
+    
+    if (UserID === null) {
+        return <LoadingCircle />; // or a loading indicator
+    }
 
     return (
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">
@@ -79,7 +108,7 @@ function CentraLayout() {
                         <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
                     </div>
                 </div>
-                <Outlet />
+                <Outlet context={[UserID]} />
                 <div className="flex justify-center">
                     <BottomNavigation
                         className="fixed bottom-0 w-screen justify-center"
@@ -113,7 +142,7 @@ function CentraLayout() {
                                             },
                                         },
                                     }
-                                  }}
+                                }}
                             />
                         ))}
                     </BottomNavigation>

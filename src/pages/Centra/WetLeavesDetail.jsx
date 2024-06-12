@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
 import Profilepic from '../../assets/Profilepic.svg';
 import NotificationBell from "../../assets/NotificationBell.svg";
 import Return from '../../components/Return';
@@ -19,67 +20,38 @@ import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 
-function WetLeavesDetail(){
+function WetLeavesDetail() {
+  const { id } = useParams();
+  const [wetLeaves, setWetLeaves] = useState(null);
 
-    const expired = "1 Hour 05 Minutes";
-    const date ="23-21-2024";
-    const time ="15:59";
-    const weight = "30 KG";
-    const leavesText = "Wet Leaves #232120";
-    const [value, setValue] = useState("");
-      const handleChange = (event, newValue) => {
-        setValue(newValue);
-      };
-    const navbarContent = [
-        {
-          key: 'wet-leaves',
-          itemActive: WetLeavesNavbar,
-          item: WetLeavesActive,
-          label: "Wet Leaves"
-        },
-        {
-          key: 'dry-leaves',
-          itemActive: DryLeavesLogo,
-          item: DryLeavesActive,
-          label: "Dry Leaves"
-        },
-        {
-          key: 'dashboard-centra',
-          item:
-            <div className="absolute left-1/2 transform -translate-x-1/2 bottom-0 border-[#94c3b3] border-8 rounded-full bg-gray-100 w-20 h-20 flex items-center justify-center">
-                <img src={DashCentra} className="w-10 h-10" />
-            </div>,
-          itemActive: null,
-          label: null,
-        },
-        {
-          key: 'powder',
-          itemActive: PowderLogo,
-          item: PowderActive,
-          label: "Powder"
-        },
-        {
-          key: 'shipment',
-          itemActive: ShipmentLogo,
-          item: ShipmentActive,
-          label: "Shipment"
-        },
-      ];
+  useEffect(() => {
+    const fetchWetLeaves = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8000/wetleaves/get/${id}`);
+        setWetLeaves(response.data);
+      } catch (error) {
+        console.error('Error fetching wet leaves detail:', error);
+      }
+    };
 
-    return(
-      <>
-        
-            
+    fetchWetLeaves();
+  }, [id]);
 
-                <LeavesType imageSrc={WetLeavesLogo} text={leavesText} />
-                <ExpiredIn expired={expired} />
-                <LeavesDetail date={date} time={time} weight={weight} />
-                
-            
-        
-      </>
-        
-    )
+  if (!wetLeaves) return <div>Loading...</div>;
+
+  const expired = "1 Hour 05 Minutes"; // Placeholder for now
+  const date = new Date(wetLeaves.ReceivedTime).toLocaleDateString();
+  const time = new Date(wetLeaves.ReceivedTime).toLocaleTimeString();
+  const weight = `${wetLeaves.Weight} KG`;
+  const leavesText = `Wet Leaves #${wetLeaves.WetLeavesID}`;
+
+  return (
+    <>
+      <LeavesType imageSrc={WetLeavesLogo} text={leavesText} />
+      <ExpiredIn expired={expired} />
+      <LeavesDetail date={date} time={time} weight={weight} />
+    </>
+  );
 }
 
 export default WetLeavesDetail;

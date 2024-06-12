@@ -10,9 +10,11 @@ import Powder from "../../assets/Powder.svg";
 import PackageSent from "../../assets/PackangeSent.svg";
 import Box from "../../assets/PackageBox.svg";
 import Fab from '@mui/material/Fab';
+import { useOutlet, useOutletContext } from 'react-router';
 
 
 function DashboardCentra() {
+  const userid = useOutletContext()
 
   const statsData = [
     { label: "Wet Leaves", value: 243, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
