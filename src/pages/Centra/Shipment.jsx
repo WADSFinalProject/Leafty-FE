@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { Link, Outlet, useOutletContext } from 'react-router-dom';
 import Box from '@mui/material/Box';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -53,6 +53,7 @@ CustomTabPanel.propTypes = {
 };
 
 function Shipment() {
+    const UserID = useOutletContext();
     const [value, setValue] = useState(0);
 
     const handleChange = (event, newValue) => {
@@ -75,9 +76,7 @@ function Shipment() {
             <div className="flex justify-end mt-4">
                 
             </div>
-
-
-            <Drawer includeFourthSection={true} showThirdInput={true} firstText="Total Packages" secondText="Schedule Deliver" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={PackageCount} secondImgSrc={Date} thirdImgSrc={WeightLogo} />
+            <Drawer UserID = {UserID} Shipment = {true} includeFourthSection={true} showThirdInput={true} firstText="Schedule Deliver" secondText="Total Packages" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={Date} secondImgSrc={PackageCount} thirdImgSrc={WeightLogo} />
 
         </ThemeProvider>
     );
