@@ -1,9 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Fab from '@mui/material/Fab';
 import AddIcon from '@mui/icons-material/Add';
+import ShipmentLogo from '@assets/ShipmentDetail.svg';
 import HistoryIcon from '@mui/icons-material/History';
+import PackageCount from '@assets/Packagecount.svg';
+import Date from '@assets/Date.svg';
+import WidgetContainer from '@components/Cards/WidgetContainer';
+import ShipmentWeight from '@assets/ShipmentWeight.svg';
+import Courier from '@assets/Courier.svg';
+import Address from '@assets/Address.svg';
+import Button from './Button';
 import "./Drawer.css";
 
 const drawerBleeding = 56;
@@ -40,7 +48,8 @@ const theme = createTheme({
 });
 
 function ScanResultsDrawer(props) {
-  const { window, open, toggleDrawer, data } = props;
+  const { window, open, toggleDrawer, ShipmentID } = props;
+  const [ReceivedPackages, SetReceivedPackages] = useState("3");
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -69,7 +78,74 @@ function ScanResultsDrawer(props) {
         >
           <StyledBox>
             <Puller />
-            <div>{data}</div>
+            <div className="flex flex-col items-center">
+              <div className='flex justify-center'>
+                <img src={ShipmentLogo} alt="Profile" style={{ maxWidth: '100px' }} className='w-full h-auto' />
+              </div>
+              <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
+                {"Shipment #000000"}
+              </span>
+              <div className="flex space-x-2">
+                <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
+                <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
+                  3 Packages
+                </span>
+                <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
+                  22/07/2024
+                </span>
+              </div>
+            </div>
+
+            <div className='p-2'>
+              <WidgetContainer borderRadius="20px">
+                <div className="flex justify-around">
+                  <div className="flex flex-col">
+                    <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
+                    <div className='flex pb-2'>
+                      <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                      <span className="font-montserrat text-16px font-semibold tracking-02em text-center">3 Packages</span>
+                    </div>
+                    <div className='flex pb-2'>
+                      <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                      <span className="font-montserrat text-16px font-semibold tracking-02em text-center">30 Kg</span>
+                    </div>
+                    <div className='flex pb-2'>
+                      <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                      <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - JNE</span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col">
+
+                    <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
+                    <div className='flex pb-2'>
+                      <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
+                      <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Unit 1</span>
+                    </div>
+
+                    <div className='flex pb-2'>
+                      <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
+                      <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Jl.Address</span>
+                    </div>
+                  </div>
+                </div>
+              </WidgetContainer>
+              <label className='font-bold'>Received Packages</label>
+              <WidgetContainer backgroundColor="#FFFFFF" borderRadius="20px" borderWidth="" borderColor="" className='mt-2 mb-2'>
+                <div className='flex'>
+                  <input
+                    type="number  "
+                    className="w-full h-full bg-transparent border-none outline-none px-2"
+                    placeholder=''
+                    value={ReceivedPackages}
+                    onChange={(e) => SetReceivedPackages(e.target.value)}
+                  />
+                  <img src={PackageCount} alt="Date" className='flex justify-end w-6 h-auto' />
+                </div>
+              </WidgetContainer>  
+              <Button className = {"flex w-full justify-center items-center"} noMax = {true} label = {"Confirm"} color = {"white"} background = {"#0F7275"}></Button>
+            </div>
           </StyledBox>
         </SwipeableDrawer>
       </Root>
