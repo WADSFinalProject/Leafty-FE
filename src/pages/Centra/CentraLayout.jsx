@@ -137,7 +137,7 @@ function CentraLayout() {
                         <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
                     </div>
                 </div>
-                <Outlet context={[UserID]} />
+                <Outlet context={UserID} />
                 <div className="flex justify-center">
                     <BottomNavigation
                         className="fixed bottom-0 w-screen justify-center"
