@@ -3,12 +3,15 @@ import axios from 'axios';
 import Plus from "@assets/Plus.svg"
 import { API_URL } from '../App';
 import WidgetContainer from '../components/Cards/WidgetContainer';
+import Powder from '../pages/Centra/Powder';
 
 const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondimg, thirdimg, includeFourthSection, showThirdInput, WetLeaves = false, DryLeaves = false, Flour = false, Shipment = false }) => {
   const [date, setDate] = useState(new Date().toISOString());
   const [weight, setWeight] = useState(25);
   const [wetLeaves, setWetLeaves] = useState([]);
+  const [dryLeaves, setDryLeaves] = useState([]);
   const [selectedWetLeavesID, setSelectedWetLeavesID] = useState('');
+  const [selectedDryLeavesID, setSelectedDryLeavesID] = useState('');
 
   useEffect(() => {
     if (DryLeaves) {
@@ -23,7 +26,20 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
     }
   }, [DryLeaves, UserID]);
 
-  const fetchAvailableWetLeaves = async () =>{
+  useEffect(() => {
+    if (Flour) {
+      // Fetch dry leaves for the user
+      axios.get(API_URL + '/dryleaves/get_by_user/' + UserID)
+        .then(response => {
+          setDryLeaves(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching dry leaves:', error);
+        });
+    }
+  }, [Flour, UserID]);
+
+  const fetchAvailableWetLeaves = async () => {
     try {
       const response = await axios.post(API_URL + '/wetLeaves/get', { UserID: String(UserID), Weight: weight, ReceivedTime: date, Status: "Awaiting" });
       console.log('Wet Leaves posted successfully:', response.data);
@@ -58,7 +74,13 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
 
   const postFlour = async () => {
     try {
-      const response = await axios.post(API_URL + '/flour/post', { date, weight });
+      const response = await axios.post(API_URL + '/flour/post', { 
+        UserID: String(UserID),
+        DryLeavesID: selectedDryLeavesID,
+        Flour_Weight: weight,
+        Expiration: date,
+        Status: "Awaiting"
+      });
       console.log('Flour posted successfully:', response.data);
     } catch (error) {
       console.error('Error posting flour:', error);
@@ -74,7 +96,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
       console.log("Posting Dry Leaves:", { UserID, selectedWetLeavesID, weight, date });
       postDryLeaves();
     } else if (Flour) {
-      console.log("Posting Flour:", { date, weight });
+      console.log("Posting Flour:", {UserID, selectedDryLeavesID,weight,date});
       postFlour();
     }
   };
@@ -143,6 +165,25 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
         </div>
       )}
 
+      {/* Select Dry Leaves for Flour */}
+      {Flour && (
+        <div className='mb-4'>
+          <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>Select Dry Leaves</p>
+          <WidgetContainer backgroundColor="#FFFFFF" borderRadius="20px" borderWidth="" borderColor="" className='mt-2'>
+            <select
+              className="w-full h-full bg-transparent border-none outline-none px-2"
+              value={selectedDryLeavesID}
+              onChange={(e) => setSelectedDryLeavesID(e.target.value)}
+            >
+              <option value="">Select Dry Leaves</option>
+              {dryLeaves.map((dryLeaf) => (
+                <option key={dryLeaf.DryLeavesID} value={dryLeaf.DryLeavesID}>{`ID: ${dryLeaf.DryLeavesID}, Weight: ${dryLeaf.Processed_Weight}`}</option>
+              ))}
+            </select>
+          </WidgetContainer>
+        </div>
+      )}
+
       {/* Optional Fourth Section */}
       {includeFourthSection && (
         <div className='mb-4 flex flex-col items-center'>
@@ -165,6 +206,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
         <WidgetContainer backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full  mr-2'>
           <button 
             className='flex items-center justify-center w-full h-8 font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg' onClick={handleSave}>
+            Save
           </button>
         </WidgetContainer>
       </div>
