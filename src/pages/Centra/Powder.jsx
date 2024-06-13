@@ -46,7 +46,7 @@ function Powder() {
       summary: 'Finished Leaves',
       details: () => (
         <>
-          {flourData.map((item) => (
+          {/* {flourData.map((item) => (
             <div key={item.FlourID} className="flex justify-between p-1">
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <Link to={`/centra/powderdetail/${item.FlourID}`}>
@@ -62,6 +62,26 @@ function Powder() {
                 </div>
                 <div className="flex ml-auto items-center">
                   <Countdown time={item.Expiration} color="#79B2B7" image={ReadyIcon} className="" />
+                </div>
+              </WidgetContainer>
+            </div>
+          ))} */}
+          {flourData.map((item) => (
+            <div key={item.FlourID} className='flex justify-between p-1'>
+              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                <button onClick={() => handleButtonClick(item)}>
+                  <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+                </button>
+                <div className='flex flex-col ml-3'>
+                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                    {item.Flour_Weight} Kg
+                  </span>
+                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                    {item.FlourID}
+                  </span>
+                </div>
+                <div className="flex ml-auto items-center">
+                  <Countdown receivedTime={item.Expiration} color="#79B2B7" image={ReadyIcon} />
                 </div>
               </WidgetContainer>
             </div>
