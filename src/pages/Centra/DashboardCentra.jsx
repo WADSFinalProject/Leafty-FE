@@ -51,10 +51,10 @@ function DashboardCentra() {
           />
         ))}
       </div>
-      <div className=''>
+      {/* <div className=''>
         <span className="font-semibold text-base font-montserrat leading-5 tracking-tighter text-left ">Last Activity</span>
-      </div>
-      <div className='grid gap-y-1'>
+      </div> */}
+      {/* <div className='grid gap-y-1'>
         {LastActivity.map((data, index) => (
           <WidgetContainer key={index}>
             <div className='flex items-center'>
@@ -63,7 +63,7 @@ function DashboardCentra() {
             </div>
           </WidgetContainer>
         ))}
-      </div>
+      </div> */}
     </>
   );
 }

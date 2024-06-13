@@ -1,16 +1,12 @@
 import React, { useState } from 'react';
-import { Link ,Outlet} from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
-import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';
 import Countdown from '../../components/Countdown';
-import InnerPlugins from '../../assets/InnerPlugins.svg';
 import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import Arrived from '../../assets/Arrived.svg';
-import InputField from '../../components/InputField';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
+import ShipmentPopup from '../../components/Popups/ShipmentPopup';
+import AccordionUsage from '../../components/AccordionUsage';
 
 
 function ShipmentCompleted(){
@@ -18,39 +14,56 @@ function ShipmentCompleted(){
         { time: "Arrived", color: "#DEE295", image: Arrived, weight: "15 Kg", code: "O123457" },
 
     ]
+    const handleButtonClick = (item) => {
+        setSelectedData(item);
+        document.getElementById('ShipmentPopup').showModal();
+      };
+    const [selectedData, setSelectedData] = useState(null);
+    const accordions = [
+        {
+          summary: 'Completed Shipment',
+          details: () => (
+            <>
+             {Completed.map((item, index) => (
+                <div key={`completed_${index}`} className=' flex justify-between p-1'>
+                    <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                        <button onClick={() => handleButtonClick(item)}>
+                            <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                        </button>
+                        <div className='flex flex-col ml-3'>
+                            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                                {item.weight}
+                            </span>
+                            <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                                {item.code}
+                            </span>
+                        </div>
+                        <div className="flex ml-auto items-center">
+                            <Countdown time={item.time} color={item.color} image={item.image} />
+                        </div>
+                    </WidgetContainer>
+                </div>
+            ))}
+            </>
+          ),
+          defaultExpanded: true,
+        }
+        
+      ];
     return(
         <>
-       <div className="mt-4  flex justify-center items-center gap-3"> 
-                            <InputField icon = {SearchLogo} placeholder={"Search"} className={"max-w-none"}/>
 
-
-                            <div className='ml-1'>
-                                <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                                    <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8 ' />
-                                </WidgetContainer>
-                            </div> 
-                        </div>
-                        {Completed.map((item, index) => (
-                            <div key={`completed_${index}`} className=' flex justify-between mt-3'>
-                                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                                    <Link to={`/centra/shipmentdetail/${item.code}`}>
-                                        <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                                    </Link>
-                                    <div className='flex flex-col ml-3'>
-                                        <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                            {item.weight}
-                                        </span>
-                                        <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                            {item.code}
-                                        </span>
-                                    </div>
-                                    <div className="flex ml-auto items-center">
-                                        <Countdown time={item.time} color={item.color} image={item.image} />
-                                    </div>
-                                </WidgetContainer>
-                            </div>
-                        ))}
-                        
+                <AccordionUsage accordions={accordions} className="mt-3"/>
+                {selectedData && (
+                <ShipmentPopup
+                code={selectedData.code}
+                time={selectedData.time}
+                weight={selectedData.weight}
+                date={selectedData.date}
+                imageSrc={selectedData.detailImage}
+               
+                />
+            )}
                         </>
     )
 

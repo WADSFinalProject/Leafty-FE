@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { API_URL } from '../App';
 import Button from '../components/Button';
+import AddLeavesPopup from '../components/Popups/AddLeavesPopup';
 
 function PageNotFound() {
     const navigate = useNavigate();
@@ -47,6 +48,8 @@ function PageNotFound() {
             <span className='w-1/3 text-center mt-2'>We've searched far and wide and couldn't seem to find what you were looking for</span>
             <Button onClick={handleSignOut} label={"Sign Out"} background={'#0F7275'} color={"white"}/>
             <button onClick={handleWhoAmI}>whoami</button>
+            <Button onClick={() => document.getElementById('AddLeaves').showModal()} label={"Sign Out"} background={'#0F7275'} color={"white"}/>
+            <AddLeavesPopup />
         </div>
     );
 }

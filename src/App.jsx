@@ -39,7 +39,7 @@ import XYZScanner from './pages/XYZMobile/XYZScanner';
 import DashboardXYZ from "./pages/XYZMobile/DashboardXYZ";
 import XYZShipmentDetail from "./pages/XYZMobile/XYZShipmentDetail";
 import Tracker from "./pages/XYZMobile/Tracker";
-import UserSetting from "./pages/XYZResponsive/UserSetting";
+import UserSetting from "./pages/XYZMobile/UserSetting";
 import TempAdmin from "./pages/Admin/TempAdmin";
 import DashboardAdmin from "./pages/Admin/DashboardAdmin";
 import AdminDryLeaves from "./pages/Admin/AdminDryLeaves";
