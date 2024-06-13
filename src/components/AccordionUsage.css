@@ -1,0 +1,10 @@
+/* AccordionUsage.css */
+.accordion {
+  margin-bottom: 16px; /* Adjust the value to your desired spacing */
+  
+}
+
+.accordion:first-of-type {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}

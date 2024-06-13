@@ -9,7 +9,13 @@ import UnverifiedPackages from '../../assets/UnverifiedPackages.svg';
 import "../../style/Dashboard.css";
 
 function DashboardHarbor() {
-    const data = Array(5).fill({ items: "a" });
+    const data = Array(5).fill({
+        showWeight: true,
+        packageCount: 10,
+        weightValue: 20,
+        dateValue: "2024-06-13",
+        expeditionId: "1234"
+    });
     const [value, setValue] = useState("Dashboard");
 
     return <>
@@ -59,7 +65,12 @@ function DashboardHarbor() {
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
-                    <LongContainer />
+                    <LongContainer
+                            packageCount={item.packageCount}
+                            weightValue={item.weightValue}
+                            dateValue={item.dateValue}
+                            expeditionId={item.expeditionId}
+                        />
                 </motion.div>
             ))}
         </div>

@@ -13,14 +13,14 @@ import Upload from '../../assets/Upload.svg';
 import Open from '../../assets/Open.svg';
 
 
-function ShipmentDetail() {
+function ShipmentDetail({weight}) {
     const { code } = useParams();
     const [value, setValue] = useState("");
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const ShipmentText = `Expedition #${code}`;
-
+    
     return (
         <>
     
@@ -56,7 +56,7 @@ function ShipmentDetail() {
                                 </div>
                                 <div className='flex pb-2'>
                                     <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">30 Kg</span>
+                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{weight}</span>
                                 </div>
                                 <div className='flex pb-2'>
                                     <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />

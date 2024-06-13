@@ -8,14 +8,14 @@ import reception from "../../assets/icons/bottombar/reception.svg";
 import receptionActive from "../../assets/icons/bottombar/reception_active.svg";
 import scan from "../../assets/icons/scan.svg";
 import "../../style/BottomNavigation.css";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate,Link,useLocation } from "react-router-dom";
 import "../../style/mobile.css"
 import { animate, motion, useAnimationControls } from "framer-motion";
 
 const HarborLayout = () => {
-    const [value, setValue] = useState("Dashboard")
-
+    const [value, setValue] = useState("Dashboard");
     const navigate = useNavigate();
+    const location = useLocation();
 
     const navbarContent = [
         {
@@ -48,7 +48,7 @@ const HarborLayout = () => {
             setValue(newValue);
             navigate(newValue);
         }
-        else navigate("Scanner");        
+        else navigate("Scanner");
     };
 
     return (
@@ -58,7 +58,9 @@ const HarborLayout = () => {
                     <span className='font-bold text-3xl'>{value}</span>
                     <div className="flex items-center gap-2">
                         <img src={NotificationBell} alt="Notification" className='' style={{ width: "30px", height: "30px" }} />
-                        <img src={Profilepic} alt="Profile" className='' style={{ width: "30px", height: "30px" }} />
+                        <Link to="/usersetting" state={{ from: location.pathname }}>
+                            <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
+                        </Link>
                     </div>
                 </div>
                 <Outlet />
