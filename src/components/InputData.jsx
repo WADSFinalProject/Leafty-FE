@@ -35,7 +35,6 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
   const postWetLeaves = async () => {
     try {
       const response = await axios.post(API_URL + '/wetLeaves/post', { UserID: String(UserID), Weight: weight, ReceivedTime: date, Status: "Awaiting" });
-      const response = await axios.post(API_URL + '/wetLeaves/post', { UserID: String(UserID), Weight: weight, ReceivedTime: date, Status: "Awaiting" });
       console.log('Wet Leaves posted successfully:', response.data);
     } catch (error) {
       console.error('Error posting wet leaves:', error);
@@ -51,7 +50,6 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
         Expiration: date,
         Status: "Awaiting"
       });
-      const response = await axios.post(API_URL + '/dryleaves/post', { date, weight });
       console.log('Dry Leaves posted successfully:', response.data);
     } catch (error) {
       console.error('Error posting dry leaves:', error);
@@ -60,7 +58,6 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
 
   const postFlour = async () => {
     try {
-      const response = await axios.post(API_URL + '/flour/post', { date, weight });
       const response = await axios.post(API_URL + '/flour/post', { date, weight });
       console.log('Flour posted successfully:', response.data);
     } catch (error) {
@@ -167,12 +164,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
       <div className='flex items-center justify-center mt-12'>
         <WidgetContainer backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full  mr-2'>
           <button 
-            className='flex items-center justify-center w-full h-8 font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg' onClick={handleSave}
-        <WidgetContainer backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full mr-2'>
-          <button
-            className='flex items-center justify-center w-full h-8 font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg' onClick={() => handleSave()}
-          >
-            Save
+            className='flex items-center justify-center w-full h-8 font-montserrat font-semibold leading-4 tracking-wide text-gray-100 text-lg' onClick={handleSave}>
           </button>
         </WidgetContainer>
       </div>
