@@ -6,19 +6,18 @@ import Download from "@assets/icons/download.svg";
 import Open from "@assets/icons/open_file.svg";
 import ReceptionFile from './ReceptionFile';
 
-const ReceptionDetail = () => {
+const ReceptionDetail = ({harbor = false, centra = false}) => {
     return (
-        <div className='p-2'>
             <WidgetContainer borderRadius='20px'>
                 <span className='font-montserrat text-16px font-semibold'>
                     Reception
                 </span>
                 <div className='flex flex-wrap items-center gap-4 justify-between'>
-                    <ReceptionFile harbor/>
-                    <ReceptionFile centra/>
+                    {harbor ? <ReceptionFile harbor = {harbor}/> : <></>}
+                    {centra ? <ReceptionFile centra = {centra}/> : <></>}
                 </div>
             </WidgetContainer>
-        </div>
+       
     );
 };
 

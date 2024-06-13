@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
+import ScanResultsDrawer from '@components/ScanResultsDrawer';
 import './scanner.css'; 
 
 function HarborScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
+    const [open, setOpen] = useState(false);
     const devices = useDeviceList();
 
     const handleDeviceChange = (event) => {
@@ -15,10 +17,20 @@ function HarborScanner() {
         console.error(error?.message);
     };
 
+    const handleToggleDrawer = (isOpen) => () => {
+        setOpen(isOpen);
+    };
+
+    useEffect(() => {
+        if (data) {
+            setOpen(true);
+        }
+    }, [data]);
+
     return (
-        <div className="scanner-wrapper">
+        <div>
             {devices.length > 0 && (
-                <div className="camera-select-container">
+                <div style={{ marginBottom: '10px' }}>
                     <label htmlFor="cameraSelect">Select Camera:</label>
                     <select id="cameraSelect" onChange={handleDeviceChange} value={selectedDeviceId || devices[0].deviceId}>
                         {devices.map((device) => (
@@ -35,16 +47,12 @@ function HarborScanner() {
                     onError={handleError}
                     options={{ deviceId: selectedDeviceId }}
                 />
-                {/* <div className="scanner-overlay">
-                    <div className="scanner-frame">
-                        <div className="scanner-guide">Align the QR code within the frame to scan</div>
-                    </div>
-                </div> */}
             </div>
-            <div className="scanned-data-container">
-                <h2>Scanned Data:</h2>
-                <p>{data}</p>
-            </div>
+            <ScanResultsDrawer 
+                open={open} 
+                toggleDrawer={handleToggleDrawer} 
+                data={data} 
+            />
         </div>
     );
 }

@@ -14,25 +14,69 @@ import ShipmentLogo from "../../assets/ShipmentLogo.svg";
 import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
 import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import Return from '../../components/Return';
+import axios from 'axios';
+import LoadingCircle from "@components/LoadingCircle"
+import { API_URL } from '../../App';
 
 function CentraLayout() {
     const [value, setValue] = useState("Dashboard"); // Initialize state with "Dashboard"
     const navigate = useNavigate();
     const location = useLocation();
+    const [showReturn, setShowReturn] = useState(false);
+    const [UserID, setUserID] = useState(null);
+    
+    async function handleWhoAmI() {
+        try {
+          const response = await axios.get(API_URL + "/whoami");
+          if (response && response.data) {
+            console.log(response.data.user_id);
+            setUserID(response.data.user_id);
+            return true;
+          } else {
+            console.error("No response or response data");
+            return false;
+          }
+        } catch (error) {
+          console.error("Error while checking session:", error);
+          return false;
+        }
+      }
+
+    useEffect(() => {
+        let intervalId;
+
+        async function checkUserID() {
+            const success = await handleWhoAmI();
+            if (!success) {
+                intervalId = setTimeout(checkUserID, 5000); // Retry after 5 seconds if not successful
+            }
+        }
+
+        checkUserID();
+
+        return () => {
+            if (intervalId) {
+                clearTimeout(intervalId);
+            }
+        };
+    }, []);
 
     // Ensure correct tab selection on page refresh
     useEffect(() => {
-        // Set value based on the current pathname
-        if (location.pathname === "/dashboard" || location.pathname === "/") {
-            setValue("Dashboard");
-        } else if (location.pathname === "/wetleaves") {
-            setValue("Wet Leaves");
-        } else if (location.pathname === "/dryleaves") {
-            setValue("Dry Leaves");
-        } else if (location.pathname === "/powder") {
-            setValue("Powder");
-        } else if (location.pathname === "/shipment") {
-            setValue("Shipment");
+        const pathname = location.pathname;
+        const hasDetail = pathname.includes('detail');
+        setShowReturn(hasDetail);
+
+        if (hasDetail) {
+            if (pathname.includes('wet-leaves/detail')) {
+                setReturnDestination("/centra/Wet%20Leaves");
+            } else if (pathname.includes('dry-leaves/detail')) {
+                setReturnDestination("/centra/Dry%20Leaves");
+            } else if (pathname.includes('powderdetail')) {
+                setReturnDestination("/centra/Powder");
+            } else if (pathname.includes('shipmentdetail')) {
+                setReturnDestination("/centra/Shipment/ShipmentOrder");
+            }
         }
     }, [location.pathname]); // Update when location.pathname changes
 
@@ -77,6 +121,10 @@ function CentraLayout() {
             navigate("dashboard");
         }
     };
+    
+    if (UserID === null) {
+        return <LoadingCircle />; // or a loading indicator
+    }
 
     return (
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">
@@ -92,7 +140,7 @@ function CentraLayout() {
                         </Link>
                     </div>
                 </div>
-                <Outlet />
+                <Outlet context={UserID} />
                 <div className="flex justify-center">
                     <BottomNavigation
                         className="fixed bottom-0 w-screen justify-center"
@@ -126,7 +174,7 @@ function CentraLayout() {
                                             },
                                         },
                                     }
-                                }}
+                                  }}
                             />
                         ))}
                     </BottomNavigation>

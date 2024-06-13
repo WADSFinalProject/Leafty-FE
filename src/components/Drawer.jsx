@@ -18,7 +18,6 @@ const Root = styled('div')(({ theme }) => ({
 const StyledBox = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderRadius: '30px',
-
 }));
 
 const Puller = styled('div')(({ theme }) => ({
@@ -40,7 +39,7 @@ const theme = createTheme({
 });
 
 function Drawer(props) {
-  const { window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
+  const { WetLeaves, DryLeaves, Flour, UserID, window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -74,6 +73,7 @@ function Drawer(props) {
         >
           <StyledBox>
             <InputData
+              UserID={UserID}
               firstp={firstText}
               secondp={secondText}
               thirdp={thirdText}
@@ -83,6 +83,9 @@ function Drawer(props) {
               showThirdInput={showThirdInput}
               thirdimg={thirdImgSrc}
               includeFourthSection={includeFourthSection}
+              WetLeaves={WetLeaves}
+              DryLeaves={DryLeaves}
+              Flour={Flour}
             />
           </StyledBox>
           <Puller />

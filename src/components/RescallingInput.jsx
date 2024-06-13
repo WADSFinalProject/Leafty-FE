@@ -2,7 +2,7 @@ import WidgetContainer from "./Cards/WidgetContainer";
 
 function RescallingInput({value}) {
     return <>
-        <WidgetContainer borderRadius='20px' className={"ml-1 flex flex-col gap-1 p-4"}>
+        <WidgetContainer borderRadius='20px' className={"    flex flex-col gap-1 p-4"}>
             <div className="flex flex-col gap-1"><span className='font-montserrat text-lg font-semibold'>
                 Re-scaling
             </span>
