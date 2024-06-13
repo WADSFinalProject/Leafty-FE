@@ -24,7 +24,8 @@ function TableComponent({
   onEditClick,
   onDelete,
   showSearch = true,
-  showFilter = true
+  showFilter = true,
+  widihmin = '65rem'
 }) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedRowForDeletion, setSelectedRowForDeletion] = useState(null);
@@ -103,7 +104,7 @@ function TableComponent({
         value={data}
         paginator={paginator}
         rows={paginator ? rows : undefined}
-        tableStyle={{ minWidth: '65rem' }}
+        tableStyle={{ minWidth: widihmin }}
         globalFilter={globalFilter}
         header={renderHeader()}
         size="large"
