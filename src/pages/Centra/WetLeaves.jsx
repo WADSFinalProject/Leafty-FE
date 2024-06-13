@@ -127,7 +127,7 @@ function WetLeaves() {
           text="Wet Leaves"
         />
       )}
-      <Drawer includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo} />
+      <Drawer WetLeaves UserID = {UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
     </>
   );
 }

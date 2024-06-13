@@ -39,7 +39,7 @@ const theme = createTheme({
 });
 
 function Drawer(props) {
-  const { WetLeaves, DryLeaves, Flour, UserID, window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
+  const { WetLeaves, DryLeaves, Flour, Shipment, UserID, window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -86,6 +86,7 @@ function Drawer(props) {
               WetLeaves={WetLeaves}
               DryLeaves={DryLeaves}
               Flour={Flour}
+              Shipment = {Shipment}
             />
           </StyledBox>
           <Puller />
