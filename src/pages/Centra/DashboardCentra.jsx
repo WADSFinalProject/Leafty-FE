@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Graph from '../../components/Graph';
 import WarningSign from '../../assets/WarningSign.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
-import FilterDashboard from "../../components/filterDashboard"
+import FilterDashboard from "../../components/filterDashboard";
 import StatsContainer from '../../components/Cards/StatsContainer';
 import WetLeaves from '../../assets/WetLeaves.svg';
 import DryLeaves from "../../assets/DryLeaves.svg";
@@ -10,11 +10,10 @@ import Powder from "../../assets/Powder.svg";
 import PackageSent from "../../assets/PackangeSent.svg";
 import Box from "../../assets/PackageBox.svg";
 import Fab from '@mui/material/Fab';
-import { useOutlet, useOutletContext } from 'react-router';
-
+import { useOutletContext } from 'react-router';
 
 function DashboardCentra() {
-  const userid = useOutletContext()
+  const UserID = useOutletContext();
 
   const statsData = [
     { label: "Wet Leaves", value: 243, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
@@ -33,15 +32,10 @@ function DashboardCentra() {
 
   return (
     <>
-
       <FilterDashboard tablet={tabletMode} />
-
-
       <WidgetContainer>
         <Graph />
       </WidgetContainer>
-
-
       <div className='grid grid-cols-2 gap-4'>
         {statsData.map((stat, index) => (
           <StatsContainer
@@ -57,12 +51,8 @@ function DashboardCentra() {
           />
         ))}
       </div>
-      {/* <div >
-        <LeavesInfo leavesData={leavesData} />
-      </div> */}
       <div className=''>
         <span className="font-semibold text-base font-montserrat leading-5 tracking-tighter text-left ">Last Activity</span>
-
       </div>
       <div className='grid gap-y-1'>
         {LastActivity.map((data, index) => (
@@ -73,9 +63,7 @@ function DashboardCentra() {
             </div>
           </WidgetContainer>
         ))}
-        
       </div>
-      
     </>
   );
 }

@@ -18,7 +18,6 @@ const Root = styled('div')(({ theme }) => ({
 const StyledBox = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderRadius: '30px',
-
 }));
 
 const Puller = styled('div')(({ theme }) => ({
@@ -74,7 +73,7 @@ function Drawer(props) {
         >
           <StyledBox>
             <InputData
-              UserID = {UserID}
+              UserID={UserID}
               firstp={firstText}
               secondp={secondText}
               thirdp={thirdText}
@@ -84,9 +83,9 @@ function Drawer(props) {
               showThirdInput={showThirdInput}
               thirdimg={thirdImgSrc}
               includeFourthSection={includeFourthSection}
-              WetLeaves = {WetLeaves}
-              DryLeaves = {DryLeaves}
-              Flour = {Flour}
+              WetLeaves={WetLeaves}
+              DryLeaves={DryLeaves}
+              Flour={Flour}
             />
           </StyledBox>
           <Puller />
