@@ -7,7 +7,7 @@ import WarningIcon from "@assets/warning.svg";
 const Popup = forwardRef(({ warning = false, info = false, error = false, confirm = false, leavesid, description, onConfirm, onCancel }, ref) => {
     return (
         <dialog ref={ref} id={leavesid} className="modal">
-            <div className="modal-box rounded-lg flex items-start flex-col gap-2 items-center">
+            <div className="modal-box rounded-lg flex flex-col gap-2 items-center">
                 {warning && <>
                     <img src={WarningIcon} className="w-1/6" alt="Warning" />
                     <span>{"Warning"}</span>

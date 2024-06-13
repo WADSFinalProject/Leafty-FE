@@ -1,38 +1,37 @@
 import React, { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
-import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';
 import Countdown from '../../components/Countdown';
-import InnerPlugins from '../../assets/InnerPlugins.svg';
 import CountdownIcon from '../../assets/Countdown.svg';
 import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
-import InputField from '../../components/InputField';
-import Fab from '@mui/material/Fab';
-import AddIcon from '@mui/icons-material/Add';
+import ShipmentPopup from '../../components/Popups/ShipmentPopup';
+import ShipmentLogo from '../../assets/ShipmentDetail.svg';
+import AccordionUsage from '../../components/AccordionUsage';
 
 function ShipmentOrders() {
+    const [selectedData, setSelectedData] = useState(null);
     const Orders = [
-        { time: "Packing", color: "#79B2B7", image: CountdownIcon, weight: "15 Kg", code: "O123486" },
+        { time: "Packing", color: "#79B2B7", image: CountdownIcon, weight: "15 Kg", code: "O123486" , detailImage: ShipmentLogo,},
 
     ];
-    return (
-        <>
-            <div className="mt-4 flex justify-center items-center gap-3 grow">
-                <InputField icon={SearchLogo} placeholder={"Search"} className={""} />
-                <div className='ml-1'>
-                    <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-                        <img src={InnerPlugins} alt="InnerPlugins" className='w-8 h-8' />
-                    </WidgetContainer>
-                </div>
-            </div>
-            {Orders.map((item, index) => (
-                <div key={`order_${index}`} className=' flex justify-between mt-3'>
+    const handleButtonClick = (item) => {
+        setSelectedData(item);
+        document.getElementById('ShipmentPopup').showModal();
+      };
+
+      const accordions = [
+        {
+          summary: 'Ordered shipment',
+          details: () => (
+            <>
+             {Orders.map((item, index) => (
+                <div key={`order_${index}`} className=' flex justify-between  p-1'>
                     <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                        <Link to={`/centra/shipmentdetail/${item.code}`}>
+                        <button onClick={() => handleButtonClick(item)}>
                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                        </Link>
+                        </button>
+                       
                         <div className='flex flex-col ml-3'>
                             <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
                                 {item.weight}
@@ -47,6 +46,27 @@ function ShipmentOrders() {
                     </WidgetContainer>
                 </div>
             ))}
+            </>
+          ),
+          defaultExpanded: true,
+        }
+        
+      ];
+    
+    return (
+        <>
+            
+            <AccordionUsage accordions={accordions} className="mt-3"/>
+            {selectedData && (
+                <ShipmentPopup
+                code={selectedData.code}
+                time={selectedData.time}
+                weight={selectedData.weight}
+                date={selectedData.date}
+                imageSrc={selectedData.detailImage}
+               
+                />
+            )}
         </>
     )
 

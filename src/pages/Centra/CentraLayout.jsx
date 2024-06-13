@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Outlet, useLocation } from 'react-router-dom';
+import { useNavigate, Outlet, useLocation, Link } from 'react-router-dom';
 import Profilepic from '../../assets/Profilepic.svg';
 import NotificationBell from "../../assets/NotificationBell.svg";
 import BottomNavigation from '@mui/material/BottomNavigation';
@@ -16,29 +16,25 @@ import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import Return from '../../components/Return';
 
 function CentraLayout() {
-    const [value, setValue] = useState("Dashboard");
+    const [value, setValue] = useState("Dashboard"); // Initialize state with "Dashboard"
     const navigate = useNavigate();
     const location = useLocation();
-    const [showReturn, setShowReturn] = useState(false);
-    const [returnDestination, setReturnDestination] = useState("");
 
+    // Ensure correct tab selection on page refresh
     useEffect(() => {
-        const pathname = location.pathname;
-        const hasDetail = pathname.includes('detail');
-        setShowReturn(hasDetail);
-
-        if (hasDetail) {
-            if (pathname.includes('wet-leaves/detail')) {
-                setReturnDestination("/centra/Wet%20Leaves");
-            } else if (pathname.includes('dry-leaves/detail')) {
-                setReturnDestination("/centra/Dry%20Leaves");
-            } else if (pathname.includes('powderdetail')) {
-                setReturnDestination("/centra/Powder");
-            } else if (pathname.includes('shipmentdetail')) {
-                setReturnDestination("/centra/Shipment/ShipmentOrder");
-            }
+        // Set value based on the current pathname
+        if (location.pathname === "/dashboard" || location.pathname === "/") {
+            setValue("Dashboard");
+        } else if (location.pathname === "/wetleaves") {
+            setValue("Wet Leaves");
+        } else if (location.pathname === "/dryleaves") {
+            setValue("Dry Leaves");
+        } else if (location.pathname === "/powder") {
+            setValue("Powder");
+        } else if (location.pathname === "/shipment") {
+            setValue("Shipment");
         }
-    }, [location.pathname]);
+    }, [location.pathname]); // Update when location.pathname changes
 
     const navbarContent = [
         {
@@ -75,9 +71,10 @@ function CentraLayout() {
     const handleChange = (event, newValue) => {
         if (newValue) {
             setValue(newValue);
-            navigate(newValue);
+            navigate(newValue.toLowerCase()); // Navigate to the lowercase value (assuming route names are lowercase)
         } else {
-            navigate("Dashboard");
+            setValue("Dashboard");
+            navigate("dashboard");
         }
     };
 
@@ -86,12 +83,13 @@ function CentraLayout() {
             <div className="bg-[#F9F9F9] max-w-screen-md w-full h-full flex flex-col p-4 m-4 gap-4 no-scrollbar">
                 <div className='flex justify-between items-center'>
                     <div className="flex items-center gap-3">
-                        {showReturn && <Return destination={returnDestination} className="mr-2 text-sm" />}
                         <span className='font-bold text-3xl'>{value}</span>
                     </div>
                     <div className="flex items-center gap-2">
                         <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
-                        <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
+                        <Link to="/usersetting" state={{ from: location.pathname }}>
+                            <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
+                        </Link>
                     </div>
                 </div>
                 <Outlet />
@@ -128,7 +126,7 @@ function CentraLayout() {
                                             },
                                         },
                                     }
-                                  }}
+                                }}
                             />
                         ))}
                     </BottomNavigation>

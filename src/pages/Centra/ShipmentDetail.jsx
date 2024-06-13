@@ -1,23 +1,5 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import Profilepic from '../../assets/Profilepic.svg';
-import NotificationBell from "../../assets/NotificationBell.svg";
-import Return from '../../components/Return';
-import PowderLogo from '../../assets/PowderDetail.svg';
-import ExpiredIn from '../../components/ExpiredIn';
-import LeavesDetail from '../../components/LeavesDetail';
-import LeavesType from '../../components/LeavesType';
-import BottomNavigation from '@mui/material/BottomNavigation';
-import BottomNavigationAction from '@mui/material/BottomNavigationAction';
-import WetLeavesNavbar from "../../assets/WetLeavesLogo.svg";
-import DryLeavesNavbar from "../../assets/DryLeavesLogo.svg";
-import DashCentra from "../../assets/icons/bottombar/dashboard_centra.svg";
-import WetLeavesActive from "../../assets/icons/bottombar/wetleaves_active.svg";
-import DryLeavesActive from "../../assets/icons/bottombar/dryleaves_actives.svg";
-import PowderNavbar from "../../assets/PowderLogo.svg";
-import ShipmentNavbar from "../../assets/ShipmentLogo.svg";
-import PowderActive from "../../assets/icons/bottombar/powder_active.svg";
-import ShipmentActive from "../../assets/icons/bottombar/shipment_active.svg";
 import ShipmentLogo from '../../assets/ShipmentDetail.svg';
 import PackageCount from '../../assets/Packagecount.svg';
 import Date from '../../assets/Date.svg';
@@ -31,14 +13,14 @@ import Upload from '../../assets/Upload.svg';
 import Open from '../../assets/Open.svg';
 
 
-function ShipmentDetail() {
+function ShipmentDetail({weight}) {
     const { code } = useParams();
     const [value, setValue] = useState("");
     const handleChange = (event, newValue) => {
         setValue(newValue);
     };
     const ShipmentText = `Expedition #${code}`;
-
+    
     return (
         <>
     
@@ -74,7 +56,7 @@ function ShipmentDetail() {
                                 </div>
                                 <div className='flex pb-2'>
                                     <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">30 Kg</span>
+                                    <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{weight}</span>
                                 </div>
                                 <div className='flex pb-2'>
                                     <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />

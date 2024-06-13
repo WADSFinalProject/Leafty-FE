@@ -72,9 +72,7 @@ function Shipment() {
                 <Outlet />
             </Box>
 
-            <div className="flex justify-end mt-4">
-                
-            </div>
+
 
 
             <Drawer includeFourthSection={true} showThirdInput={true} firstText="Total Packages" secondText="Schedule Deliver" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={PackageCount} secondImgSrc={Date} thirdImgSrc={WeightLogo} />

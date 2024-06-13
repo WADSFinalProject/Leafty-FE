@@ -8,7 +8,7 @@ import shipmentList from "../../assets/icons/bottombar/xyz_shipmentlist.svg";
 import shipmentListActive from "../../assets/icons/bottombar/xyz_shipmentlistActive.svg";
 import scan from "../../assets/icons/scan.svg";
 import "../../style/BottomNavigation.css";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useNavigate,useLocation,Link } from "react-router-dom";
 import "../../style/mobile.css"
 import { animate, motion, useAnimationControls } from "framer-motion";
 
@@ -16,6 +16,7 @@ const XYZLayout = () => {
     const [value, setValue] = useState("Dashboard")
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const navbarContent = [
         {
@@ -58,7 +59,9 @@ const XYZLayout = () => {
                     <span className='font-bold text-3xl'>{value}</span>
                     <div className="flex items-center gap-2">
                         <img src={NotificationBell} alt="Notification" className='' style={{ width: "30px", height: "30px" }} />
-                        <img src={Profilepic} alt="Profile" className='' style={{ width: "30px", height: "30px" }} />
+                        <Link to="/usersetting" state={{ from: location.pathname }}>
+                            <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
+                        </Link>
                     </div>
                 </div>
                 <Outlet />
