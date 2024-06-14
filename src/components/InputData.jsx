@@ -202,7 +202,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
                     </button>
                 </WidgetContainer>
             </div>
-            {/* <ChoosePowderDrawer UserID={UserID} open={drawerOpen} toggleDrawer={toggleDrawer} /> */}
+            {Shipment ? <ChoosePowderDrawer UserID={UserID} open={drawerOpen} toggleDrawer={toggleDrawer} /> : <></>}
         </div>
     );
 }

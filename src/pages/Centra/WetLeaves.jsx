@@ -106,7 +106,6 @@ function WetLeaves() {
 
   return (
     <>
-
       <AccordionUsage accordions={accordions} />
       
       {selectedData && (

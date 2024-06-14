@@ -107,8 +107,6 @@ function DryLeaves() {
 
   return (
     <>
-      
-
       <AccordionUsage accordions={accordions} />
       
       {selectedData && (
@@ -125,7 +123,7 @@ function DryLeaves() {
         DryLeaves 
         UserID={UserID} 
         includeFourthSection={false} 
-        showThirdInput={true} 
+        showThirdInput={false} 
         firstText="Expiry Date" 
         secondText="Weight" 
         thirdText="Wet leaves" 

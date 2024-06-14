@@ -43,7 +43,7 @@ function Powder() {
 
   const accordions = [
     {
-      summary: 'Finished Leaves',
+      summary: 'Awaiting Powder',
       details: () => (
         <>
           {/* {flourData.map((item) => (
@@ -90,12 +90,16 @@ function Powder() {
       ),
       defaultExpanded: true,
     },
+    {
+      summary: 'Processed Powder',
+    },
+    {
+      summary: 'Thrown Powder',
+    }
   ];
 
   return (
     <>
-      
-
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
@@ -112,7 +116,7 @@ function Powder() {
         includeFourthSection={false}
         UserID={UserID}
         Flour={true}
-        showThirdInput={true}
+        showThirdInput={false}
         firstText="Expiry Date"
         secondText="Weight"
         thirdText="Dry leaves"
