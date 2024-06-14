@@ -12,6 +12,7 @@ import PowderLogo from '@assets/Powder.svg';
 import ReadyIcon from '@assets/ReadyIcon.svg';
 import { API_URL } from '../App';
 import "./Drawer.css";
+import Powder from '../pages/Centra/Powder';
 
 const drawerBleeding = 56;
 
@@ -25,7 +26,9 @@ const Root = styled('div')(({ theme }) => ({
 const StyledBox = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: '30px',
-    padding: theme.spacing(2)
+    padding: theme.spacing(2),
+    height: '75vh', // Use vh to ensure it takes 75% of the viewport height
+    overflowY: 'auto' // Ensure content is scrollable if it overflows
 }));
 
 const Puller = styled('div')(({ theme }) => ({
@@ -58,8 +61,9 @@ function ChoosePowderDrawer(props) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(API_URL + `/powder/get_by_user/${UserID}`);
+                const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
                 setPowderData(response.data);
+                console.log(response.data)
             } catch (error) {
                 console.error('Error fetching Powder data:', error);
             }
@@ -90,24 +94,24 @@ function ChoosePowderDrawer(props) {
                         <div className='flex flex-col gap-2'>
                             <span className='font-bold text-2xl'>Choose Powder</span>
                             {PowderData ? (
-                                data.map((item) => (
+                                PowderData.map((item) => (
                                     <div key={item.code} className='flex justify-between'>
                                         <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
                                             <Checkbox sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}></Checkbox>
-                                            <Link to={`/centra/powderdetail/${item.code}/${item.weight}`}>
-                                                <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
-                                            </Link>
+                                            
+                                            <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+                                           
 
                                             <div className='flex flex-col ml-3'>
                                                 <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                                    {item.weight}
+                                                    {item.Flour_Weight} Kg
                                                 </span>
                                                 <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                                    {item.code}
+                                                    P01{item.FlourID}
                                                 </span>
                                             </div>
                                             <div className="flex ml-auto items-center">
-                                                <Countdown time={item.time} color={item.color} image={item.image} />
+                                                <Countdown time={item.Expiration} color={"#C0CD30"} image={ReadyIcon} />
                                             </div>
                                         </WidgetContainer>
                                     </div>

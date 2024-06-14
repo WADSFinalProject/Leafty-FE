@@ -14,6 +14,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
     const [selectedWetLeavesID, setSelectedWetLeavesID] = useState('');
     const [selectedDryLeavesID, setSelectedDryLeavesID] = useState('');
     const [drawerOpen, setDrawerOpen] = useState(false);
+    const [powderID, setPowderID] = useState(''); // New state for powder ID
 
     useEffect(() => {
         if (DryLeaves) {
@@ -82,13 +83,35 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
         }
     };
 
+    const postShipment = async () => {
+        try {
+            const response = await axios.post(API_URL + '/shipment/post', {
+                UserID: String(UserID),
+                Date: date,
+                Weight: weight,
+                PowderID: powderID,
+                Status: "Pending"
+            });
+            console.log('Shipment posted successfully:', response.data);
+        } catch (error) {
+            console.error('Error posting shipment:', error);
+        }
+    };
+
     const handleSave = () => {
+        console.log('Save button clicked');
         if (WetLeaves) {
+            console.log('Posting Wet Leaves...');
             postWetLeaves();
         } else if (DryLeaves) {
+            console.log('Posting Dry Leaves...');
             postDryLeaves();
         } else if (Flour) {
+            console.log('Posting Flour...');
             postFlour();
+        } else if (Shipment) {
+            console.log('Posting Shipment...');
+            postShipment();
         }
     };
 
@@ -185,6 +208,8 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
                                 type="text"
                                 className="w-full h-full bg-transparent border-none outline-none px-2"
                                 placeholder='Input Number'
+                                value={powderID}
+                                onChange={(e) => setPowderID(e.target.value)}
                             />
                             <img src={thirdimg} alt="Weight" className='w-6 h-auto mr-3' />
                         </div>
@@ -209,3 +234,4 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
 }
 
 export default InputData;
+

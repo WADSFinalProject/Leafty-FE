@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
+import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
 import ScanResultsDrawer from '@components/ScanResultsDrawer';
 import './scanner.css'; 
 
@@ -7,7 +7,7 @@ function XYZScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
     const [open, setOpen] = useState(false);
-    const devices = useDeviceList();
+    const devices = useDevices();
 
     const handleDeviceChange = (event) => {
         setSelectedDeviceId(event.target.value);

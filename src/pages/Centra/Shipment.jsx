@@ -13,7 +13,7 @@ import WeightLogo from "@assets/Weight.svg";
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#0F7275', 
+            main: '#0F7275',
         },
     },
 });
@@ -70,12 +70,25 @@ function Shipment() {
                         <BoldTab label="Completed" component={Link} to="ShipmentCompleted" />
                     </Tabs>
                 </Box>
-                <Outlet />
+                <CustomTabPanel value={value} index={0}>
+                    {/* Display Orders Tab Content */}
+                    <Outlet context={UserID} />
+                </CustomTabPanel>
             </Box>
 
-        
-            <Drawer UserID = {UserID} Shipment = {true} includeFourthSection={true} showThirdInput={true} firstText="Schedule Deliver" secondText="Total Packages" thirdText="Powder ID" fourthText="Total weight" firstImgSrc={Date} secondImgSrc={PackageCount} thirdImgSrc={WeightLogo} />
-
+            <Drawer 
+                UserID={UserID} 
+                Shipment={true} 
+                includeFourthSection={true} 
+                showThirdInput={true} 
+                firstText="Schedule Deliver" 
+                secondText="Total Packages" 
+                thirdText="Powder ID" 
+                fourthText="Total weight" 
+                firstImgSrc={Date} 
+                secondImgSrc={PackageCount} 
+                thirdImgSrc={WeightLogo} 
+            />
         </ThemeProvider>
     );
 }
