@@ -9,13 +9,14 @@ const WidgetContainer = ({
   backgroundColor, 
   round = "md", 
   border = true, 
+  container = true,
   borderRadius, 
   borderWidth = "4px", 
   borderColor = "white" 
 }) => {
   return (
     <div 
-      className={`${className ? className : "flex flex-col container"} gap-2 rounded-${round} shadow-lg ${padding ? 'p-2' : ''} ${border ? `border-${borderWidth}` : ''}`} 
+      className={`${className ? className : "flex flex-col"} ${container ? "container":''} gap-2 rounded-${round} shadow-lg ${padding ? 'p-2' : ''} ${border ? `border-${borderWidth}` : ''}`} 
       style={{ background: backgroundColor, borderRadius: borderRadius, borderColor: border ? borderColor : 'transparent', borderWidth: border ? borderWidth : '0' }}
     >
       {children}

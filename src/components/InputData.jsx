@@ -29,7 +29,8 @@ const InputData = ({
   const [selectedWetLeavesID, setSelectedWetLeavesID] = useState("");
   const [selectedDryLeavesID, setSelectedDryLeavesID] = useState("");
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [powderIDs, setPowderIDs] = useState([]); // Updated state for powder IDs
+  const [powderIDs, setPowderIDs] = useState([]);
+  const [totalFlourWeight, setTotalFlourWeight] = useState(0); // New state for total flour weight
 
   useEffect(() => {
     if (DryLeaves) {
@@ -140,6 +141,11 @@ const InputData = ({
   const handleSelectFlour = (flours) => {
     console.log("handleSelectFlour in InputData with flours:", flours);
     setPowderIDs(flours);
+
+    // Calculate the total flour weight
+    const totalWeight = flours.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+    setTotalFlourWeight(totalWeight);
+
     setDrawerOpen(false);
   };
 
@@ -155,6 +161,7 @@ const InputData = ({
           borderRadius="20px"
           borderWidth=""
           borderColor=""
+          container={false}
           className="mt-2"
         >
           <div className="flex  justify-items-end ">
@@ -178,7 +185,8 @@ const InputData = ({
           borderRadius="20px"
           borderWidth=""
           borderColor=""
-          className="w-full "
+          className="w-full"
+          container={false}
         >
           <div className="flex">
             <input
@@ -205,12 +213,15 @@ const InputData = ({
             borderRadius="20px"
             borderWidth=""
             borderColor=""
-            className="mt-2 h-fit p-4"
+            container={false}
+            className="mt-2 h-fit"
           >
             <div className="flex flex-row flex-wrap gap-2 items-center">
               {powderIDs.map((value) => (
                 <span
-                  className={"bg-[#94C3B3] p-2 px-4 text-[#0F7275] rounded-full"}
+                  className={
+                    "bg-[#94C3B3] p-2 px-4 text-[#0F7275] rounded-full"
+                  }
                   key={value.FlourID}
                 >{`${value.FlourID} - ${value.Flour_Weight} Kg`}</span>
               ))}
@@ -237,6 +248,7 @@ const InputData = ({
             backgroundColor="#FFFFFF"
             borderRadius="20px"
             borderWidth=""
+            container={false}
             borderColor=""
             className="mt-2"
           >
@@ -264,6 +276,7 @@ const InputData = ({
             Select Dry Leaves
           </p>
           <WidgetContainer
+            container={false}
             backgroundColor="#FFFFFF"
             borderRadius="20px"
             borderWidth=""
@@ -271,7 +284,7 @@ const InputData = ({
             className="mt-2"
           >
             <select
-              className="w-full h-full bg-transparent border-none outline-none px-            px-2"
+              className="w-full h-full bg-transparent border-none outline-none px-2"
               value={selectedDryLeavesID}
               onChange={(e) => setSelectedDryLeavesID(e.target.value)}
             >
@@ -294,6 +307,7 @@ const InputData = ({
             {fourthp}
           </p>
           <WidgetContainer
+            container={false}
             backgroundColor="#FFFFFF"
             borderRadius="20px"
             borderWidth=""
@@ -302,10 +316,11 @@ const InputData = ({
           >
             <div className="flex">
               <input
+                disabled
                 type="text"
                 className="w-full h-full bg-transparent border-none outline-none px-2"
                 placeholder="Input Number"
-                value={""}
+                value={totalFlourWeight +" Kg"} // Displaying the total flour weight
               />
               <img src={thirdimg} alt="Weight" className="w-6 h-auto mr-3" />
             </div>
@@ -316,6 +331,7 @@ const InputData = ({
       {/* Save Button */}
       <div className="flex items-center justify-center mt-12">
         <WidgetContainer
+          container={false}
           backgroundColor="#0F7275"
           borderRadius="20px"
           border={false}

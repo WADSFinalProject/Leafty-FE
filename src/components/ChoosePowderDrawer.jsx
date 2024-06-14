@@ -112,7 +112,7 @@ function ChoosePowderDrawer(props) {
                             {PowderData.length > 0 ? (
                                 PowderData.map((item) => (
                                     <div key={item.FlourID} className='flex justify-between'> {/* Corrected key prop */}
-                                        <WidgetContainer borderRadius="10px" className="w-full flex items-center ">
+                                        <WidgetContainer container = {false} borderRadius="10px" className="w-full flex items-center ">
                                             <Checkbox
                                                 sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
                                                 checked={selectedFlours.some(f => f.FlourID === item.FlourID)}

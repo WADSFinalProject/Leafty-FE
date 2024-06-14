@@ -32,9 +32,10 @@
           fileName="ShipmentCode.pdf"
         >
           {({ loading }) => (
-            <div className="p-2 w-10 h-10 rounded-full flex items-center justify-center"
+            <div className="p-2 px-4 w-fit gap-2 h-10 rounded-full flex items-center justify-center mt-2"
                 style={{ backgroundColor: loading ? "#D9D9D9" : "#79B2B7" }}>
               <img src={Download} alt="Download icon" />
+              <span className = "text-[white] font-semibold">Download</span>
             </div>
           )}
         </PDFDownloadLink>
