@@ -30,6 +30,7 @@ function DryLeaves() {
       try {
         const response = await axios.get(`${API_URL}/dryleaves/get_by_user/${UserID}`);
         const data = response.data;
+        console.log(data)
         setDryLeavesData(data.filter(item => !item.isExpired));
         setExpiredLeavesData(data.filter(item => item.isExpired));
       } catch (error) {
@@ -113,7 +114,7 @@ function DryLeaves() {
           code={selectedData.DryLeavesID}
           time={selectedData.ReceivedTime}
           weight={selectedData.Processed_Weight + " Kg"}
-          date={selectedData.ReceivedDate}
+          date={selectedData.Expiration}
           imageSrc={DryLeavesDetail}
           text="Dry Leaves"
         />
