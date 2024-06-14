@@ -69,9 +69,9 @@ function Powder() {
           {flourData.map((item) => (
             <div key={item.FlourID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                <button onClick={() => handleButtonClick(item)}>
-                  <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
-                </button>
+              <button onClick={() => handleButtonClick(item)}>
+                <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+              </button>
                 <div className='flex flex-col ml-3'>
                   <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
                     {item.Flour_Weight} Kg
@@ -94,23 +94,16 @@ function Powder() {
 
   return (
     <>
-      <div className="mt-4 flex justify-center items-center gap-3">
-        <InputField icon={SearchLogo} placeholder="Search" className="max-w-none" />
-        <div className="ml-1">
-          <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-            <img src={InnerPlugins} alt="InnerPlugins" className="w-8 h-8" />
-          </WidgetContainer>
-        </div>
-      </div>
+      
 
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
-          code={selectedData.code}
+          code={selectedData.FlourID}
           time={selectedData.time}
-          weight={selectedData.weight}
-          date={selectedData.date}
-          imageSrc={selectedData.detailImage}
+          weight={selectedData.Flour_Weight}
+          date={selectedData.Expiration}
+          imageSrc={PowderDetail}
           text={selectedData.text}
         />
       )}

@@ -30,6 +30,7 @@ function DryLeaves() {
       try {
         const response = await axios.get(`${API_URL}/dryleaves/get_by_user/${UserID}`);
         const data = response.data;
+        console.log(data)
         setDryLeavesData(data.filter(item => !item.isExpired));
         setExpiredLeavesData(data.filter(item => item.isExpired));
       } catch (error) {
@@ -106,14 +107,7 @@ function DryLeaves() {
 
   return (
     <>
-      <div className="mt-4 flex justify-center items-center gap-3">
-        <InputField icon={SearchLogo} placeholder="Search" className="w-full" />
-        <div className='ml-1'>
-          <WidgetContainer backgroundColor="#94C3B3" borderRadius="20px" border={false}>
-            <img src={InnerPlugins} alt="Inner Plugins" className='w-full h-8' />
-          </WidgetContainer>
-        </div>
-      </div>
+      
 
       <AccordionUsage accordions={accordions} />
       
@@ -122,7 +116,7 @@ function DryLeaves() {
           code={selectedData.DryLeavesID}
           time={selectedData.ReceivedTime}
           weight={selectedData.Processed_Weight + " Kg"}
-          date={selectedData.ReceivedDate}
+          date={selectedData.Expiration}
           imageSrc={DryLeavesDetail}
           text="Dry Leaves"
         />
