@@ -86,7 +86,7 @@ function Drawer(props) {
               WetLeaves={WetLeaves}
               DryLeaves={DryLeaves}
               Flour={Flour}
-              Shipment = {Shipment}
+              Shipment={Shipment}
             />
           </StyledBox>
           <Puller />

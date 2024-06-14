@@ -2,21 +2,21 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import WidgetContainer from '../components/Cards/WidgetContainer';
 
-const Countdown = ({ receivedTime, color, image }) => {
-  const [timeLeft, setTimeLeft] = useState('');
+const Countdown = ({ expiredTime, color, image }) => {
+  const [timeLeft, setTimeLeft] = useState({ hours: '0h', minutes: '0m' });
 
   useEffect(() => {
     const calculateTimeLeft = () => {
       const now = new Date();
-      const targetTime = new Date(receivedTime);
+      const targetTime = new Date(expiredTime);
       const difference = targetTime - now;
 
       if (difference > 0) {
         const hours = Math.floor(difference / (1000 * 60 * 60));
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-        setTimeLeft(`${hours}h${minutes}m`);
+        setTimeLeft({ hours: `${hours}h`, minutes: `${minutes}m` });
       } else {
-        setTimeLeft('0h0m');
+        setTimeLeft({ hours: '0h', minutes: '0m' });
       }
     };
 
@@ -24,7 +24,7 @@ const Countdown = ({ receivedTime, color, image }) => {
     const timerId = setInterval(calculateTimeLeft, 60000);
 
     return () => clearInterval(timerId);
-  }, [receivedTime]);
+  }, [expiredTime]);
 
   return (
     <div className="flex justify-end">
@@ -36,7 +36,7 @@ const Countdown = ({ receivedTime, color, image }) => {
       >
         <div className="flex justify-center items-center mr-1 gap-2">
           <span className="font-montserrat text-xs font-medium leading-14 tracking-normal text-center truncate flex items-center">
-            {timeLeft}
+            {timeLeft.hours}{timeLeft.minutes}
           </span>
           <img src={image} alt="Countdown" className="w-4 h-4" /> 
         </div>
@@ -46,7 +46,7 @@ const Countdown = ({ receivedTime, color, image }) => {
 };
 
 Countdown.propTypes = {
-  receivedTime: PropTypes.string.isRequired,
+  expiredTime: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
 };

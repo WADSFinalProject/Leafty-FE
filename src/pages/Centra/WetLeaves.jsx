@@ -32,6 +32,7 @@ function WetLeaves() {
         const data = response.data;
         setWetLeavesData(data.filter(item => !item.isExpired));
         setExpiredLeavesData(data.filter(item => item.isExpired));
+        console.log(data)
       } catch (error) {
         console.error('Error fetching wet leaves data:', error);
       }
@@ -65,7 +66,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown receivedTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
+                  <Countdown expiredTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -93,7 +94,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown receivedTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
+                  <Countdown expiredTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -110,14 +111,13 @@ function WetLeaves() {
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.WetLeavesID}
-          time={selectedData.ReceivedTime}
-          weight={selectedData.Weight}
-          date={selectedData.ReceivedDate}
+          weight={selectedData.Weight + " Kg"}
+          expirationDate={selectedData.ReceivedTime}
           imageSrc={WetLeavesDetail}
           text="Wet Leaves"
         />
       )}
-      <Drawer WetLeaves UserID = {UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={Date} secondImgSrc={WeightLogo}/>
+      <Drawer WetLeaves UserID={UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo}/>
     </>
   );
 }
