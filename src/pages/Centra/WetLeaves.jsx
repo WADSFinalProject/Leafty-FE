@@ -106,8 +106,7 @@ function WetLeaves() {
 
   return (
     <>
-      <AccordionUsage accordions={accordions} />
-      
+      <AccordionUsage accordions={accordions} /> 
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.WetLeavesID}

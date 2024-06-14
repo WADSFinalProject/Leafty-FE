@@ -51,6 +51,7 @@ import WetLeavesOverview from "./pages/XYZ Desktop/WetLeavesOverview";
 import AdminUserApproval from "./pages/Admin/AdminUserApproval";
 import Pickup from "./pages/XYZ Desktop/PickUp";
 import ShipmentDetails from "./pages/XYZ Desktop/ShipmentDetails";
+import QRPage from "./pages/QRPage";
 
 function App() {
   return (
@@ -115,6 +116,7 @@ function App() {
           <Route path="user management" element={<AdminUserTable />} />
           <Route path="user approval" element={<AdminUserApproval />} />
         </Route>
+        <Route path="qr" element={<QRPage />} />
         {/* <Route path="Admin" element={<TempAdmin />}> */}
         {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}
         {/* <Route path="adminwetleaves" element={<AdminWetLeaves />} />

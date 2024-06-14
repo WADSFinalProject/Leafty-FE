@@ -18,7 +18,7 @@ function ShipmentOrders() {
     const handleButtonClick = (item) => {
         setSelectedData(item);
         document.getElementById('ShipmentPopup').showModal();
-      };
+    };
 
       const accordions = [
         {
