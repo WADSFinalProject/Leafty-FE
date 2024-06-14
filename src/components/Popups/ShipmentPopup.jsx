@@ -12,7 +12,7 @@ import Upload from '../../assets/Upload.svg';
 import Open from '../../assets/Open.svg';
 import QRPage from '../../pages/QRPage';
 import Button from '@components/Button'; //
-function ShipmentPopup({ code, weight }) {
+function ShipmentPopup({ code, weight, quantity, courier }) {
     const ShipmentText = `Expedition #${code}`;
     const date = '22/07/2024'; // Example static date
 
@@ -30,7 +30,7 @@ function ShipmentPopup({ code, weight }) {
                         <div className="flex space-x-2">
                             <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                3 Packages
+                                {quantity} Packages
                             </span>
                             <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
@@ -54,7 +54,7 @@ function ShipmentPopup({ code, weight }) {
                                     </div>
                                     <div className='flex pb-2'>
                                         <img src={Courier} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - JNE</span>
+                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - {courier}</span>
                                     </div>
                                 </div>
 

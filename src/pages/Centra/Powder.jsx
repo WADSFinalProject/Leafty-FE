@@ -19,6 +19,8 @@ import AccordionUsage from '../../components/AccordionUsage';
 
 function Powder() {
   const [flourData, setFlourData] = useState([]);
+  const [ProcessedFlourData, setProcessedFlourData] = useState([]);
+  const [ThrownFlourData, setThrownFlourData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
   const UserID = useOutletContext();
 
@@ -26,7 +28,9 @@ function Powder() {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
-        setFlourData(response.data);
+        setFlourData(response.data.filter(item => item.Status = "Awaiting"));
+        setProcessedFlourData(response.data.filter(item => item.Status = "Processed")); 
+        setThrownFlourData(response.data.filter(item => item.Status = "Thrown")); // Corrected line
         console.log(response.data);
       } catch (error) {
         console.error('Error fetching flour data:', error);
@@ -103,6 +107,7 @@ function Powder() {
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
+
           code={selectedData.FlourID}
           weight={selectedData.Flour_Weight + " Kg"}
           expirationDate={selectedData.Expiration}
@@ -113,6 +118,8 @@ function Powder() {
       )}
 
       <Drawer
+        Data = {flourData}
+        setData = {setFlourData}
         includeFourthSection={false}
         UserID={UserID}
         Flour={true}

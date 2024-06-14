@@ -16,8 +16,7 @@ function QRPage({ numPackages = 4, data }) {
         if (!data) {
           throw new Error("Data is required for generating QR codes");
         }
-
-        const hash = await bcrypt.hash(String(data)   , 10);
+        const hash = await bcrypt.hash(String(data), 10);
         const encryptedData = { id: 1, value: hash }; // Assuming a single data item with id 1
 
         // Use only the encrypted data for display
