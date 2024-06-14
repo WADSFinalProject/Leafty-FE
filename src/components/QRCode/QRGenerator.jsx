@@ -5,23 +5,21 @@ import LeaftyLogo from "@assets/LeaftyLogo.svg";
 function QRGenerator(props) {
   const { value, documentId } = props;
   return (
-    <div>
       <QRCodeSVG
         id={documentId}
         value={value}
-        size={144}
+        size = {200}
         bgColor={"#ffffff"}
         fgColor={"#000000"}
         level={"H"}
-        includeMargin={true}
+        includeMargin={false}
         imageSettings={{
           src: LeaftyLogo, // Remove the curly braces around LeaftyLogo
-          height: 48,
-          width: 48,
+          height: 64,
+          width: 64,
           excavate: false,
         }}
       />
-    </div>
   );
 }
 
