@@ -81,7 +81,7 @@ function Powder() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown receivedTime={item.Expiration} color="#79B2B7" image={ReadyIcon} />
+                  <Countdown expiredTime={item.Expiration} color="#79B2B7" image={ReadyIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -104,11 +104,11 @@ function Powder() {
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.FlourID}
-          time={selectedData.time}
-          weight={selectedData.Flour_Weight}
-          date={selectedData.Expiration}
+          weight={selectedData.Flour_Weight + " Kg"}
+          expirationDate={selectedData.Expiration}
           imageSrc={PowderDetail}
           text="Powder"
+          showExpiredIn={false}
         />
       )}
 

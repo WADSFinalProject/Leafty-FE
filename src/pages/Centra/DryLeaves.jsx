@@ -42,6 +42,7 @@ function DryLeaves() {
   }, [UserID]);
 
   const handleButtonClick = (item) => {
+    console.log('Selected Item:', item)
     setSelectedData(item);
     document.getElementById('AddLeaves').showModal();
   };
@@ -51,7 +52,7 @@ function DryLeaves() {
       summary: 'Awaiting Leaves',
       details: () => (
         <>
-          {dryLeavesData.map((item) => (
+          {dryLeavesData.map((item) => (            
             <div key={item.DryLeavesID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <button onClick={() => handleButtonClick(item)}>
@@ -66,7 +67,7 @@ function DryLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown receivedTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
+                  <Countdown expiredTime={item.Expiration} color="#79B2B7" image={CountdownIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -94,7 +95,7 @@ function DryLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown receivedTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
+                  <Countdown expiredTime={item.Expiration} color="#D45D5D" image={ExpiredWarningIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -112,9 +113,8 @@ function DryLeaves() {
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.DryLeavesID}
-          time={selectedData.ReceivedTime}
           weight={selectedData.Processed_Weight + " Kg"}
-          date={selectedData.Expiration}
+          expirationDate={selectedData.Expiration}
           imageSrc={DryLeavesDetail}
           text="Dry Leaves"
         />
