@@ -31,6 +31,9 @@ const InputData = ({
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [powderIDs, setPowderIDs] = useState([]);
   const [totalFlourWeight, setTotalFlourWeight] = useState(0); // New state for total flour weight
+  const [courierID, setCourierID] = useState("");
+  const [shipmentQuantity, setShipmentQuantity] = useState(0);
+  const [couriers, setCouriers] = useState([]);
 
   useEffect(() => {
     if (DryLeaves) {
@@ -57,6 +60,19 @@ const InputData = ({
         });
     }
   }, [Flour, UserID]);
+
+  useEffect(() => {
+    if (Shipment) {
+      axios
+        .get(API_URL + "/courier/get")
+        .then((response) => {
+          setCouriers(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching couriers:", error);
+        });
+    }
+  }, [Shipment]);
 
   const toggleDrawer = (open) => () => {
     setDrawerOpen(open);
@@ -107,13 +123,19 @@ const InputData = ({
   };
 
   const postShipment = async () => {
+    console.log("Posting Shipment with data:", {
+      UserID: String(UserID),
+      CourierID: courierID, // Include CourierID
+      ShipmentQuantity: shipmentQuantity, // Include Shipment Quantity
+      FlourIDs: powderIDs.map((item) => item.FlourID), // Extract FlourIDs for posting
+    });
+
     try {
       const response = await axios.post(API_URL + "/shipment/post", {
         UserID: String(UserID),
-        Date: date,
-        Weight: weight,
-        PowderID: powderIDs.map((item) => item.FlourID), // Extract FlourIDs for posting
-        Status: "Pending",
+        CourierID: courierID, // Include CourierID
+        ShipmentQuantity: shipmentQuantity, // Include Shipment Quantity
+        FlourIDs: powderIDs.map((item) => item.FlourID), // Extract FlourIDs for posting
       });
       console.log("Shipment posted successfully:", response.data);
     } catch (error) {
@@ -135,6 +157,8 @@ const InputData = ({
     } else if (Shipment) {
       console.log("Posting Shipment...");
       postShipment();
+    } else {
+      console.log("No matching condition found");
     }
   };
 
@@ -320,7 +344,65 @@ const InputData = ({
                 type="text"
                 className="w-full h-full bg-transparent border-none outline-none px-2"
                 placeholder="Input Number"
-                value={totalFlourWeight +" Kg"} // Displaying the total flour weight
+                value={totalFlourWeight + " Kg"} // Displaying the total flour weight
+              />
+              <img src={thirdimg} alt="Weight" className="w-6 h-auto mr-3" />
+            </div>
+          </WidgetContainer>
+        </div>
+      )}
+
+      {/* Select Courier for Shipment */}
+      {Shipment && (
+        <div className="mb-4">
+          <p className="font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1">
+            Select Courier
+          </p>
+          <WidgetContainer
+            container={false}
+            backgroundColor="#FFFFFF"
+            borderRadius="20px"
+            borderWidth=""
+            borderColor=""
+            className="mt-2"
+          >
+            <select
+              className="w-full h-full bg-transparent border-none outline-none px-2"
+              value={courierID}
+              onChange={(e) => setCourierID(e.target.value)}
+            >
+              <option value="">Select Courier</option>
+              {couriers.map((courier) => (
+                <option key={courier.CourierID} value={courier.CourierID}>
+                  {courier.CourierName}
+                </option>
+              ))}
+            </select>
+          </WidgetContainer>
+        </div>
+      )}
+
+      {/* Input Shipment Quantity */}
+      {Shipment && (
+        <div className="mb-4 flex flex-col items-center">
+          <p className="font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left self-start mb-2">
+            Shipment Quantity
+          </p>
+          <WidgetContainer
+            container={false}
+            backgroundColor="#FFFFFF"
+            borderRadius="20px"
+            borderWidth=""
+            borderColor=""
+            className="w-full"
+          >
+            <div className="flex">
+              <input
+                type="number"
+                className="w-full h-full bg-transparent border-none outline-none px-2"
+                placeholder="Input Quantity"
+                value={shipmentQuantity}
+                onChange={(e) => setShipmentQuantity(e.target.value)}
               />
               <img src={thirdimg} alt="Weight" className="w-6 h-auto mr-3" />
             </div>
