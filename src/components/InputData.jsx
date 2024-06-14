@@ -4,6 +4,7 @@ import Plus from "@assets/Plus.svg";
 import { API_URL } from '../App';
 import WidgetContainer from '../components/Cards/WidgetContainer';
 import ChoosePowderDrawer from './ChoosePowderDrawer';
+import './InputData.css';
 
 const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondimg, thirdimg, includeFourthSection, showThirdInput, WetLeaves = false, DryLeaves = false, Flour = false, Shipment = false }) => {
     const [date, setDate] = useState(new Date().toISOString());
@@ -97,14 +98,14 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
             <div className='mb-4'>
                 <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>{firstp}</p>
                 <WidgetContainer backgroundColor="#FFFFFF" borderRadius="20px" borderWidth="" borderColor="" className='mt-2'>
-                    <div className='flex'>
+                    <div className='flex  justify-items-end '>
                         <input
                             type="datetime-local"
                             className="w-full h-full bg-transparent border-none outline-none px-2"
                             value={date}
                             onChange={(e) => setDate(e.target.value)}
                         />
-                        <img src={firstimg} alt="Date" className='flex justify-end w-6 h-auto' />
+                    
                     </div>
                 </WidgetContainer>
             </div>
@@ -121,7 +122,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
                             value={weight}
                             onChange={(e) => setWeight(e.target.value)}
                         />
-                        <img src={secondimg} alt="Weight" className='w-6 h-auto mr-1' />
+                        <img src={secondimg} alt="Weight" className='w-6 h-auto mr-3' />
                     </div>
                 </WidgetContainer>
             </div>
@@ -185,7 +186,7 @@ const InputData = ({ UserID, firstp, secondp, thirdp, fourthp, firstimg, secondi
                                 className="w-full h-full bg-transparent border-none outline-none px-2"
                                 placeholder='Input Number'
                             />
-                            <img src={thirdimg} alt="Weight" className='w-6 h-auto mr-1' />
+                            <img src={thirdimg} alt="Weight" className='w-6 h-auto mr-3' />
                         </div>
                     </WidgetContainer>
                 </div>

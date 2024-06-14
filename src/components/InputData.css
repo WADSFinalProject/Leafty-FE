@@ -1,0 +1,8 @@
+/* Add the following styles to your CSS file or within a <style> tag */
+
+
+::-webkit-calendar-picker-indicator {
+    background-image: url('@assets/Date.svg');
+    width: 28px;
+    height: 28px;
+  }
