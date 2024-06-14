@@ -79,7 +79,7 @@ function ShipmentPopup({ code, weight }) {
 
                     <div className='p-2'>
                         <WidgetContainer container = {false} borderRadius='20px'>
-                            <QRPage/>
+                            <QRPage data = {code}/>
                         </WidgetContainer>
                     </div>
                     <Button className="flex w-full mt-4" noMax = {true} onClick = {() => {}} type="submit" background="#0F7275" color="#F7FAFC" label="Confirm Deliver"  />

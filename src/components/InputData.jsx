@@ -427,7 +427,7 @@ const InputData = ({
           </button>
         </WidgetContainer>
       </div>
-      {Shipment && (
+      {Shipment & drawerOpen ? (
         <ChoosePowderDrawer
           UserID={UserID}
           open={drawerOpen}
@@ -435,7 +435,7 @@ const InputData = ({
           onSelectFlour={handleSelectFlour}
           weight={weight} // Passing weight to ChoosePowderDrawer
         />
-      )}
+      ) : <></>}
     </div>
   );
 };
