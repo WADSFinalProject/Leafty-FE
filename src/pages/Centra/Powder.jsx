@@ -104,7 +104,7 @@ function Powder() {
           weight={selectedData.Flour_Weight}
           date={selectedData.Expiration}
           imageSrc={PowderDetail}
-          text={selectedData.text}
+          text="Powder"
         />
       )}
 
