@@ -1,49 +1,37 @@
 import React, { useState, useEffect } from "react";
 import { PDFDownloadLink } from "@react-pdf/renderer";
-import axios from "axios";
 import bcrypt from "bcryptjs";
 import QRGenerator from "@components/QRCode/QRGenerator";
 import QRCodeDocument from "@components/QRCode/QRCodeDocument";
 import Download from "@assets/icons/download.svg";
 
-function QRPage({ numPackages = 4, data}) {
+function QRPage({ numPackages = 4, data }) {
   const [qrCodeData, setQRCodeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchShipments = async () => {
+    const encryptData = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/shipment/get");
-        const shipmentData = response.data;
-
-        if (!shipmentData || !Array.isArray(shipmentData)) {
-          throw new Error("Invalid shipment data format");
+        if (!data) {
+          throw new Error("Data is required for generating QR codes");
         }
 
-        // Encrypt shipment IDs using bcrypt
-        const encryptedShipmentData = await Promise.all(
-          shipmentData.map(async (shipment) => {
-            if (!shipment.ShipmentID) {
-              throw new Error(`Shipment ID is missing for shipment: ${JSON.stringify(shipment)}`);
-            }
-            const hash = await bcrypt.hash(shipment.ShipmentID.toString(), 10);
-            return { id: shipment.ShipmentID, value: hash };
-          })
-        );
+        const hash = await bcrypt.hash(String(data)   , 10);
+        const encryptedData = { id: 1, value: hash }; // Assuming a single data item with id 1
 
-        // Use only the first QR code data for display
-        setQRCodeData(encryptedShipmentData.slice(0, 1));
+        // Use only the encrypted data for display
+        setQRCodeData([encryptedData]);
         setLoading(false);
       } catch (error) {
-        console.error("Error fetching shipment data:", error);
+        console.error("Error encrypting data:", error);
         setError(error.message);
         setLoading(false);
       }
     };
 
-    fetchShipments();
-  }, []);
+    encryptData();
+  }, [data]);
 
   // Prepare an array to hold repeated QR code data for the PDF
   let repeatedQRCodeData = [];
