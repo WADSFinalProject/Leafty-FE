@@ -48,6 +48,11 @@ function Drawer(props) {
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
+  const handleSelectFlour = (flourID) => {
+    // Handle the selected flour ID here, if needed.
+    console.log("Selected flour ID in Drawer component:", flourID);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Root>
@@ -97,3 +102,4 @@ function Drawer(props) {
 }
 
 export default Drawer;
+
