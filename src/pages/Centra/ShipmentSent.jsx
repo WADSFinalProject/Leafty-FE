@@ -81,7 +81,7 @@ function ShipmentSent() {
                                             </span>
                                         </div>
                                         <div className="flex ml-auto items-center">
-                                            <ShipmentStatus packing />
+                                            <ShipmentStatus delivered />
                                         </div>
                                     </WidgetContainer>
                                 </div>

@@ -4,7 +4,7 @@ import WidgetContainer from './Cards/WidgetContainer';
 import PackingIcon from "@assets/Countdown.svg";
 import DeliveredIcon from "@assets/Delivered.svg";
 import VerifyIcon from "@assets/ReadyIcon.svg";
-import RescallingIcon from "@assets/Status.svg";
+import RescallingIcon from "@assets/rescallingicon.svg";
 import ArrivedIcon from "@assets/Arrived.svg";
 
 const ShipmentStatus = ({ packing, delivered, verified, rescalling, arrived }) => {
@@ -13,13 +13,13 @@ const ShipmentStatus = ({ packing, delivered, verified, rescalling, arrived }) =
       return { color: "#79B2B7", image: PackingIcon, text: "Packing" };
     }
     if (delivered) {
-      return { color: "#D4965D80", image: DeliveredIcon, text: "Delivered" };
+      return { color: "#79B2B7", image: DeliveredIcon, text: "Delivered" };
     }
     if (verified) {
       return { color: "#C0CD30", image: VerifyIcon, text: "Verified" };
     }
     if (rescalling) {
-      return { color: "#D45D5D", image: RescallingIcon, text: "Rescalling" };
+      return { color: "#E28834", image: RescallingIcon, text: "Rescalling" };
     }
     if (arrived) {
       return { color: "#DEE295", image: ArrivedIcon, text: "Arrived" };
