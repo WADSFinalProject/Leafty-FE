@@ -15,15 +15,7 @@ import LoadingCircle from '@components/LoadingCircle';
 import VerificationImage from '@components/Images';
 import InputField from '@components/InputField';
 import MyMapComponent from '@components/MyMapComponents';
-import { db, auth, useAuth } from '../firebase';
 import axios from 'axios';
-import {
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    createUserWithEmailAndPassword,
-    signInWithPopup
-  } from "firebase/auth";
-import {collection, addDoc, Timestamp, query, onSnapshot, QuerySnapshot, updateDoc, doc, deleteDoc, setDoc, getDoc} from 'firebase/firestore';
 import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
 
@@ -61,14 +53,14 @@ function Register() {
     useEffect(() => {
         if (userPassword) {
             setPassword(userPassword);
-            // const saltRounds = 10;
-            // bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
-            //     if (err) {
-            //         console.error('Error encrypting password:', err);
-            //     } else {
-            //         setPassword(hashedPassword);
-            //     }
-            // });
+            const saltRounds = 10;
+            bcrypt.hash(userPassword, saltRounds, (err, hashedPassword) => {
+                if (err) {
+                    console.error('Error encrypting password:', err);
+                } else {
+                    setPassword(hashedPassword);
+                }
+            });
         }
     }, [userPassword]);
 
@@ -82,14 +74,6 @@ function Register() {
                 Password: password,
             });
             console.log(response.data);
-            const user_id = response.data.UserID;
-            try {
-                const response = await axios.post(API_URL + "/create_session/" + user_id, {
-                });
-                console.log("session created")
-            } catch (error) {
-                console.error('Error calling backend function for session', error);
-            }
         } catch (error) {
             console.error('Error calling backend function', error);
         }
@@ -124,34 +108,16 @@ function Register() {
     };
 
     const [value, setValue] = useState('')
-    const handleClick = () => {
-        signInWithPopup(auth, provider).then((data) => {
-            setValue(data.user.email)
-            localStorage.setItem("email", data.user.email)
-        })
-    }
 
     useEffect(() => {
         setValue(localStorage.getItem('email'))
     })
 
     const handleRegister = async () => {
-        createUser();
-        createUserWithEmailAndPassword(
-            auth,
-            email,
-            password
-        )
-        const unsubscribeAuth = auth.onAuthStateChanged(async (user) => {
-
-
-        });
-
-        return () => unsubscribeAuth()
-            .then(() => {
-                navigate("/dashboard");
-            })
-            .catch((err) => alert(err.message));
+        createUser()
+        
+        .then(res => navigate("/"))
+        .catch((err) => alert(err.message));
     };
 
     const handleGoBack = (e) => {

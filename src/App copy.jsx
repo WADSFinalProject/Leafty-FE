@@ -46,12 +46,95 @@ import AdminDryLeaves from "./pages/Admin/AdminDryLeaves";
 import AdminPowder from "./pages/Admin/AdminPowder";
 import AdminUserTable from "./pages/Admin/AdminUserTable";
 import AdminLayout from "./pages/Admin/AdminLayout";
+<<<<<<< Updated upstream
 import Performance from "./pages/XYZ Desktop/Performance";
 import WetLeavesOverview from "./pages/XYZ Desktop/WetLeavesOverview";
 import AdminUserApproval from "./pages/Admin/AdminUserApproval";
 import Pickup from "./pages/XYZ Desktop/PickUp";
 import ShipmentDetails from "./pages/XYZ Desktop/ShipmentDetails";
 import QRPage from "./pages/QRPage";
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<OnBoarding />}></Route>
+        <Route path="verify" element={<Verification />}></Route>
+        <Route path="register" element={<Register />}></Route>
+        <Route path="approval" element={<Approval />}></Route>
+        <Route path="*" element={<PageNotFound />}></Route>
+        {/* <Route path="company" element={<PageNotFound />}></Route> */}
+        <Route path="company" element={<DashboardLayout />}>
+          <Route path="dashboard" element={<Dashboard />}></Route>
+          <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
+          <Route path="wetoverview" element={<WetLeavesOverview />}></Route>
+          <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
+          <Route path="powder" element={<PowderXYZ />}></Route>
+          <Route path="shipment" element={<ShipmentXYZ />}></Route>
+          <Route path="performance" element={<Performance />}></Route>
+          <Route path="pickup" element={<Pickup />}></Route>
+          <Route path="shipmentdetails" element={<ShipmentDetails />}></Route>
+          <Route path="reception" element={<Reception />}>
+            <Route path="centra" element={<CentraTabContent />}></Route>
+            <Route path="harbor" element={<HarborTabContent />}></Route>
+          </Route>
+        </Route>
+        <Route path="harbor" element={<HarborLayout />}>
+          <Route path="dashboard" element={<DashboardHarbor />} />
+          <Route path="reception" element={<HarborReception />} />
+          <Route path="Scanner" element={<HarborScanner />} />
+        </Route>
+        <Route path="centra" element={<CentraLayout />}>
+          <Route path="Dashboard" element={<DashboardCentra />}></Route>
+          <Route path="Wet Leaves" element={<WetLeaves />}>
+            
+          </Route>
+          <Route path="wet-leaves/detail/:code/:time/:weight" element={<WetLeavesDetail />} />
+          <Route path="Dry Leaves" element={<DryLeaves />}></Route>
+          <Route path="dry-leaves/detail/:code/:time/:weight" element={<DryLeavesDetail />} />
+          <Route path="Powder" element={<Powder />}></Route>
+          <Route path="powderdetail/:code/:weight" element={<PowderDetail />}></Route>
+          <Route path="Shipment" element={<Shipment />}>
+            <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
+            <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
+            <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
+          </Route>
+          <Route path="shipmentdetail/:code" element={<ShipmentDetail />}></Route>
+          
+
+        </Route>
+        <Route path="xyzmobile" element={<XYZLayout />}>
+          <Route path="dashboard" element={<DashboardXYZ />} />
+          <Route path="Shipment List" element={<XYZShipmentList />} />
+          <Route path="Scanner" element={<XYZScanner />} />
+          <Route path="Tracker" element={<Tracker />} />
+        </Route>
+        <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
+        <Route path="admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<DashboardAdmin />} />
+          <Route path="wet leaves" element={<AdminWetLeaves />} />
+          <Route path="dry leaves" element={<AdminDryLeaves />} />
+          <Route path="powder" element={<AdminPowder />} />
+          <Route path="user management" element={<AdminUserTable />} />
+          <Route path="user approval" element={<AdminUserApproval />} />
+        </Route>
+        <Route path="qr" element={<QRPage />} />
+        {/* <Route path="Admin" element={<TempAdmin />}> */}
+        {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}
+        {/* <Route path="adminwetleaves" element={<AdminWetLeaves />} />
+        <Route path="admindryleaves" element={<AdminDryLeaves />} />
+        <Route path="adminpowder" element={<AdminPowder />} />
+        <Route path="adminusermanagement" element={<AdminUserTable />} /> */}
+        {/* </Route> */}
+
+        {/* <Route path="/wetleavesdetail" element={<WetLeavesDetail />} /> */}
+        
+       
+        <Route path="/xyzshipmentdetail" element={<XYZShipmentDetail />} />
+        <Route path="/usersetting" element={<UserSetting />} />
+      </Routes>
+    </Router>
+=======
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import React from "react";
@@ -185,13 +268,9 @@ function App() {
               <Route path="company" element={<DashboardLayout />}>
                 <Route path="dashboard" element={<Dashboard />}></Route>
                 <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
-                <Route path="wetoverview" element={<WetLeavesOverview />}></Route>
                 <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
                 <Route path="powder" element={<PowderXYZ />}></Route>
                 <Route path="shipment" element={<ShipmentXYZ />}></Route>
-                <Route path="performance" element={<Performance />}></Route>
-                <Route path="pickup" element={<Pickup />}></Route>
-                <Route path="shipmentdetails" element={<ShipmentDetails />}></Route>
                 <Route path="reception" element={<Reception />}>
                   <Route path="centra" element={<CentraTabContent />}></Route>
                   <Route path="harbor" element={<HarborTabContent />}></Route>
@@ -213,24 +292,16 @@ function App() {
           <Route exact path="/" element={<ProtectedRoute/>}>
             <Route exact path="/" ele ment={<ProtectedCentra/>}>
               <Route path="centra" element={<CentraLayout />}>
-                <Route path="Dashboard" element={<DashboardCentra />}></Route>
-                <Route path="Wet Leaves" element={<WetLeaves />}>
-                  
+                  <Route path="Dashboard" element={<DashboardCentra />}></Route>
+                  <Route path="Wet Leaves" element={<WetLeaves />}></Route>
+                  <Route path="Dry Leaves" element={<DryLeaves />}></Route>
+                  <Route path="Powder" element={<Powder />}></Route>
+                  <Route path="Shipment" element={<Shipment />}>
+                    <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
+                    <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
+                    <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
+                  </Route>
                 </Route>
-                <Route path="wet-leaves/detail/:code/:time/:weight" element={<WetLeavesDetail />} />
-                <Route path="Dry Leaves" element={<DryLeaves />}></Route>
-                <Route path="dry-leaves/detail/:code/:time/:weight" element={<DryLeavesDetail />} />
-                <Route path="Powder" element={<Powder />}></Route>
-                <Route path="powderdetail/:code/:weight" element={<PowderDetail />}></Route>
-                <Route path="Shipment" element={<Shipment />}>
-                  <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
-                  <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
-                  <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
-                </Route>
-                <Route path="shipmentdetail/:code" element={<ShipmentDetail />}></Route>
-                
-
-              </Route>
             </Route>
           </Route>
 
@@ -238,9 +309,7 @@ function App() {
             <Route path="dashboard" element={<DashboardXYZ />} />
             <Route path="Shipment List" element={<XYZShipmentList />} />
             <Route path="Scanner" element={<XYZScanner />} />
-            <Route path="Tracker" element={<Tracker />} />
           </Route>
-          <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
 
           <Route exact path="/" element={<ProtectedRoute/>}>
             <Route exact path="/" element={<ProtectedAdmin/>}>
@@ -250,12 +319,10 @@ function App() {
                 <Route path="dry leaves" element={<AdminDryLeaves />} />
                 <Route path="powder" element={<AdminPowder />} />
                 <Route path="user management" element={<AdminUserTable />} />
-                <Route path="user approval" element={<AdminUserApproval />} />
               </Route>
             </Route>
           </Route>
           
-          <Route path="qr" element={<QRPage />} />
           {/* <Route path="Admin" element={<TempAdmin />}> */}
           {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}
           {/* <Route path="adminwetleaves" element={<AdminWetLeaves />} />
@@ -264,14 +331,16 @@ function App() {
           <Route path="adminusermanagement" element={<AdminUserTable />} /> */}
           {/* </Route> */}
 
-          {/* <Route path="/wetleavesdetail" element={<WetLeavesDetail />} /> */}
-        
-       
+          <Route path="/wetleavesdetail" element={<WetLeavesDetail />} />
+          <Route path="/dryleavesdetail" element={<DryLeavesDetail />} />
+          <Route path="/powderdetail" element={<Powder />} />
+          <Route path="/shipmentdetail" element={<ShipmentDetail />} />
           <Route path="/xyzshipmentdetail" element={<XYZShipmentDetail />} />
           <Route path="/usersetting" element={<UserSetting />} />
         </Routes>
       </Router>
     </AuthApi.Provider>
+>>>>>>> Stashed changes
   )
 }
 
