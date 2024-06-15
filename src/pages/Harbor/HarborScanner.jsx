@@ -23,6 +23,7 @@ function HarborScanner() {
 
     useEffect(() => {
         if (data) {
+            console.log('QR code data received:', data); // Log the scanned data
             setOpen(true);
         }
     }, [data]);
