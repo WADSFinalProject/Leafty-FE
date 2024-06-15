@@ -123,13 +123,9 @@ function ScanResultsDrawer(props) {
       console.error("Error updating shipment check-in details: ", error);
     }
   };
-  const handleConfirm = () => {
-    console.log("Confirm clicked");
-    setShowPopup(false);
-  };
 
-  const handleCancel = () => {
-    console.log("Cancel clicked");
+  const handleConfirmPopup = () => {
+    console.log("Confirm clicked");
     setShowPopup(false);
   };
 
@@ -251,8 +247,7 @@ function ScanResultsDrawer(props) {
           ref={popupRef}
           error={true}
           description={popupDescription}
-          onConfirm={handleConfirm}
-          onCancel={handleCancel}
+          onConfirm={handleConfirmPopup}
         />
       </Root>
     </ThemeProvider>
