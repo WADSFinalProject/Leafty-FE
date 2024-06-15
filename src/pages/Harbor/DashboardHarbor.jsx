@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HarborLayout from './HarborLayout';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import LongContainer from '../../components/Cards/LongContainer';
@@ -7,8 +7,10 @@ import VerifiedPackages from '../../assets/VerifiedPackages.svg';
 import UnverifiedShipment from '../../assets/UnverifiedShipment.svg';
 import UnverifiedPackages from '../../assets/UnverifiedPackages.svg';
 import "../../style/Dashboard.css";
+import { useOutletContext } from 'react-router';
 
 function DashboardHarbor() {
+    const UserID = useOutletContext();
     const data = Array(5).fill({
         showWeight: true,
         packageCount: 10,
@@ -17,6 +19,16 @@ function DashboardHarbor() {
         expeditionId: "1234"
     });
     const [value, setValue] = useState("Dashboard");
+
+    // useEffect(async ()=>{
+    //     try {
+    //         const response = await axios.get(`${API_URL}/wetleaves/sum_get_by_user/${UserID}`);
+    //         const data = response.data;
+
+    //       } catch (error) {
+    //         console.error('Error fetching wet leaves data:', error);
+    //       }
+    // }, [UserID])
 
     return <>
         <div className='flex items-center justify-between'>

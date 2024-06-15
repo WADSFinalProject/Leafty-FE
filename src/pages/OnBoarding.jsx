@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import '@style/App.css';
@@ -13,18 +13,14 @@ import Divider from '@components/Divider';
 import Button from '@components/Button';
 import CarouselImage from "@components/CarouselImage.jsx";
 import { Slides } from '../components/Slides.js';
-import { auth, provider } from "../firebase.js";
-import {
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  createUserWithEmailAndPassword,
-  signInWithPopup
-} from "firebase/auth";
 import axios from 'axios';
 import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
+import AuthApi from '../AuthApi.js';
 
-function OnBoarding() {
+function OnBoarding( ) {
+
+  const Auth = React.useContext(AuthApi);
   const [isLogin, setIsLogin] = useState(false);
 
   const [isSubmit, setIsSubmit] = useState(false);
@@ -34,7 +30,6 @@ function OnBoarding() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginPassword, setLogInPassword] = useState();
 
   const controls = useAnimationControls();
   const navigate = useNavigate();
@@ -63,66 +58,39 @@ function OnBoarding() {
     }
   }, [isSubmit, isLogin, isSignUp]);
 
-  async function handleUserSignIn() {
+  async function handleRouting() {
+    
+    const response = await axios.get(API_URL + "/user/get_user_email/" + email);
+    const user_id = response.data.UserID;
     try {
-      const response = await axios.get(API_URL + "/user/get_user_email/" + email);
-      const role = response.data.RoleID;
-      const UserID = response.data.UserID;
-      try {
-        axios.post(API_URL + "/create_session/" + UserID, {
-        });
-        console.log("session created")
-      } catch (error) {
-        console.error('Error calling backend function for session', error);
-      }
-      if (role == 1) {
-        navigate('/centra/Dashboard')
-      }
-      if (role == 2) {
-        navigate('/harbor/Dashboard')
-      }
-      if (role == 3) {
-        navigate('/company/Dashboard')
-      }
-      if (role == 4) {
-        navigate('/admin/Dashboard')
-      }
-      if (role == 5) {
-        navigate('/approval')
-      }
+      const response = await axios.post(API_URL + "/create_session/" + user_id, {
+      });
+      console.log("session created")
     } catch (error) {
-      console.error("Error while checking session:", error);
-      return false
+        console.error('Error calling backend function for session', error);
     }
+    Auth.setAuth(true);
   }
 
-  useEffect(() => {
-    if (loginPassword) {
-      // bcrypt.compare(myPlaintextPassword, hash, function(err, result) {
-      //   // result == true
-      // })
-      signInWithEmailAndPassword(auth, email, loginPassword)
-        .then(() => {
-          handleUserSignIn();
-        })
-        .catch((err) => {
-          alert(err.message)
-          setIsLogin(isLogin);
-        });
-    }
-  }, [loginPassword]);
-
-  const handleLogin = () => {
+  const handleLogin = async () => {
     setIsLogin(!isLogin);
-    const saltRounds = 10;
-    setLogInPassword(password);
-    // bcrypt.hash(password, saltRounds, (err, hashedPassword) => {
-    //   if (err) {
-    //     console.error('Error encrypting password:', err);
-    //   } else {
-    //     setLogInPassword(hashedPassword);
-    //   }
-    // });   
+    try {
+      const response = await axios.get(API_URL + "/user/get_user_email/" + email);
+      bcrypt.compare(password, response.data.Password, function(err, result) {
+        if (err){
+          console.error('Error encrypting password:', err);
+        }
+        if (result){
+          handleRouting();
+        }
+        else{
+          console.log("wrong password");
+        }
+      })
+  } catch (error) {
+      console.error("Error while checking session:", error);
+      return false
+  }
   };
 
   const handleSignUp = () => {
@@ -133,26 +101,6 @@ function OnBoarding() {
     e.preventDefault();
     setIsSubmit(!isSubmit);
   }
-
-  async function handleWhoAmI() {
-    try {
-      const response = await axios.get(API_URL + "/whoami");
-      if (response && response.data) {
-        console.log(response.data.role_id);
-        return true;
-      } else {
-        console.error("No response or response data");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error while checking session:", error);
-      return false;
-    }
-  }
-
-  useEffect(()=>{
-    handleWhoAmI()
-  },[])
 
   useEffect(() => {
     // Set a timeout to show the carousel after 2 seconds

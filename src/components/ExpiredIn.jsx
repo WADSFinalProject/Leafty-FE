@@ -28,9 +28,9 @@ const ExpiredIn = ({ expirationDate }) => {
   }, [expirationDate]);
 
   return (
-    <div className='flex-grow '>
-      <span className="font-montserrat font-medium text-xs leading-4 ml-2">Expires in</span>
-      <WidgetContainer borderRadius="20px" backgroundColor="#FDFDFD" className="flex justify-start">
+    <div className='flex-grow'>
+      <span className="font-montserrat font-medium text-xs ml-2">Expires in</span>
+      <WidgetContainer container = {false} borderRadius="20px" backgroundColor="#FDFDFD" className="flex flex-row">
         <img src={ExpiredInLogo} alt="ExpiredIn" className='w-5 h-auto mr-1' />
         <span className="font-montserrat font-semibold text-base leading-4 mt-0.5">
            {timeLeft.hours}{timeLeft.minutes}

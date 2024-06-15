@@ -8,10 +8,10 @@ import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
-import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
+import PowderProduced from '@assets/PowderProduced.svg';
+import InProcessPowder from '@assets/In-ProcessPowder.svg';
+import UnpackagedPowder from '@assets/UnpackagedPowder.svg';
+import PackagedPowder from '@assets/PackagedPowder.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 const data = [
@@ -43,35 +43,35 @@ const columns = [
 
 const stats = [
   {
-    label: "Awaiting Leaves",
+    label: "Powder Produced",
     value: "243",
     unit: "Kg",
     color: "#C0CD30",
-    icon: AwaitingLeaves,
+    icon: PowderProduced,
     delay: 1
   },
   {
-    label: "Processed Leaves",
+    label: "In-Process Powder",
     value: "243",
     unit: "Kg",
     color: "#79B2B7",
-    icon: ProcessedLeaves,
+    icon: InProcessPowder,
     delay: 1.25
   },
   {
-    label: "Wasted Leaves",
+    label: "Unpackaged Powder",
     value: "250",
     unit: "Kg",
     color: "#0F7275",
-    icon: ExpiredWetLeaves,
+    icon: UnpackagedPowder,
     delay: 1.5
   },
   {
-    label: "Total Wet Leaves",
+    label: "Packaged Powder",
     value: "1500",
     unit: "Kg",
     color: "#0F7275",
-    icon: TotalCollectedWet,
+    icon: PackagedPowder,
     delay: 1.75
   }
 ];

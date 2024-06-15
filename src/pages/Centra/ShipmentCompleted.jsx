@@ -7,6 +7,7 @@ import Shipments from '../../assets/Shipments.svg';
 import Arrived from '../../assets/Arrived.svg';
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
 import AccordionUsage from '../../components/AccordionUsage';
+import ShipmentStatus from '../../components/ShipmentStatus';
 
 
 function ShipmentCompleted(){
@@ -39,7 +40,7 @@ function ShipmentCompleted(){
                             </span>
                         </div>
                         <div className="flex ml-auto items-center">
-                            <Countdown time={item.time} color={item.color} image={item.image} />
+                            <ShipmentStatus arrived />
                         </div>
                     </WidgetContainer>
                 </div>

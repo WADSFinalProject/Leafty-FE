@@ -22,15 +22,18 @@ const Popup = forwardRef(({ warning = false, info = false, error = false, confir
                 )}
                 {error && <>
                     <img src={ErrorIcon} className="w-1/6" alt="Error" />
-                    <span>{"Error"}</span>
+                    <span className='font-bold text-2xl'>{"Error"}</span>
+                    <span className='text-md'>{description || "Confirm?"}</span>
                 </>}
-                <Button className="w-full flex-grow p-0" type="submit" background="#0F7275" color="#F7FAFC" label="Confirm" onClick={onConfirm} />
-                {confirm && (
-                    <div className='gap-2 w-full flex flex-col items-center'>     
-                        <Button className="w-full flex-grow" type="cancel" background="#94C3B3" color="#F7FAFC" label="Cancel" onClick={onCancel} />
-                    </div>
-                )}
-                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 font-bold text-[#0F7275]" onClick={onCancel}>
+                <div className="mt-4 w-full flex justify-center">
+                    <Button className="w-full flex-grow p-0" type="submit" background="#0F7275" color="#F7FAFC" label="Confirm" onClick={onConfirm} />
+                    {confirm && (
+                        <div className='gap-2 w-full flex flex-col items-center'>
+                            <Button className="w-full flex-grow" type="cancel" background="#94C3B3" color="#F7FAFC" label="Cancel" onClick={onCancel} />
+                        </div>
+                    )}
+                </div>
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 font-bold text-[#0F7275]" onClick={confirm ? onConfirm : onCancel}>
                     ✕
                 </button>
             </div>

@@ -7,10 +7,10 @@ import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
-import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
+import AwaitingLeaves from '@assets/AwaitingDryLeaves.svg';
+import ExpiredDryLeaves from '@assets/ExpiredDryLeaves.svg';
+import ProcessedLeaves from '@assets/In-ProcessLeaves.svg';
+import TotalDryLeaves from '@assets/TotalDryLeaves.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
 const data = [
@@ -42,7 +42,7 @@ const columns = [
 
 const stats = [
   {
-    label: "Awaiting Leaves",
+    label: "Awaiting Dry Leaves",
     value: "243",
     unit: "Kg",
     color: "#C0CD30",
@@ -50,7 +50,7 @@ const stats = [
     delay: 1
   },
   {
-    label: "Processed Leaves",
+    label: "In-Processed Leaves",
     value: "243",
     unit: "Kg",
     color: "#79B2B7",
@@ -58,19 +58,19 @@ const stats = [
     delay: 1.25
   },
   {
-    label: "Wasted Leaves",
+    label: "Expired Dry Leaves",
     value: "250",
     unit: "Kg",
     color: "#0F7275",
-    icon: ExpiredWetLeaves,
+    icon: ExpiredDryLeaves,
     delay: 1.5
   },
   {
-    label: "Total Wet Leaves",
+    label: "Total Collected Dry Leaves",
     value: "1500",
     unit: "Kg",
     color: "#0F7275",
-    icon: TotalCollectedWet,
+    icon: TotalDryLeaves,
     delay: 1.75
   }
 ];

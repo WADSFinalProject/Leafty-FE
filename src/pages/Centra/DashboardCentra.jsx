@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Graph from '../../components/Graph';
 import WarningSign from '../../assets/WarningSign.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
@@ -11,15 +11,40 @@ import PackageSent from "../../assets/PackangeSent.svg";
 import Box from "../../assets/PackageBox.svg";
 import Fab from '@mui/material/Fab';
 import { useOutletContext } from 'react-router';
+import { API_URL } from '../../App';
+import axios from 'axios';
 
 function DashboardCentra() {
   const UserID = useOutletContext();
+  const [sumWetLeaves, setSumWetLeaves] = useState("---");
+  const [sumDryLeaves, setSumDryLeaves] = useState("---");
+  const [sumFlour, setSumFlour] = useState("---");
+  const [sumShipmentQuantity, setSumShipmentQuantity] = useState("---");
+
+  useEffect(()=>{
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/centra/statistics/${UserID}`);
+        const data = response.data;
+        setSumWetLeaves(response.data.sum_wet_leaves);
+        setSumDryLeaves(response.data.sum_dry_leaves);
+        setSumFlour(response.data.sum_flour);
+        setSumShipmentQuantity(response.data.sum_shipment_quantity);
+
+      } catch (error) {
+        console.error('Error fetching statistics data:', error);
+      }
+    };  
+
+    fetchData();
+    console.log(statsData)
+  }, [UserID])
 
   const statsData = [
-    { label: "Wet Leaves", value: 243, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
-    { label: "Dry Leaves", value: 243, unit: "Kg", frontIcon: DryLeaves, modal: false, color: "#D2D681" },
-    { label: "Powder", value: 243, unit: "Kg", frontIcon: Powder, modal: false, color: "#0F7275" },
-    { label: "Packages Sent", value: 243, icon_unit: Box, frontIcon: PackageSent, modal: false, color: "#A0C2B5" }
+    { label: "Wet Leaves", value: sumWetLeaves, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
+    { label: "Dry Leaves", value: sumDryLeaves, unit: "Kg", frontIcon: DryLeaves, modal: false, color: "#D2D681" },
+    { label: "Powder", value: sumFlour, unit: "Kg", frontIcon: Powder, modal: false, color: "#0F7275" },
+    { label: "Packages Sent", value: sumShipmentQuantity, icon_unit: Box, frontIcon: PackageSent, modal: false, color: "#A0C2B5" }
   ];
 
   const LastActivity = [
@@ -37,7 +62,7 @@ function DashboardCentra() {
         <Graph />
       </WidgetContainer>
       <div className='grid grid-cols-2 gap-4'>
-        {statsData.map((stat, index) => (
+        {statsData[0].value !== "---" && statsData.map((stat, index) => (
           <StatsContainer
             key={index}
             label={stat.label}

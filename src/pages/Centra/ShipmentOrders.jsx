@@ -11,6 +11,7 @@ import AccordionUsage from '../../components/AccordionUsage';
 import { useOutletContext } from 'react-router';
 import axios from 'axios';
 import { API_URL } from '../../App';
+import ShipmentStatus from '@components/ShipmentStatus';
 
 function ShipmentOrders() {
     const [shipmentData, setShipmentData] = useState([]);
@@ -22,7 +23,33 @@ function ShipmentOrders() {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
                 console.log('Fetched shipments:', response.data);
-                setShipmentData(response.data);
+                const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Exclude shipments with a ShipmentDate
+
+                // Fetch details for each FlourID in each shipment
+                const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
+                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        return {
+                            FlourID: flourID,
+                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                        };
+                    }));
+
+                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
+                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
+                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                    const courierName = courierResponse.data.CourierName;
+
+                    return {
+                        ...shipment,
+                        ShipmentWeight: totalFlourWeight,
+                        CourierName: courierName
+                    };
+                }));
+
+                setShipmentData(updatedShipments);
+                console.log(updatedShipments)
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
@@ -36,22 +63,42 @@ function ShipmentOrders() {
         document.getElementById('ShipmentPopup').showModal();
     };
 
-    const Orders = shipmentData.map(shipment => ({
-        time: "Packing",
-        color: "#79B2B7",
-        image: CountdownIcon,
-        weight: `${shipment.Weight} Kg`,
-        code: shipment.ShipmentID,
-        detailImage: ShipmentLogo,
-        date: shipment.Date
-    }));
+    const refreshData = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
+            const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Ensure filtering here as well
+            const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
+                const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                    const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                    return {
+                        FlourID: flourID,
+                        Flour_Weight: flourResponse.data.Flour_Weight
+                    };
+                }));
+
+                const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+                const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                const courierName = courierResponse.data.CourierName;
+
+                return {
+                    ...shipment,
+                    ShipmentWeight: totalFlourWeight,
+                    CourierName: courierName
+                };
+            }));
+
+            setShipmentData(updatedShipments);
+        } catch (error) {
+            console.error('Error refreshing shipments:', error);
+        }
+    };
 
     const accordions = [
         {
             summary: 'Ordered shipment',
             details: () => (
                 <>
-                    {Orders.map((item, index) => (
+                    {shipmentData.map((item, index) => (
                         <div key={`order_${index}`} className='flex justify-between p-1'>
                             <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                                 <button onClick={() => handleButtonClick(item)}>
@@ -60,14 +107,14 @@ function ShipmentOrders() {
 
                                 <div className='flex flex-col ml-3'>
                                     <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                        {item.weight}
+                                        {item.ShipmentWeight} Kg
                                     </span>
                                     <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                        {item.code}
+                                        S01{item.ShipmentID}
                                     </span>
                                 </div>
                                 <div className="flex ml-auto items-center">
-                                    <Countdown time={item.time} color={item.color} image={item.image} />
+                                    <ShipmentStatus packing />
                                 </div>
                             </WidgetContainer>
                         </div>
@@ -83,11 +130,15 @@ function ShipmentOrders() {
             <AccordionUsage accordions={accordions} className="mt-3" />
             {selectedData && (
                 <ShipmentPopup
-                    code={selectedData.code}
+                    confirmDeliver
+                    courier={selectedData.CourierName}
+                    code={selectedData.ShipmentID}
                     time={selectedData.time}
-                    weight={selectedData.weight}
+                    quantity={selectedData.ShipmentQuantity}
+                    weight={selectedData.ShipmentWeight + " Kg"}
                     date={selectedData.date}
                     imageSrc={selectedData.detailImage}
+                    onConfirm={refreshData} // Pass the refreshData function as a prop
                 />
             )}
         </>

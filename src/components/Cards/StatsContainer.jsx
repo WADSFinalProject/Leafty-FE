@@ -15,9 +15,9 @@ const settings = {
 function showModal() {
 
 }
-function StatsContainer({ row = true, label, value, unit = false, icon_unit = false, description, modalContent, color, modal = true, frontIcon = false, backIcon = false, round }) {
+function StatsContainer({ row = true, label, value, unit = false, icon_unit = false, description, modalContent, color, modal = true, frontIcon = false, backIcon = false, round, dashboardStats = false, truck = false }) {
     return <>
-        <WidgetContainer padding={false} round = {round}>
+        <WidgetContainer container = {false} padding={false} round = {round}>
             <div className="flex flex-row justify-between py-2 pl-2 items-center">
                 {frontIcon ? <img src={frontIcon} className="w-1/4"></img> : <></>}
                 <div className={`flex ${row ? "flex-col":"flex-row"} gap-1.5`}>
@@ -25,7 +25,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                         {modal ? <button className="" onClick={() => document.getElementById('my_modal').showModal()}><img src={information}></img></button> : <></>}
                         <div></div>
                     </div>
-                    <span style={{ color: "#6B6A6A" }}>
+                    <span style={{ color: "#6B6A6A" }} className="w-3/4">
                         {label ? label : <></>}
                     </span>
                     <span className="font-bold text-2xl">
@@ -44,6 +44,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                     </span>
                 </div>
                 {backIcon ? <img src={backIcon}></img> : <></>}
+                {dashboardStats && <img src = {dashboardStats} className={`w-1/3 ${truck && "mr-6"}`}></img>}
                 {/* <img src={powder} className="w-1/4 transform -scale-x-100 opacity-10 place-self-end"></img> */}
                 <div className="w-[20px] h-[100px] place-self-center">
                     <div className="w-[20px] h-[100px] rounded-[10px_0px_0px_10px] shadow-[inset_0px_4px_4px_#0000001a] left-20 " style={{ background: color }} />

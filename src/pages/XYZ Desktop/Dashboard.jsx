@@ -8,7 +8,10 @@ import { animate, motion, useAnimationControls } from "framer-motion";
 import LongContainer from "@components/Cards/LongContainer";
 import PieChart from "@components/Cards/PieChart";
 import box from "@assets/PackageBox.svg";
-
+import PowderStats from "@assets/PowderStats.svg";
+import TruckStats from "@assets/TruckStats.svg";
+import WetLeavesStats from "@assets/WetLeavesStats.svg";
+import Powder from "../Centra/Powder";
 
 function Dashboard() {
     const [collapsed, setCollapsed] = useState(false);
@@ -59,19 +62,19 @@ function Dashboard() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 1 }}>
-                <StatsContainer label="Today's Production" value="150" unit="Kg" description="Since Yesterday" color={"#C0CD30"} />
+                <StatsContainer label="Today's Received Powder" value="150" unit="Kg" description="" color={"#C0CD30"} dashboardStats = {PowderStats}/>
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 1.25 }}>
-                <StatsContainer label="Wet Leaves Collected" value="300" unit="Kg" description="Since Yesterday" color={"#79B2B7"} />
+                <StatsContainer label="Wet Leaves Collected" value="300" unit="Kg" description="" color={"#79B2B7"} dashboardStats = {WetLeavesStats} />
             </motion.div>
             <motion.div initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 1.5 }}>
-                <StatsContainer label="Unscaled Pickups" value="3" icon_unit = {box} description="Scale Your Pickup!" color={"#0F7275"} />
+                <StatsContainer label="Unscaled Pickups" value="3" icon_unit = {box} description="" color={"#0F7275"} dashboardStats = {TruckStats} truck = {true} />
             </motion.div>
         </div>
 

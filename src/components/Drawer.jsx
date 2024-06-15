@@ -39,7 +39,7 @@ const theme = createTheme({
 });
 
 function Drawer(props) {
-  const { WetLeaves, DryLeaves, Flour, Shipment, UserID, window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
+  const { Data, setData, WetLeaves, DryLeaves, Flour, Shipment, UserID, window, firstText, secondText, thirdText, fourthText, firstImgSrc, secondImgSrc, thirdImgSrc, showThirdInput, includeFourthSection, inputData } = props;
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen) => () => {
@@ -47,6 +47,11 @@ function Drawer(props) {
   };
 
   const container = window !== undefined ? () => window().document.body : undefined;
+
+  const handleSelectFlour = (flourID) => {
+    // Handle the selected flour ID here, if needed.
+    console.log("Selected flour ID in Drawer component:", flourID);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -73,6 +78,10 @@ function Drawer(props) {
         >
           <StyledBox>
             <InputData
+              setData = {setData}
+              Data = {Data}
+              open = {open}
+              setOpen = {setOpen}
               UserID={UserID}
               firstp={firstText}
               secondp={secondText}
@@ -97,3 +106,4 @@ function Drawer(props) {
 }
 
 export default Drawer;
+

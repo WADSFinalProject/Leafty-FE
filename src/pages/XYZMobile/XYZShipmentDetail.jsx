@@ -148,7 +148,7 @@ function XYZShipmentDetail() {
                                 Next
                             </button>
                         </WidgetContainer>
-                    </div>
+                </div>
             </div>
         </div>
 
