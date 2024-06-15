@@ -107,8 +107,8 @@ function App() {
           <Route path="Shipment List" element={<XYZShipmentList />} />
           <Route path="Scanner" element={<XYZScanner />} />
           <Route path="Tracker" element={<Tracker />} />
-          <Route path="Shipment Detail" element={<XYZShipmentDetail />} />
         </Route>
+        <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
         <Route path="admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<DashboardAdmin />} />
           <Route path="wet leaves" element={<AdminWetLeaves />} />
