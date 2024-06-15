@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Scanner, useDevices } from '@yudiel/react-qr-scanner';
+import { Scanner, useDeviceList } from '@yudiel/react-qr-scanner';
 import ScanResultsDrawer from '@components/ScanResultsDrawer';
 import './scanner.css'; 
 
@@ -7,7 +7,7 @@ function HarborScanner() {
     const [selectedDeviceId, setSelectedDeviceId] = useState(null);
     const [data, setData] = useState('');
     const [open, setOpen] = useState(false);
-    const devices = useDevices();
+    const devices = useDeviceList();
 
     const handleDeviceChange = (event) => {
         setSelectedDeviceId(event.target.value);
@@ -23,6 +23,7 @@ function HarborScanner() {
 
     useEffect(() => {
         if (data) {
+            console.log('QR code data received:', data); // Log the scanned data
             setOpen(true);
         }
     }, [data]);
