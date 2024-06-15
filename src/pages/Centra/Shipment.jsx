@@ -58,12 +58,15 @@ function Shipment() {
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
+        console.log('Tab changed to:', newValue);
     };
+
+    console.log('UserID:', UserID);
 
     return (
         <ThemeProvider theme={theme}>
             <Box sx={{ width: '100%' }}>
-                <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+                <Box sx={{ borderBottom: 1, marginBottom: "20px", borderColor: 'divider' }}>
                     <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                         <BoldTab label="Orders" component={Link} to="ShipmentOrder" />
                         <BoldTab label="Sent" component={Link} to="ShipmentSent" />
@@ -71,7 +74,12 @@ function Shipment() {
                     </Tabs>
                 </Box>
                 <CustomTabPanel value={value} index={0}>
-                    {/* Display Orders Tab Content */}
+                    <Outlet context={UserID} />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={1}>
+                    <Outlet context={UserID} />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={2}>
                     <Outlet context={UserID} />
                 </CustomTabPanel>
             </Box>

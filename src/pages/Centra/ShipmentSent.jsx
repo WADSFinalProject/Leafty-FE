@@ -20,23 +20,21 @@ function ShipmentSent() {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
                 console.log('Fetched shipments:', response.data);
-                const shipments = response.data.filter(shipment => shipment.ShipmentDate); // Include only shipments with a ShipmentDate
+                const shipments = response.data.filter(shipment => shipment.ShipmentDate);
 
-                // Fetch details for each FlourID in each shipment
                 const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
                         return {
                             FlourID: flourID,
-                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                            Flour_Weight: flourResponse.data?.Flour_Weight || 0
                         };
                     }));
 
-                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
                     const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
 
                     const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
+                    const courierName = courierResponse.data?.CourierName || 'Unknown Courier';
 
                     return {
                         ...shipment,
@@ -60,41 +58,38 @@ function ShipmentSent() {
         document.getElementById('ShipmentPopup').showModal();
     };
 
-    const accordions = [
-        {
-            summary: 'Sent Shipments',
-            details: () => (
-                <>
-                    {shipmentData.map((item, index) => (
-                        <div key={`sent_${index}`} className='flex justify-between p-1'>
-                            <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                                <button onClick={() => handleButtonClick(item)}>
-                                    <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                                </button>
-
-                                <div className='flex flex-col ml-3'>
-                                    <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                        {item.ShipmentWeight} Kg
-                                    </span>
-                                    <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                        S01{item.ShipmentID}
-                                    </span>
-                                </div>
-                                <div className="flex ml-auto items-center">
-                                    <Countdown time={item.time} color={"#79B2B7"} packing />
-                                </div>
-                            </WidgetContainer>
-                        </div>
-                    ))}
-                </>
-            ),
-            defaultExpanded: true,
-        }
-    ];
-
     return (
         <>
-            <AccordionUsage accordions={accordions} className="mt-3" />
+            <AccordionUsage accordions={[
+                {
+                    summary: 'Sent Shipments',
+                    details: () => (
+                        <>
+                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
+                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                                    <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                                        <button onClick={() => handleButtonClick(item)}>
+                                            <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                                        </button>
+                                        <div className='flex flex-col ml-3'>
+                                            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                                                {item.ShipmentWeight} Kg
+                                            </span>
+                                            <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                                                S01{item.ShipmentID}
+                                            </span>
+                                        </div>
+                                        <div className="flex ml-auto items-center">
+                                            <Countdown time={item.time} color={"#79B2B7"} packing />
+                                        </div>
+                                    </WidgetContainer>
+                                </div>
+                            )) : <div>No shipments found.</div>}
+                        </>
+                    ),
+                    defaultExpanded: true,
+                }
+            ]} className="mt-3" />
             {selectedData && (
                 <ShipmentPopup
                     courier={selectedData.CourierName}
