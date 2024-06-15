@@ -81,7 +81,9 @@ function App() {
       if (response.data) {
         setUser(response.data.user_id);
         setRole(response.data.user_role);
-        setAuth(true);
+        if(!auth) {
+          setAuth(true);
+        }
       }
     } catch (error) {
       console.error("Error fetching user data", error);
@@ -91,13 +93,7 @@ function App() {
 }
   useEffect(() => {
     handleWhoAmI();
-  }, []);
-  
-  useEffect(() => {
-    if(auth){
-      handleWhoAmI();
-    }
-  }, [auth]);
+  }, [,auth]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -159,7 +155,7 @@ function App() {
 
   const ProtectedAdmin = ({}) => {
   
-    if (CURRENT_USER_ROLE != 5) {
+    if (CURRENT_USER_ROLE != 4) {
       return <Navigate to="/" />;
     }
   
@@ -171,9 +167,8 @@ function App() {
       <Router>
         <Routes>
           <Route exact path="/" element={<ProtectedLogin/>}>
-            <Route path="/" element={<OnBoarding/>}></Route>
+            <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI}/>}></Route>
           </Route>
-          <Route path="/" element={<OnBoarding/>}></Route>
           <Route path="verify" element={<Verification />}></Route>
           <Route path="register" element={<Register />}></Route>
           <Route path="approval" element={<Approval />}></Route>
@@ -211,12 +206,10 @@ function App() {
           </Route>
 
           <Route exact path="/" element={<ProtectedRoute/>}>
-            <Route exact path="/" ele ment={<ProtectedCentra/>}>
+            <Route exact path="/" element={<ProtectedCentra/>}>
               <Route path="centra" element={<CentraLayout />}>
                 <Route path="Dashboard" element={<DashboardCentra />}></Route>
-                <Route path="Wet Leaves" element={<WetLeaves />}>
-                  
-                </Route>
+                <Route path="Wet Leaves" element={<WetLeaves />}></Route>
                 <Route path="wet-leaves/detail/:code/:time/:weight" element={<WetLeavesDetail />} />
                 <Route path="Dry Leaves" element={<DryLeaves />}></Route>
                 <Route path="dry-leaves/detail/:code/:time/:weight" element={<DryLeavesDetail />} />
@@ -228,8 +221,6 @@ function App() {
                   <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
                 </Route>
                 <Route path="shipmentdetail/:code" element={<ShipmentDetail />}></Route>
-                
-
               </Route>
             </Route>
           </Route>

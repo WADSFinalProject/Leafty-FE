@@ -102,26 +102,6 @@ function OnBoarding( ) {
     setIsSubmit(!isSubmit);
   }
 
-  async function handleWhoAmI() {
-    try {
-      const response = await axios.get(API_URL + "/whoami");
-      if (response && response.data) {
-        console.log(response.data.role_id);
-        return true;
-      } else {
-        console.error("No response or response data");
-        return false;
-      }
-    } catch (error) {
-      console.error("Error while checking session:", error);
-      return false;
-    }
-  }
-
-  useEffect(()=>{
-    handleWhoAmI()
-  },[])
-
   useEffect(() => {
     // Set a timeout to show the carousel after 2 seconds
     const timeout = setTimeout(() => {
