@@ -129,6 +129,7 @@ function ShipmentOrders() {
             <AccordionUsage accordions={accordions} className="mt-3" />
             {selectedData && (
                 <ShipmentPopup
+                    confirmDeliver
                     courier={selectedData.CourierName}
                     code={selectedData.ShipmentID}
                     time={selectedData.time}

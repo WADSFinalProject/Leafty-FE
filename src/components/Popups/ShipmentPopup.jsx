@@ -11,7 +11,7 @@ import QRPage from '../../pages/QRPage';
 import Button from '@components/Button';
 import { API_URL } from '../../App'; // Adjust the import path as needed
 
-function ShipmentPopup({ code, weight, quantity, courier, onConfirm }) {
+function ShipmentPopup({ code, weight, quantity, courier, onConfirm, ShipmentDate = false, confirmDeliver = false }) {
     const ShipmentText = `Expedition #${code}`;
 
     const handleConfirm = async () => {
@@ -45,10 +45,11 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm }) {
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                                 {quantity} Packages
                             </span>
-                            <img src={DateIcon} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            {ShipmentDate ? <><img src={DateIcon} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                {new Date().toLocaleDateString()}
-                            </span>
+                                {ShipmentDate}
+                            </span></>:<></> }
+                          
                         </div>
                     </div>
 
@@ -59,7 +60,7 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm }) {
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Powder</span>
                                     <div className='flex pb-2'>
                                         <img src={DateIcon} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">3 Packages</span>
+                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{quantity} Packages</span>
                                     </div>
                                     <div className='flex pb-2'>
                                         <img src={ShipmentWeight} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
@@ -92,7 +93,7 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm }) {
                             <QRPage data={code} />
                         </WidgetContainer>
                     </div>
-                    <Button className="flex w-full mt-4" noMax={true} onClick={handleConfirm} type="submit" background="#0F7275" color="#F7FAFC" label="Confirm Deliver" />
+                    {confirmDeliver && <Button className="flex w-full mt-4" noMax={true} onClick={handleConfirm} type="submit" background="#0F7275" color="#F7FAFC" label="Confirm Deliver" />}
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
