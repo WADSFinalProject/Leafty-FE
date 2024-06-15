@@ -17,7 +17,7 @@ import Popup from '@components/Popups/Popup';
 import "./Drawer.css";
 import { API_URL } from '../App';
 
-const drawerBleeding = 56;
+const drawerBleeding = 0;
 
 const Root = styled('div')(({ theme }) => ({
   height: '100%',

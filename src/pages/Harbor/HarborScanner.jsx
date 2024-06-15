@@ -49,6 +49,7 @@ function HarborScanner() {
                     options={{ deviceId: selectedDeviceId }}
                 />
             </div>
+            
             <ScanResultsDrawer 
                 open={open} 
                 toggleDrawer={handleToggleDrawer} 
