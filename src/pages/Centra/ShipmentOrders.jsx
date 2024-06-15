@@ -22,7 +22,7 @@ function ShipmentOrders() {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
                 console.log('Fetched shipments:', response.data);
-                const shipments = response.data;
+                const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Exclude shipments with a ShipmentDate
 
                 // Fetch details for each FlourID in each shipment
                 const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
@@ -62,16 +62,35 @@ function ShipmentOrders() {
         document.getElementById('ShipmentPopup').showModal();
     };
 
-    // const Orders = shipmentData.map(shipment => ({
-    //     time: "Packing",
-    //     color: "#79B2B7",
-    //     image: CountdownIcon,
-    //     quantity: shipment.ShipmentQuantity,
-    //     weight: `${shipment.ShipmentWeight} Kg`,
-    //     code: shipment.ShipmentID,
-    //     detailImage: ShipmentLogo,
-    //     date: shipment.Date
-    // }));
+    const refreshData = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
+            const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Ensure filtering here as well
+            const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
+                const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                    const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                    return {
+                        FlourID: flourID,
+                        Flour_Weight: flourResponse.data.Flour_Weight
+                    };
+                }));
+
+                const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+                const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                const courierName = courierResponse.data.CourierName;
+
+                return {
+                    ...shipment,
+                    ShipmentWeight: totalFlourWeight,
+                    CourierName: courierName
+                };
+            }));
+
+            setShipmentData(updatedShipments);
+        } catch (error) {
+            console.error('Error refreshing shipments:', error);
+        }
+    };
 
     const accordions = [
         {
@@ -117,6 +136,7 @@ function ShipmentOrders() {
                     weight={selectedData.ShipmentWeight + " Kg"}
                     date={selectedData.date}
                     imageSrc={selectedData.detailImage}
+                    onConfirm={refreshData} // Pass the refreshData function as a prop
                 />
             )}
         </>

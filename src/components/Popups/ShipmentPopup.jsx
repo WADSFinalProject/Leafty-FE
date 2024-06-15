@@ -1,20 +1,33 @@
 import React from 'react';
+import axios from 'axios'; // Import axios for making API calls
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import ShipmentLogo from '../../assets/ShipmentDetail.svg';
 import PackageCount from '../../assets/Packagecount.svg';
-import Date from '../../assets/Date.svg';
+import DateIcon from '../../assets/Date.svg';
 import ShipmentWeight from '../../assets/ShipmentWeight.svg';
 import Courier from '../../assets/Courier.svg';
 import Address from '../../assets/Address.svg';
-import ShipmentReceipt from '../../assets/ShipmentReceipt.svg';
-import Download from '../../assets/Download.svg';
-import Upload from '../../assets/Upload.svg';
-import Open from '../../assets/Open.svg';
 import QRPage from '../../pages/QRPage';
-import Button from '@components/Button'; //
-function ShipmentPopup({ code, weight, quantity, courier }) {
+import Button from '@components/Button';
+import { API_URL } from '../../App'; // Adjust the import path as needed
+
+function ShipmentPopup({ code, weight, quantity, courier, onConfirm }) {
     const ShipmentText = `Expedition #${code}`;
-    const date = '22/07/2024'; // Example static date
+
+    const handleConfirm = async () => {
+        try {
+            const response = await axios.put(`${API_URL}/shipment/update_date/${code}`, {
+                ShipmentDate: new Date().toISOString() // Update shipment date to current date
+            });
+            console.log('Shipment date updated:', response.data);
+            if (onConfirm) {
+                onConfirm(); // Call the callback function to refresh data
+            }
+            document.getElementById('ShipmentPopup').close(); // Close the modal
+        } catch (error) {
+            console.error('Error updating shipment date:', error);
+        }
+    };
 
     return (
         <>
@@ -32,20 +45,20 @@ function ShipmentPopup({ code, weight, quantity, courier }) {
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                                 {quantity} Packages
                             </span>
-                            <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            <img src={DateIcon} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                22/07/2024
+                                {new Date().toLocaleDateString()}
                             </span>
                         </div>
                     </div>
 
                     <div className='p-2'>
-                        <WidgetContainer container = {false} borderRadius="20px">
+                        <WidgetContainer container={false} borderRadius="20px">
                             <div className="flex justify-around">
                                 <div className="flex flex-col">
-                                    <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
+                                    <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Powder</span>
                                     <div className='flex pb-2'>
-                                        <img src={Date} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                                        <img src={DateIcon} alt="Profile" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
                                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">3 Packages</span>
                                     </div>
                                     <div className='flex pb-2'>
@@ -59,7 +72,6 @@ function ShipmentPopup({ code, weight, quantity, courier }) {
                                 </div>
 
                                 <div className="flex flex-col">
-
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
                                     <div className='flex pb-2'>
                                         <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
@@ -71,18 +83,16 @@ function ShipmentPopup({ code, weight, quantity, courier }) {
                                         <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Jl.Address</span>
                                     </div>
                                 </div>
-
-
                             </div>
                         </WidgetContainer>
                     </div>
 
                     <div className='p-2'>
-                        <WidgetContainer container = {false} borderRadius='20px'>
-                            <QRPage data = {code}/>
+                        <WidgetContainer container={false} borderRadius='20px'>
+                            <QRPage data={code} />
                         </WidgetContainer>
                     </div>
-                    <Button className="flex w-full mt-4" noMax = {true} onClick = {() => {}} type="submit" background="#0F7275" color="#F7FAFC" label="Confirm Deliver"  />
+                    <Button className="flex w-full mt-4" noMax={true} onClick={handleConfirm} type="submit" background="#0F7275" color="#F7FAFC" label="Confirm Deliver" />
                 </div>
                 <form method="dialog" className="modal-backdrop">
                     <button>close</button>
