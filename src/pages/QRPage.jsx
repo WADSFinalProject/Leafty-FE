@@ -5,7 +5,7 @@ import QRGenerator from "@components/QRCode/QRGenerator";
 import QRCodeDocument from "@components/QRCode/QRCodeDocument";
 import Download from "@assets/icons/download.svg";
 
-function QRPage({ numPackages = 4, data }) {
+function QRPage({ numPackages = 4, data = "Leafty"}) {
   const [qrCodeData, setQRCodeData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
