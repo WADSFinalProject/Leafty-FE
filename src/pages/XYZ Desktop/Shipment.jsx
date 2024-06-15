@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
-import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
+import VerifiedPackages from '@assets/VerifiedPackages.svg';
+import DeparturedPackages from '@assets/DeparturedPackages.svg';
+import RescalledPackages from '@assets/RescalledPackages.svg';
+import TotalPackagesReceived from '@assets/TotalPackagesReceived.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import LongContainer from '@components/Cards/LongContainer';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
@@ -55,35 +55,35 @@ function Shipment() {
 
     const stats = [
         {
-            label: "Awaiting Leaves",
+            label: "Verified Packages",
             value: "243",
             unit: "Kg",
             color: "#C0CD30",
-            icon: AwaitingLeaves,
+            icon: VerifiedPackages,
             delay: 1
         },
         {
-            label: "Processed Leaves",
+            label: "Departured Packages",
             value: "243",
             unit: "Kg",
             color: "#79B2B7",
-            icon: ProcessedLeaves,
+            icon: DeparturedPackages,
             delay: 1.25
         },
         {
-            label: "Wasted Leaves",
+            label: "Rescalled Packages",
             value: "250",
             unit: "Kg",
             color: "#0F7275",
-            icon: ExpiredWetLeaves,
+            icon: RescalledPackages,
             delay: 1.5
         },
         {
-            label: "Total Wet Leaves",
+            label: "Total Packages Received",
             value: "1500",
             unit: "Kg",
             color: "#0F7275",
-            icon: TotalCollectedWet,
+            icon: TotalPackagesReceived,
             delay: 1.75
         }
     ];
