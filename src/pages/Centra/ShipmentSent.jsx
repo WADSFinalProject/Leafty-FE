@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import CircularButton from '../../components/CircularButton';
-import Countdown from '../../components/Countdown';
 import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
@@ -59,6 +58,11 @@ function ShipmentSent() {
         document.getElementById('ShipmentPopup').showModal();
     };
 
+    const deliveredShipments = shipmentData.filter(item => !item.Check_in_Date && !item.Check_in_Quantity);
+    const verifiedShipments = shipmentData.filter(item => item.Check_in_Date && item.Check_in_Quantity && item.Rescalled_Weight === null);
+    const rescalledShipments = shipmentData.filter(item => item.Rescalled_Weight !== null);
+    console.log('hello',rescalledShipments);
+
     return (
         <>
             <AccordionUsage accordions={[
@@ -66,8 +70,8 @@ function ShipmentSent() {
                     summary: 'Delivered Shipments',
                     details: () => (
                         <>
-                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
-                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                            {deliveredShipments.length > 0 ? deliveredShipments.map((item, index) => (
+                                <div key={`delivered_${index}`} className='flex justify-between p-1'>
                                     <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                                         <button onClick={() => handleButtonClick(item)}>
                                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
@@ -93,8 +97,8 @@ function ShipmentSent() {
                     summary: 'Verified Shipments',
                     details: () => (
                         <>
-                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
-                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                            {verifiedShipments.length > 0 ? verifiedShipments.map((item, index) => (
+                                <div key={`verified_${index}`} className='flex justify-between p-1'>
                                     <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                                         <button onClick={() => handleButtonClick(item)}>
                                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
@@ -120,8 +124,8 @@ function ShipmentSent() {
                     summary: 'Re-scalled Shipments',
                     details: () => (
                         <>
-                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
-                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                            {rescalledShipments.length > 0 ? rescalledShipments.map((item, index) => (
+                                <div key={`rescalled_${index}`} className='flex justify-between p-1'>
                                     <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                                         <button onClick={() => handleButtonClick(item)}>
                                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
