@@ -66,8 +66,8 @@ function ScanResultsDrawer(props) {
         console.log("All shipment IDs received: ", shipmentIds);
 
         const shipmentId = shipmentIds.find(id => {
-          console.log(id)
-          console.log(data.trim())
+          console.log(id);
+          console.log(data.trim());
           const isMatch = bcrypt.compareSync(id.toString(), data.trim().toString());
           if (isMatch) {
             console.log(`Matching shipment ID found: ${id}`);
@@ -94,6 +94,25 @@ function ScanResultsDrawer(props) {
     }
   }, [data]);
 
+  const handleConfirm = async () => {
+    if (!shipmentDetails) return;
+
+    try {
+      const shipmentId = shipmentDetails.ShipmentID;
+      const checkInDate = new Date().toISOString();
+      const checkInQuantity = parseInt(receivedPackages, 10);
+
+      const response = await axios.put(`${API_URL}/shipment/update_check_in/${shipmentId}`, {
+        Check_in_Date: checkInDate,
+        Check_in_Quantity: checkInQuantity,
+      });
+
+      console.log("Shipment check-in details updated successfully:", response.data);
+      toggleDrawer(false)();
+    } catch (error) {
+      console.error("Error updating shipment check-in details: ", error);
+    }
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -194,7 +213,14 @@ function ScanResultsDrawer(props) {
                   <img src={PackageCount} alt="Date" className='flex justify-end w-6 h-auto' />
                 </div>
               </WidgetContainer>  
-              <Button className = {"flex w-full justify-center items-center"} noMax = {true} label = {"Confirm"} color = {"white"} background = {"#0F7275"}></Button>
+              <Button 
+                className={"flex w-full justify-center items-center"} 
+                noMax={true} 
+                label={"Confirm"} 
+                color={"white"} 
+                background={"#0F7275"} 
+                onClick={handleConfirm}
+              />
             </div>
           </StyledBox>
         </SwipeableDrawer>
@@ -202,6 +228,5 @@ function ScanResultsDrawer(props) {
     </ThemeProvider>
   );
 }
-//raja sucks
 
 export default ScanResultsDrawer;
