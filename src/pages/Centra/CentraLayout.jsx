@@ -74,7 +74,7 @@ function CentraLayout() {
                 setReturnDestination("/centra/Dry%20Leaves");
             } else if (pathname.includes('powderdetail')) {
                 setReturnDestination("/centra/Powder");
-            } else if (pathname.includes('shipmentdetail')) {
+            } else if (pathname.includes('shipment')) {
                 setReturnDestination("/centra/Shipment/ShipmentOrder");
             }
         }
@@ -115,13 +115,17 @@ function CentraLayout() {
     const handleChange = (event, newValue) => {
         if (newValue) {
             setValue(newValue);
-            navigate(newValue.toLowerCase()); // Navigate to the lowercase value (assuming route names are lowercase)
+            if (newValue.toLowerCase() === "shipment") {
+                navigate("shipment/shipmentorder");
+            } else {
+                navigate(newValue.toLowerCase()); // Navigate to the lowercase value (assuming route names are lowercase)
+            }
         } else {
             setValue("Dashboard");
             navigate("dashboard");
         }
     };
-    
+
     if (UserID === null) {
         return <LoadingCircle />; // or a loading indicator
     }

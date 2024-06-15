@@ -11,6 +11,7 @@ import AccordionUsage from '../../components/AccordionUsage';
 import { useOutletContext } from 'react-router';
 import axios from 'axios';
 import { API_URL } from '../../App';
+import ShipmentStatus from '@components/ShipmentStatus';
 
 function ShipmentOrders() {
     const [shipmentData, setShipmentData] = useState([]);
@@ -113,7 +114,7 @@ function ShipmentOrders() {
                                     </span>
                                 </div>
                                 <div className="flex ml-auto items-center">
-                                    <Countdown time={item.time} color={"#79B2B7"} packing />
+                                    <ShipmentStatus packing />
                                 </div>
                             </WidgetContainer>
                         </div>

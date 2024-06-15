@@ -9,6 +9,7 @@ import AccordionUsage from '../../components/AccordionUsage';
 import { useOutletContext } from 'react-router';
 import axios from 'axios';
 import { API_URL } from '../../App';
+import ShipmentStatus from '../../components/ShipmentStatus';
 
 function ShipmentSent() {
     const [shipmentData, setShipmentData] = useState([]);
@@ -62,7 +63,7 @@ function ShipmentSent() {
         <>
             <AccordionUsage accordions={[
                 {
-                    summary: 'Sent Shipments',
+                    summary: 'Delivered Shipments',
                     details: () => (
                         <>
                             {shipmentData.length > 0 ? shipmentData.map((item, index) => (
@@ -80,7 +81,7 @@ function ShipmentSent() {
                                             </span>
                                         </div>
                                         <div className="flex ml-auto items-center">
-                                            <Countdown time={item.time} color={"#79B2B7"} packing />
+                                            <ShipmentStatus packing />
                                         </div>
                                     </WidgetContainer>
                                 </div>
@@ -88,6 +89,60 @@ function ShipmentSent() {
                         </>
                     ),
                     defaultExpanded: true,
+                },{
+                    summary: 'Verified Shipments',
+                    details: () => (
+                        <>
+                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
+                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                                    <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                                        <button onClick={() => handleButtonClick(item)}>
+                                            <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                                        </button>
+                                        <div className='flex flex-col ml-3'>
+                                            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                                                {item.ShipmentWeight} Kg
+                                            </span>
+                                            <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                                                S01{item.ShipmentID}
+                                            </span>
+                                        </div>
+                                        <div className="flex ml-auto items-center">
+                                            <ShipmentStatus verified />
+                                        </div>
+                                    </WidgetContainer>
+                                </div>
+                            )) : <div>No shipments found.</div>}
+                        </>
+                    ),
+                    defaultExpanded: false,
+                },{
+                    summary: 'Re-scalled Shipments',
+                    details: () => (
+                        <>
+                            {shipmentData.length > 0 ? shipmentData.map((item, index) => (
+                                <div key={`sent_${index}`} className='flex justify-between p-1'>
+                                    <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                                        <button onClick={() => handleButtonClick(item)}>
+                                            <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                                        </button>
+                                        <div className='flex flex-col ml-3'>
+                                            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                                                {item.ShipmentWeight} Kg
+                                            </span>
+                                            <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                                                S01{item.ShipmentID}
+                                            </span>
+                                        </div>
+                                        <div className="flex ml-auto items-center">
+                                            <ShipmentStatus rescalling />
+                                        </div>
+                                    </WidgetContainer>
+                                </div>
+                            )) : <div>No shipments found.</div>}
+                        </>
+                    ),
+                    defaultExpanded: false
                 }
             ]} className="mt-3" />
             {selectedData && (

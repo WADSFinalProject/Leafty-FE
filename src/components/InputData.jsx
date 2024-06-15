@@ -279,7 +279,7 @@ const InputData = ({
   return (
     <div className="w-full max-w mt-4 p-4 ">
       {/* Date Input */}
-      <div className="mb-4">
+      <div className={`mb-4 ${Shipment && "hidden"}`}>
         <p className="font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1">
           {firstp}
         </p>
@@ -303,7 +303,7 @@ const InputData = ({
       </div>
 
       {/* Weight Input */}
-      <div className="mb-4 flex flex-col items-center">
+      <div className={`mb-4 flex flex-col items-center ${Shipment && "hidden"}`}>
         <p className="font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left self-start mb-2">
           {secondp}
         </p>
