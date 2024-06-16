@@ -11,17 +11,23 @@ import PackageSent from "../../assets/PackangeSent.svg";
 import Box from "../../assets/PackageBox.svg";
 import Fab from '@mui/material/Fab';
 import { useOutletContext } from 'react-router';
+import { motion } from 'framer-motion';
+
 import { API_URL } from '../../App';
 import axios from 'axios';
 
 function DashboardCentra() {
+  const fadeUpVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
+  };
   const UserID = useOutletContext();
   const [sumWetLeaves, setSumWetLeaves] = useState("---");
   const [sumDryLeaves, setSumDryLeaves] = useState("---");
   const [sumFlour, setSumFlour] = useState("---");
   const [sumShipmentQuantity, setSumShipmentQuantity] = useState("---");
 
-  useEffect(()=>{
+  useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/centra/statistics/${UserID}`);
@@ -34,7 +40,7 @@ function DashboardCentra() {
       } catch (error) {
         console.error('Error fetching statistics data:', error);
       }
-    };  
+    };
 
     fetchData();
     console.log(statsData)
@@ -58,22 +64,34 @@ function DashboardCentra() {
   return (
     <>
       <FilterDashboard tablet={tabletMode} />
-      <WidgetContainer>
-        <Graph />
-      </WidgetContainer>
+      <motion.div initial="hidden" animate="visible"
+        variants={fadeUpVariants}
+        transition={{ duration: 0.5, delay: 0.1 }}>
+        <WidgetContainer>
+          <Graph /> 
+        </WidgetContainer>
+      </motion.div>
+
       <div className='grid grid-cols-2 gap-4'>
         {statsData[0].value !== "---" && statsData.map((stat, index) => (
-          <StatsContainer
+          <motion.div
             key={index}
-            label={stat.label}
-            value={stat.value}
-            unit={stat.unit}
-            frontIcon={stat.frontIcon}
-            icon_unit={stat.icon_unit}
-            modal={stat.modal}
-            color={stat.color}
-            round={"lg"}
-          />
+            initial="hidden"
+            animate="visible"
+            variants={fadeUpVariants}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <StatsContainer
+              label={stat.label}
+              value={stat.value}
+              unit={stat.unit}
+              frontIcon={stat.frontIcon}
+              icon_unit={stat.icon_unit}
+              modal={stat.modal}
+              color={stat.color}
+              round={"lg"}
+            />
+          </motion.div>
         ))}
       </div>
       {/* <div className=''>

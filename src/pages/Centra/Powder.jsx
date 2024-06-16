@@ -9,6 +9,7 @@ import PowderStatus from "@components/PowderStatus";
 import Drawer from '../../components/Drawer';
 import Date from '../../assets/Date.svg';
 import WeightLogo from '../../assets/Weight.svg';
+import LoadingStatic from "@components/LoadingStatic";
 import ReadyIcon from '../../assets/ReadyIcon.svg';
 import axios from 'axios';
 import { API_URL } from '../../App';

@@ -1,6 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import './style/App.css'
 import './style/font.css'
+import LoadingCircle from "@components/LoadingCircle"
 import OnBoarding from "./pages/OnBoarding";
 import Verification from "./pages/Verification";
 import Register from "./pages/Register";
@@ -70,7 +71,7 @@ const USER_TYPES = {
 
 function App() {
   const [auth, setAuth] = useState(false);
-  const [CURRENT_USER, setUser] = useState();
+  const [CURRENT_USER, setUser] = useState(null);
   const [CURRENT_USER_ROLE, setRole] = useState(0);
   const [loading, setLoading] = useState(true);
   
@@ -93,10 +94,10 @@ function App() {
 }
   useEffect(() => {
     handleWhoAmI();
-  }, [,auth]);
+  }, [auth]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingCircle />;
   }
 
   const ProtectedLogin = ({}) => {
@@ -207,20 +208,16 @@ function App() {
 
           <Route exact path="/" element={<ProtectedRoute/>}>
             <Route exact path="/" element={<ProtectedCentra/>}>
-              <Route path="centra" element={<CentraLayout />}>
+              <Route path="centra" element={<CentraLayout CURRENT_USER = {CURRENT_USER} />}>
                 <Route path="Dashboard" element={<DashboardCentra />}></Route>
                 <Route path="Wet Leaves" element={<WetLeaves />}></Route>
-                <Route path="wet-leaves/detail/:code/:time/:weight" element={<WetLeavesDetail />} />
                 <Route path="Dry Leaves" element={<DryLeaves />}></Route>
-                <Route path="dry-leaves/detail/:code/:time/:weight" element={<DryLeavesDetail />} />
                 <Route path="Powder" element={<Powder />}></Route>
-                <Route path="powderdetail/:code/:weight" element={<PowderDetail />}></Route>
                 <Route path="Shipment" element={<Shipment />}>
                   <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
                   <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
                   <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
                 </Route>
-                <Route path="shipmentdetail/:code" element={<ShipmentDetail />}></Route>
               </Route>
             </Route>
           </Route>
@@ -230,7 +227,7 @@ function App() {
             <Route path="Shipment List" element={<XYZShipmentList />} />
             <Route path="Scanner" element={<XYZScanner />} />
             <Route path="Tracker" element={<Tracker />} />
-          </Route>
+          </Route>  
           <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
 
           <Route exact path="/" element={<ProtectedRoute/>}>
