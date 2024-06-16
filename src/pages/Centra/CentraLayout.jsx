@@ -18,48 +18,49 @@ import axios from 'axios';
 import LoadingCircle from "@components/LoadingCircle"
 import { API_URL } from '../../App';
 
-function CentraLayout() {
+function CentraLayout(CURRENT_USER) {
     const [value, setValue] = useState("Dashboard"); // Initialize state with "Dashboard"
     const navigate = useNavigate();
     const location = useLocation();
     const [showReturn, setShowReturn] = useState(false);
-    const [UserID, setUserID] = useState(null);
+    const UserID = CURRENT_USER.CURRENT_USER;
+    // const [UserID, setUserID] = useState(null);
     
-    async function handleWhoAmI() {
-        try {
-          const response = await axios.get(API_URL + "/whoami");
-          if (response && response.data) {
-            console.log(response.data.user_id);
-            setUserID(response.data.user_id);
-            return true;
-          } else {
-            console.error("No response or response data");
-            return false;
-          }
-        } catch (error) {
-          console.error("Error while checking session:", error);
-          return false;
-        }
-      }
+    // async function handleWhoAmI() {
+    //     try {
+    //       const response = await axios.get(API_URL + "/whoami");
+    //       if (response && response.data) {
+    //         console.log(response.data.user_id);
+    //         setUserID(response.data.user_id);
+    //         return true;
+    //       } else {
+    //         console.error("No response or response data");
+    //         return false;
+    //       }
+    //     } catch (error) {
+    //       console.error("Error while checking session:", error);
+    //       return false;
+    //     }
+    //   }
 
-    useEffect(() => {
-        let intervalId;
+    // useEffect(() => {
+    //     let intervalId;
 
-        async function checkUserID() {
-            const success = await handleWhoAmI();
-            if (!success) {
-                intervalId = setTimeout(checkUserID, 5000); // Retry after 5 seconds if not successful
-            }
-        }
+    //     async function checkUserID() {
+    //         const success = await handleWhoAmI();
+    //         if (!success) {
+    //             intervalId = setTimeout(checkUserID, 5000); // Retry after 5 seconds if not successful
+    //         }
+    //     }
 
-        checkUserID();
+    //     checkUserID();
 
-        return () => {
-            if (intervalId) {
-                clearTimeout(intervalId);
-            }
-        };
-    }, []);
+    //     return () => {
+    //         if (intervalId) {
+    //             clearTimeout(intervalId);
+    //         }
+    //     };
+    // }, []);
 
     // Ensure correct tab selection on page refresh
     useEffect(() => {
@@ -127,8 +128,11 @@ function CentraLayout() {
     };
 
     if (UserID === null) {
+        
         return <LoadingCircle />; // or a loading indicator
     }
+
+    console.log(UserID);
 
     return (
         <div className="flex flex-col items-center justify-center px-4 pb-8 overflow-y-auto overflow-x-hidden">

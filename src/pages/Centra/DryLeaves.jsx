@@ -17,6 +17,7 @@ import DateIcon from '../../assets/Date.svg';
 import WeightLogo from '../../assets/Weight.svg';
 import AccordionUsage from '../../components/AccordionUsage';
 import { API_URL } from '../../App';
+import LoadingStatic from "@components/LoadingStatic"
 import DryLeavesDetail from '../../assets/DryLeavesDetail.svg';
 
 function DryLeaves() {
@@ -39,7 +40,7 @@ function DryLeaves() {
       } catch (error) {
         console.error('Error fetching dry leaves data:', error);
       }
-    };  
+    };
 
     fetchData();
   }, [UserID]);
@@ -55,26 +56,35 @@ function DryLeaves() {
       summary: 'Awaiting Leaves',
       details: () => (
         <>
-          {DryLeavesData.map((item) => (            
-            <div key={item.DryLeavesID} className='flex justify-between p-1'>
-              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                <button onClick={() => handleButtonClick(item)}>
-                  <CircularButton imageUrl={DryLeavesLogo} backgroundColor="#94C3B3" />
-                </button>
-                <div className='flex flex-col ml-3'>
-                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                    {item.Processed_Weight} Kg
-                  </span>
-                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                    {item.DryLeavesID}
-                  </span>
-                </div>
-                <div className="flex ml-auto items-center">
-                  <Countdown expiredTime={item.Expiration} color="#79B2B7" image={CountdownIcon} />
-                </div>
-              </WidgetContainer>
+          {DryLeavesData.length > 0 ? (
+            DryLeavesData.map((item) => (
+              <div key={item.DryLeavesID} className='flex justify-between p-1'>
+                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                  <button onClick={() => handleButtonClick(item)}>
+                    <CircularButton imageUrl={DryLeavesLogo} backgroundColor="#94C3B3" />
+                  </button>
+                  <div className='flex flex-col ml-3'>
+                    <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                      {item.Processed_Weight} Kg
+                    </span>
+                    <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                      {item.DryLeavesID}
+                    </span>
+                  </div>
+                  <div className="flex ml-auto items-center">
+                    <Countdown expiredTime={item.Expiration} color="#79B2B7" image={CountdownIcon} />
+                  </div>
+                </WidgetContainer>
+              </div>
+            ))
+          ) : (
+            <div className='text-center p-4'>
+              <span className="font-montserrat text-base font-semibold leading-tight tracking-wide">
+                <LoadingStatic />
+              </span>
             </div>
-          ))}
+          )}
+
         </>
       ),
       defaultExpanded: true,
@@ -98,7 +108,7 @@ function DryLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown expired = {true} expiredTime={item.Expiration} color="#D45D5D" image={ExpiredWarningIcon} />
+                  <Countdown expired={true} expiredTime={item.Expiration} color="#D45D5D" image={ExpiredWarningIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -111,7 +121,7 @@ function DryLeaves() {
       summary: 'Processed Leaves',
       details: () => (
         <>
-         {ProcessedLeavesData.map((item) => (
+          {ProcessedLeavesData.map((item) => (
             <div key={item.DryLeavesID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <button onClick={() => handleButtonClick(item)}>
@@ -126,7 +136,7 @@ function DryLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown processed = {true} expiredTime={item.Expiration} color="#D4965D80" image={ProcessedLogo} />
+                  <Countdown processed={true} expiredTime={item.Expiration} color="#D4965D80" image={ProcessedLogo} />
                 </div>
               </WidgetContainer>
             </div>
@@ -140,7 +150,7 @@ function DryLeaves() {
   return (
     <>
       <AccordionUsage accordions={accordions} />
-      
+
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.DryLeavesID}
@@ -150,18 +160,18 @@ function DryLeaves() {
           text="Dry Leaves"
         />
       )}
-      <Drawer 
-        Data = {DryLeavesData}
-        setData = {setDryLeavesData}
-        DryLeaves 
-        UserID={UserID} 
-        includeFourthSection={false} 
-        showThirdInput={false} 
-        firstText="Expiry Date" 
-        secondText="Weight" 
-        thirdText="Wet leaves" 
-        firstImgSrc={DateIcon} 
-        secondImgSrc={WeightLogo} 
+      <Drawer
+        Data={DryLeavesData}
+        setData={setDryLeavesData}
+        DryLeaves
+        UserID={UserID}
+        includeFourthSection={false}
+        showThirdInput={false}
+        firstText="Expiry Date"
+        secondText="Weight"
+        thirdText="Wet leaves"
+        firstImgSrc={DateIcon}
+        secondImgSrc={WeightLogo}
       />
     </>
   );

@@ -19,6 +19,7 @@ import WeightLogo from '../../assets/Weight.svg';
 import AccordionUsage from '../../components/AccordionUsage';
 import { API_URL } from '../../App';
 import WetLeavesDetail from '../../assets/WetLeavesDetail.svg';
+import LoadingStatic from "@components/LoadingStatic"
 
 function WetLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -42,7 +43,7 @@ function WetLeaves() {
         console.error('Error fetching wet leaves data:', error);
       }
     };
-  
+
     fetchData();
   }, [UserID]);
 
@@ -56,26 +57,34 @@ function WetLeaves() {
       summary: 'Awaiting Leaves',
       details: () => (
         <>
-          {wetLeavesData.map((item) => (
-            <div key={item.WetLeavesID} className='flex justify-between p-1'>
-              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                <button onClick={() => handleButtonClick(item)}>
-                  <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
-                </button>
-                <div className='flex flex-col ml-3'>
-                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                    {item.Weight} Kg
-                  </span>
-                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                    {item.WetLeavesID}
-                  </span>
-                </div>
-                <div className="flex ml-auto items-center">
-                  <Countdown expiredTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
-                </div>
-              </WidgetContainer>
+          {wetLeavesData.length > 0 ? (
+            wetLeavesData.map((item) => (
+              <div key={item.WetLeavesID} className='flex justify-between p-1'>
+                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                  <button onClick={() => handleButtonClick(item)}>
+                    <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
+                  </button>
+                  <div className='flex flex-col ml-3'>
+                    <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                      {item.Weight} Kg
+                    </span>
+                    <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                      {item.WetLeavesID}
+                    </span>
+                  </div>
+                  <div className="flex ml-auto items-center">
+                    <Countdown expiredTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
+                  </div>
+                </WidgetContainer>
+              </div>
+            ))
+          ) : (
+            <div className='text-center p-4'>
+              <span className="font-montserrat text-base font-semibold leading-tight tracking-wide">
+                <LoadingStatic />
+              </span>
             </div>
-          ))}
+          )}
         </>
       ),
       defaultExpanded: true,
@@ -99,7 +108,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown expired = {true} expiredTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
+                  <Countdown expired={true} expiredTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -127,7 +136,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown processed = {true} expiredTime={item.ReceivedTime} color="#D4965D80" image={ProcessedLogo} />
+                  <Countdown processed={true} expiredTime={item.ReceivedTime} color="#D4965D80" image={ProcessedLogo} />
                 </div>
               </WidgetContainer>
             </div>
@@ -140,7 +149,7 @@ function WetLeaves() {
 
   return (
     <>
-      <AccordionUsage accordions={accordions} /> 
+      <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
           code={selectedData.WetLeavesID}
@@ -150,7 +159,7 @@ function WetLeaves() {
           text="Wet Leaves"
         />
       )}
-      <Drawer WetLeaves Data = {wetLeavesData} setData = {setWetLeavesData} UserID={UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo}/>
+      <Drawer WetLeaves Data={wetLeavesData} setData={setWetLeavesData} UserID={UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo} />
     </>
   );
 }
