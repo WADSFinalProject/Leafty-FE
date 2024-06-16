@@ -1,3 +1,4 @@
+import React from 'react';
 import WidgetContainer from "./WidgetContainer";
 import unscaled_pickup from "../../assets/icons/unscaled_pickup.svg";
 import Package from "../../assets/icons/package.svg";
@@ -6,25 +7,25 @@ import weight from "../../assets/icons/weight_scale.svg";
 import arrow_square from "../../assets/icons/arrow_square.svg";
 import Shipments from '../../assets/Shipments.svg';
 import CircularButton from '../../components/CircularButton';
-import { Link ,Outlet} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-function ShipmentLongContainer({ showWeight }) { // Destructure props to access showWeight directly
+function ShipmentLongContainer({ showWeight, packageCount, weightValue, dateValue, expeditionId }) {
     console.log(showWeight); // Ensure you are receiving the correct prop value
 
     const data = [
         {
             "image": Package,
-            "value": 3,
+            "value": packageCount,
             "unit": showWeight ? "Packages" : ""
         },
         {
             "image": weight,
-            "value": 30,
+            "value": weightValue,
             "unit": "Kg"
         },
         {
             "image": date,
-            "value": "22/07/2024",
+            "value": dateValue,
             "unit": ""
         },
     ];
@@ -37,9 +38,9 @@ function ShipmentLongContainer({ showWeight }) { // Destructure props to access 
             <div className="flex justify-between flex-row items-center font-semibold text-sm lg:text-base px-2">
                 <div className="flex flex-row justify-center items-center gap-2">
                     <Link to="/xyzmobile/Tracker">
-                            <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                        <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
                     </Link>
-                    <span className="w-min sm:w-full">Expedition #0123456</span>
+                    <span className="w-min sm:w-full">Expedition #{expeditionId}</span>
                 </div>
                 {filteredData.map((e, index) => (
                     <div key={index} className="flex flex-row justify-center items-center gap-2">

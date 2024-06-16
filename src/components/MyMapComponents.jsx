@@ -7,6 +7,13 @@ const containerStyle = {
   height: '400px'
 };
 
+const indonesiaBounds = {
+  north: 6.1,
+  south: -11.2,
+  west: 95,
+  east: 141
+};
+
 function MyMapComponent({ setShowMap, setAddressDetails }) {
   const [center, setCenter] = useState(null);
   const [markers, setMarkers] = useState([]);
@@ -65,6 +72,13 @@ function MyMapComponent({ setShowMap, setAddressDetails }) {
             center={center}
             zoom={10}
             onClick={handleMapClick}
+            options={{
+              restriction: {
+                latLngBounds: indonesiaBounds,
+                strictBounds: true
+              }
+            }}
+            
           >
             {markers.map((marker, index) => (
               <Marker key={index} position={marker} />

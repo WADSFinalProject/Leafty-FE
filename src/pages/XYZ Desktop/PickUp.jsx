@@ -4,24 +4,12 @@ import LongContainer from '@components/Cards/LongContainer';
 import 'daisyui/dist/full.css';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io'; // Import arrow icons from react-icons
-import '../../style/PaginatorColoring.css'
+import axios from 'axios';
+import { API_URL } from "../../App"; // Adjust the import according to your project structure
+import '../../style/PaginatorColoring.css';
 
 function Pickup() {
-    const data = [
-        { id: 1, name: 'John Doe', packageCount: 5, weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
-        { id: 2, name: 'John Doe', packageCount: 3, weight: 8, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 3, name: 'John Doe', packageCount: 7, weight: 15, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 4, name: 'John Doe', packageCount: 2, weight: 5, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 5, name: 'John Doe', packageCount: 4, weight: 12, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 6, name: 'John Doe', packageCount: 6, weight: 20, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 7, name: 'John Doe', packageCount: 5, weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
-        { id: 8, name: 'John Doe', packageCount: 3, weight: 8, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 9, name: 'John Doe', packageCount: 7, weight: 15, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 10, name: 'John Doe', packageCount: 2, weight: 5, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 11, name: 'John Doe', packageCount: 4, weight: 12, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { id: 12, name: 'John Doe', packageCount: 6, weight: 20, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-    ];
-
+    const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8); // Default value
 
@@ -45,12 +33,25 @@ function Pickup() {
         return () => window.removeEventListener('resize', calculateItemsPerPage);
     }, []);
 
+    useEffect(() => {
+        const fetchShipments = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/shipment/get`);
+                const unscaledShipments = response.data.filter(shipment => shipment.Rescalled_Weight === null && shipment.Rescalled_Date === null);
+                setShipments(unscaledShipments);
+            } catch (error) {
+                console.error('Error fetching shipments:', error);
+            }
+        };
+
+        fetchShipments();
+    }, []);
+
     const offset = currentPage * itemsPerPage;
-    const currentPageData = data.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(data.length / itemsPerPage);
+    const currentPageData = shipments.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(shipments.length / itemsPerPage);
 
     return (
-        
         <div className="container mx-auto w-full">
             <span className="text-xl font-bold">
                 Unscaled Pickups
@@ -58,7 +59,7 @@ function Pickup() {
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
                     <motion.div
-                        key={item.id}
+                        key={item.ShipmentID}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
@@ -66,10 +67,10 @@ function Pickup() {
                     >
                         <LongContainer
                             showWeight={true}
-                            packageCount={item.packageCount}
-                            weightValue={item.weight}
-                            dateValue={item.date}
-                            expeditionId={item.id}
+                            packageCount={item.ShipmentQuantity}
+                            weightValue={item.Rescalled_Weight}
+                            dateValue={item.ShipmentDate}
+                            expeditionId={item.ShipmentID}
                         />
                     </motion.div>
                 ))}
