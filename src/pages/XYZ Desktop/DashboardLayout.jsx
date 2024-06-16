@@ -14,15 +14,16 @@ import leafty_Logo from '@assets/LeaftyLogo.svg';
 import profile_pic from '@assets/icons/sidebar/profile_pic.svg';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import FilterDashboard from "@components/filterDashboard"
+import axios from "axios";
+import { API_URL } from "../../App";
 import Profile from "@components/Profile";
 
-function DashboardLayout() {
+function DashboardLayout(CURRENT_USER) {
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [title, setTitle] = useState("Dashboard");
     const navigate = useNavigate();
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
-    
 
     // async function handleWhoAmI() {
     //     try {
@@ -39,33 +40,33 @@ function DashboardLayout() {
     //     }
     // }
 
-    // const getUser = async () => {
-    //     try {
-    //       const user_id = await handleWhoAmI();
-    //       console.log("this is user id: " + user_id);
-    //       if (user_id) {
-    //         const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
-    //         console.log(response.data);
-    //         return response.data; 
-    //       } else {
-    //         console.error('User ID not found');
-    //         return null; 
-    //       }
-    //     } catch (error) {
-    //       console.error('Error calling backend function', error);
-    //       return null; 
-    //     }
-    // };
+    const getUser = async () => {
+        try {
+          const user_id = CURRENT_USER.CURRENT_USER
+          console.log("this is user id: " + user_id);
+          if (user_id) {
+            const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
+            console.log(response.data);
+            return response.data; 
+          } else {
+            console.error('User ID not found');
+            return null; 
+          }
+        } catch (error) {
+          console.error('Error calling backend function', error);
+          return null; 
+        }
+    };
    
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const userData = await getUser();
-    //         if (userData) {
-    //             setUserData(userData);
-    //         }
-    //     };
-    //     fetchData();
-    // }, []);
+    useEffect(() => {
+        const fetchData = async () => {
+            const userData = await getUser();
+            if (userData) {
+                setUserData(userData);
+            }
+        };
+        fetchData();
+    }, []);
 
     
 
@@ -125,7 +126,7 @@ function DashboardLayout() {
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
                         <FilterDashboard tablet={tabletMode} />
-                        <Profile />
+                        <Profile username = {userData.Username}/>
                     </div>
                 </div>
                 <Outlet />

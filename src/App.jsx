@@ -180,7 +180,7 @@ function App() {
 
           <Route exact path="/" element={<ProtectedRoute/>}>
             <Route exact path="/" element={<ProtectedCompany/>}>
-              <Route path="company" element={<DashboardLayout />}>
+              <Route path="company" element={<DashboardLayout CURRENT_USER = {CURRENT_USER}/>}>
                 <Route path="dashboard" element={<Dashboard />}></Route>
                 <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
                 <Route path="wetoverview" element={<WetLeavesOverview />}></Route>

@@ -74,11 +74,18 @@ function Dashboard() {
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
-        };
+        };  
 
         fetchStatistics();
         fetchShipments();
     }, []);
+
+    function formatDate(dateString) {
+        if (!dateString) return "Not Delivered";
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return "    "+date.toLocaleDateString(undefined, options);
+    }
 
     return (
         <>
@@ -132,7 +139,7 @@ function Dashboard() {
                         showWeight={!tabletMode}
                         packageCount={item.ShipmentQuantity}
                         weightValue={item.Rescalled_Weight}
-                        dateValue={item.ShipmentDate}
+                        dateValue={formatDate(item.ShipmentDate)}
                         expeditionId={item.ShipmentID}
                     />
                 ))}

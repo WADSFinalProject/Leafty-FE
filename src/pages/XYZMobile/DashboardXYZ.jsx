@@ -56,8 +56,8 @@ function DashboardXYZ() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }} >
-                    <WidgetContainer className={"p-5 h-[13rem] md:h-full"}>
-                        <div className='flex flex-row'>
+                    <WidgetContainer container = {false} className={"p-5 h-[13rem] md:h-full"}>
+                        <div className='flex flex-col gap-8 md:gap-0'>
                             <div className='flex flex-col'>
                                 <span className="font-semibold text-gray-600">Rescalled Package</span>
                                 <span className='font-montserrat text-xl font-semibold text-left'>{statistics.rescalled_packages_count}</span>
@@ -66,8 +66,8 @@ function DashboardXYZ() {
                         </div>
                     </WidgetContainer>
                     <div className="flex flex-col md:flex-row gap-2 justify-around">
-                        <WidgetContainer>
-                            <div className='flex items-center gap-2 justify-between'>
+                        <WidgetContainer container = {false}>
+                            <div className='flex flex-row gap-24 items-center justify-between'>
                                 <div className='flex flex-col'>
                                     <span className=' w-8 font-montserrat text-base font-semibold text-gray-600'>Received Powder</span>
                                     <span className='font-montserrat text-xl font-semibold'>{statistics.received_powder_count}</span>
@@ -75,7 +75,7 @@ function DashboardXYZ() {
                                 <img src={ReceivedPowder} alt="ReceivedPowder" className='w-50 h-auto mr-3 ' />
                             </div>
                         </WidgetContainer>
-                        <WidgetContainer>
+                        <WidgetContainer container = {false}>
                             <div className='flex items-center gap-2 justify-between'>
                                 <div className='flex flex-col'>
                                     <span className='font-montserrat text-base font-semibold text-gray-600'>Unscalled Packages</span>

@@ -64,7 +64,7 @@ function XYZPopup() {
                         </div>
                     </div>
                     <div className='p-1'>
-                        <WidgetContainer borderRadius="20px">
+                        <WidgetContainer borderRadius="20px" container = {false}>
                             <div className="flex justify-around">
                                 <div className="flex flex-col">
                                     <span className='font-montserrat text-16px font-semibold tracking-02em  pb-2 ml-1'>Powder</span>
@@ -101,7 +101,7 @@ function XYZPopup() {
                         {currentComponent === 3 && <ReceptionDetail />}
                         {currentComponent === 4 && (
                             <div className='p-2'>
-                                <WidgetContainer borderRadius='20px'>
+                                <WidgetContainer borderRadius='20px' container = {false}>
                                     <span className='font-montserrat text-lg font-semibold tracking-wide ml-1'>
                                         Re-scaling
                                     </span>
@@ -133,7 +133,7 @@ function XYZPopup() {
                             <div className="w-20"></div> // Empty div to maintain spacing
                         )}
                         {currentComponent !== 7 && (
-                            <WidgetContainer backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full max-w-20 mr-2'>
+                            <WidgetContainer container = {false} backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full max-w-20 mr-2'>
                                 <button 
                                     onClick={handleNext} 
                                     className='flex justify-items-center font-montserrat text-xs font-semibold leading-4 tracking-wide text-gray-100 ml-4'

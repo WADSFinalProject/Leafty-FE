@@ -22,10 +22,10 @@ import XYZPopup from '../../components/Popups/XYZPopup';
 function Tracker() {
     const [selectedData, setSelectedData] = useState(null);
     const handleButtonClick = () => {
-        console.log('Selected Item:', )
-        
+        console.log('Selected Item:',)
+
         document.getElementById('XYZPopup').showModal();
-      };
+    };
     return (
         <>
             <WidgetContainer borderRadius="20px">
@@ -34,10 +34,9 @@ function Tracker() {
                         <button onClick={() => handleButtonClick()}>
                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
                         </button>
-                        
+
                     </div>
                     <div className="flex flex-col ml-3 mt-1">
-
                         <span className="font-montserrat text-16px font-semibold tracking-02em ">
                             Expedition #0123456
                         </span>
@@ -53,21 +52,10 @@ function Tracker() {
                         </div>
                     </div>
                 </div>
-
-
-                
             </WidgetContainer>
-            <VerticalStepper></VerticalStepper>
-            
-        <XYZPopup
-
-    
-        />
-      
-
+            <VerticalStepper step = {1}></VerticalStepper>
+            <XYZPopup />
         </>
-        
-
     )
 }
 

@@ -13,6 +13,7 @@ import MyMapComponent from '@components/MyMapComponents';
 import LongContainer from '../../components/Cards/LongContainer';
 import PerformanceMap from '../../components/PerformanceMap';
 import MarkerDetails from '../../components/MarkerDetails';
+import LongUser from '../../components/Cards/LongUser';
 
 const stats = [
     {
@@ -89,9 +90,9 @@ const Performance = () => {
                         <span className='text-md text-[#94C3B3]'>See all</span>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <LongContainer />
-                        <LongContainer />
-                        <LongContainer />
+                        <LongUser Atis='test' Mailis={"test"} Phonis=''/>
+                        <LongUser />
+                        <LongUser />
                     </div>
                 </div>
                 <div className='flex flex-col w-1/2'>
@@ -100,7 +101,7 @@ const Performance = () => {
                     <div className='flex justify-between items-center mt-2'>
                         <span className='text-xl font-semibold'>Harbor</span>
                     </div>
-                    <LongContainer />
+                    <LongUser />
                 </div>
             </div>
         </div>

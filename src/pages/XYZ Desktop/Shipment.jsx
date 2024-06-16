@@ -41,7 +41,29 @@ function Shipment() {
         const fetchShipments = async () => {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get`);
-                setShipments(response.data);
+                // Fetch details for each FlourID in each shipment
+                const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
+                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        return {
+                            FlourID: flourID,
+                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                        };
+                    }));
+
+                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
+                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
+                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                    const courierName = courierResponse.data.CourierName;
+
+                    return {
+                        ...shipment,
+                        ShipmentWeight: totalFlourWeight,
+                        CourierName: courierName
+                    };
+                }));
+                setShipments(updatedShipments)
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
@@ -89,6 +111,14 @@ function Shipment() {
         }
     ];
 
+    function formatDate(dateString) {
+        if (!dateString) return "Not Delivered";
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return "    "+date.toLocaleDateString(undefined, options);
+    }
+
+    
     return (
         <div className="container mx-auto w-full">
             <span className="text-xl font-bold">
@@ -105,15 +135,16 @@ function Shipment() {
                     >
                         <LongContainer
                             showWeight={true}
-                            weightValue={item.ShipmentQuantity}
-                            dateValue={item.ShipmentDate}
+                            weightValue={item.ShipmentWeight}
+                            packageCount={item.ShipmentQuantity}
+                            dateValue={formatDate(item.ShipmentDate)}
                             expeditionId={item.ShipmentID}
                         />
                     </motion.div>
                 ))}
             </div>
             <div className="flex justify-between items-center mt-4 gapMapping">
-                <button 
+                <button
                     onClick={() => handlePageClick(currentPage - 1)}
                     disabled={currentPage === 0}
                     className="cursor-pointer greening-paginator"
@@ -123,7 +154,7 @@ function Shipment() {
                 <div className="greening-paginator">
                     Page {currentPage + 1} of {pageCount}
                 </div>
-                <button 
+                <button
                     onClick={() => handlePageClick(currentPage + 1)}
                     disabled={currentPage + 1 === pageCount}
                     className="cursor-pointer greening-paginator"

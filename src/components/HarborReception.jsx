@@ -3,7 +3,7 @@ import WidgetContainer from './Cards/WidgetContainer';
 
 const HarborReception = ({ containers, title, padding = true }) => {
     return (
-        <WidgetContainer borderRadius='20px' className={"pl-4 flex flex-col gap-1"}>
+        <WidgetContainer borderRadius='20px' className={"pl-4 flex flex-col gap-1"} container = {false}>
             <div className='flex flex-col'>
                 <span className='font-montserrat text-lg font-semibold'>
                     {title}

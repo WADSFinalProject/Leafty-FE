@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import axios from 'axios';
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
@@ -12,29 +13,47 @@ import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
 import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import axios from 'axios';  // Ensure you have axios installed and imported
+import dayjs from 'dayjs';
+import LeavesPopup from '@components/Popups/LeavesPopup';
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 
-const header = 'Recently Gained Wet Leaves'; // Example header
+const header = 'Recently Gained Wet Leaves';
 
 const columns = [
   { field: 'status', header: 'Status' },
   { field: 'id', header: 'Batch Id' },
   { field: 'name', header: 'Centra Name' },
   { field: 'weight', header: 'Weight' },
-  { field: 'receivedTime', header: 'Received Time' },
   { field: 'expiration', header: 'Expiration Date' },
 ];
 
 const WetLeaves = () => {
   const [wetLeaves, setWetLeaves] = useState([]);
   const [users, setUsers] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const [stats, setStats] = useState({
     awaiting: 0,
     processed: 0,
     wasted: 0,
     total: 0
   });
+  const leavesModalRef = useRef(null);
+
+  const formatDate = (dateString) => {
+    return dayjs(dateString).format('MM/DD/YYYY HH:mm');
+  };
+
+  const addMonth = (dateString) => {
+    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
+  };
+
+  const handleDetailsClick = (rowData) => {
+    setSelectedRowData(rowData);
+    if (leavesModalRef.current) {
+      leavesModalRef.current.showModal();
+    }
+  };
+
 
   useEffect(() => {
     const fetchWetLeaves = async () => {
@@ -44,14 +63,13 @@ const WetLeaves = () => {
         setWetLeaves(wetLeavesResponse.data);
         setUsers(usersResponse.data);
 
-        // Calculate statistics
         const stats = {
           awaiting: 0,
           processed: 0,
           wasted: 0,
           total: 0
         };
-        
+
         wetLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Weight;
           if (leaf.Status === 'Awaiting') {
@@ -78,9 +96,8 @@ const WetLeaves = () => {
       id: leaf.WetLeavesID,
       name: user ? user.Username : 'Unknown',
       weight: leaf.Weight,
-      receivedTime: leaf.ReceivedTime,
       status: leaf.Status,
-      expiration: leaf.Expiration,
+      expiration: formatDate((leaf.ReceivedTime)),
     };
   });
 
@@ -89,7 +106,6 @@ const WetLeaves = () => {
     let textColor;
     let logo;
 
-    // Determine background color and text color based on status
     switch (rowData.status) {
       case "Awaiting":
         backgroundColor = hexToRGBA("#A0C2B5", 0.5);
@@ -148,7 +164,14 @@ const WetLeaves = () => {
 
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} />
+      <TableComponent
+        data={mergedData}
+        header={header}
+        columns={columns}
+        ColorConfig={statusBodyTemplate}
+        admin={false}
+        onDetailsClick={handleDetailsClick}
+      />
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -219,6 +242,18 @@ const WetLeaves = () => {
           />
         </motion.div>
       </div>
+      {selectedRowData && (
+        <LeavesPopup
+          weight={selectedRowData.weight}
+          centra_name={selectedRowData.name}
+          collectedDate={selectedRowData.receivedTime}
+          expiredDate={selectedRowData.expiration}
+          ref={leavesModalRef}
+          wet_leaves={true}
+          leavesid={selectedRowData.id}
+          editable={false}
+        />
+      )}
     </div>
   );
 };

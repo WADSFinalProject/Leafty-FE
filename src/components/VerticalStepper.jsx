@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -60,8 +60,8 @@ const CustomStepIcon = ({ active, completed }) => {
   };
   
 
-const VerticalStepper = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
+const VerticalStepper = (step = -1) => {
+  const [activeStep, setActiveStep] = useState(-1);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

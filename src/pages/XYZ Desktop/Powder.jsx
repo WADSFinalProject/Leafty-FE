@@ -26,7 +26,6 @@ const columns = [
   { field: 'expiration', header: 'Expiration Date' },
 ];
 
-<<<<<<< Updated upstream
 const Powder = () => {
   const [flour, setFlour] = useState([]);
   const [users, setUsers] = useState([]);
@@ -85,43 +84,6 @@ const Powder = () => {
     };
   });
 
-=======
-const stats = [
-  {
-    label: "Powder Produced",
-    value: "243",
-    unit: "Kg",
-    color: "#C0CD30",
-    icon: PowderProduced,
-    delay: 1
-  },
-  {
-    label: "In-Process Powder",
-    value: "243",
-    unit: "Kg",
-    color: "#79B2B7",
-    icon: InProcessPowder,
-    delay: 1.25
-  },
-  {
-    label: "Unpackaged Powder",
-    value: "250",
-    unit: "Kg",
-    color: "#0F7275",
-    icon: UnpackagedPowder,
-    delay: 1.5
-  },
-  {
-    label: "Packaged Powder",
-    value: "1500",
-    unit: "Kg",
-    color: "#0F7275",
-    icon: PackagedPowder,
-    delay: 1.75
-  }
-];
-const Powder = () => {
->>>>>>> Stashed changes
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;

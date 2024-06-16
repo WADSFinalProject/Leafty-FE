@@ -97,7 +97,7 @@ const LeavesPopup = forwardRef(({
               {currentDate < new Date(expiredDate) && (
                 <div className='flex flex-col justify-center items-center'>
                   <span className='font-semibold text-md'>Expired in</span>
-                  <RealTimeCountDown collectedDate={collectedDate} expiredDate={expiredDate} />
+                  <RealTimeCountDown collectedDate={new Date()} expiredDate={expiredDate} />
                 </div>
               )}
             </div>

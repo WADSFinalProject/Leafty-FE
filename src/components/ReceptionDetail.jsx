@@ -8,7 +8,7 @@ import ReceptionFile from './ReceptionFile';
 import QRPage from '../pages/QRPage';
 const ReceptionDetail = ({harbor = false, centra = false}) => {
     return (
-            <WidgetContainer borderRadius='20px'>
+            <WidgetContainer borderRadius='20px' container = {false}>
                 <div className='p-2'>
                         <WidgetContainer container={false} borderRadius='20px'>
                             <QRPage />

@@ -4,8 +4,8 @@ import Button from "@components/Button";
 
 const VerificationWait = ({ padding = true, title = "Waiting for Verification", message = "Harbor has not received the packages" }) => {
     return (
-        <div className={`${padding ? "p-2" : ""}`}>
-            <WidgetContainer borderRadius='20px' className={"flex flex-col p-4"}>
+        <div className={`${padding ? "p-2" : ""}` }>
+            <WidgetContainer borderRadius='20px' className={"flex flex-col p-4"} container = {false}>
                 <span className='font-montserrat text-lg font-semibold'>
                     {title}
                 </span>
