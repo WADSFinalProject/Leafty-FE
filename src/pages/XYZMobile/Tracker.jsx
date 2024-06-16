@@ -16,18 +16,25 @@ import VerificationWait from '../../components/VerificationWait';
 import ReceptionDetail from '../../components/ReceptionDetail';
 import CircularButton from '../../components/CircularButton';
 import Shipments from '../../assets/Shipments.svg';
+import XYZPopup from '../../components/Popups/XYZPopup';
 
 
 function Tracker() {
-
+    const [selectedData, setSelectedData] = useState(null);
+    const handleButtonClick = () => {
+        console.log('Selected Item:', )
+        
+        document.getElementById('XYZPopup').showModal();
+      };
     return (
         <>
             <WidgetContainer borderRadius="20px">
                 <div className='flex justify-center'>
                     <div className='flex justify-center mr-2'>
-                        <Link to="/xyzshipmentdetail">
+                        <button onClick={() => handleButtonClick()}>
                             <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                        </Link>
+                        </button>
+                        
                     </div>
                     <div className="flex flex-col ml-3 mt-1">
 
@@ -51,6 +58,12 @@ function Tracker() {
                 
             </WidgetContainer>
             <VerticalStepper></VerticalStepper>
+            
+        <XYZPopup
+
+    
+        />
+      
 
         </>
         

@@ -18,7 +18,7 @@ const HarborReception = ({ containers, title, padding = true }) => {
                     <div key={index} className='flex justify-between xl:justify-start gap-2'>
                         {group.map((container, id) => (
                             <div key={id} className='w-full max-w-fit'>
-                                <span className=''>{container.label}</span>
+                                <span className='ml-1'>{container.label}</span>
                                 <WidgetContainer borderRadius="30px" backgroundColor="#94C3B380" borderWidth="2px" borderColor="#79B2B7" className="flex h-8">
                                     <input
                                         type="text"
