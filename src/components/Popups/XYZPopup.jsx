@@ -14,6 +14,7 @@ import HarborReception from '../../components/HarborReception';
 import VerificationWait from '../../components/VerificationWait';
 import ReceptionDetail from '../../components/ReceptionDetail';
 import QRPage from '../../pages/QRPage';
+import Centralogo from '../../assets/centra.svg';
 
 function XYZPopup() {
     const [currentComponent, setCurrentComponent] = useState(1); 
@@ -83,7 +84,7 @@ function XYZPopup() {
                                 <div className="flex flex-col">
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
                                     <div className='flex pb-1'>
-                                        <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
+                                        <img src={Centralogo} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
                                         <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Unit 1</span>
                                     </div>
                                     <div className='flex pb-1'>
