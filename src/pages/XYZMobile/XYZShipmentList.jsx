@@ -1,16 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from "framer-motion";
-import LongContainer from "../../components/Cards/ShipmentLongContainer";
+import ShipmentLongContainer from "../../components/Cards/ShipmentLongContainer";
 import InputField from '../../components/InputField';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import InnerPlugins from '../../assets/InnerPlugins.svg';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import axios from 'axios';
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
+import Tracker from './Tracker'; // Import Tracker component
+import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
 
 function XYZShipmentList() {
     const [shipments, setShipments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
+    const [selectedShipment, setSelectedShipment] = useState(null);
+
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     useEffect(() => {
         const fetchShipments = async () => {
@@ -32,6 +37,12 @@ function XYZShipmentList() {
         setSearchTerm(e.target.value);
     };
 
+    const handleShipmentClick = (shipment) => {
+        console.log("Shipment clicked:", shipment);
+        setSelectedShipment(shipment);
+        navigate(`/xyzmobile/tracker/${shipment.ShipmentID}`); // Navigate to Tracker page with shipment ID
+    };
+
     const filteredShipments = shipments.filter(shipment =>
         shipment.ShipmentID.toString().includes(searchTerm) ||
         shipment.ShipmentQuantity.toString().includes(searchTerm) ||
@@ -39,6 +50,7 @@ function XYZShipmentList() {
     );
 
     console.log("Filtered shipments:", filteredShipments);
+    console.log("Selected shipment:", selectedShipment);
 
     return (
         <>
@@ -65,13 +77,15 @@ function XYZShipmentList() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
+                        onClick={() => handleShipmentClick(item)}
                     >
-                        <LongContainer
+                        <ShipmentLongContainer
                             showWeight={true}
                             packageCount={item.ShipmentQuantity}
                             weightValue={item.Rescalled_Weight}
                             dateValue={item.ShipmentDate}
                             expeditionId={item.ShipmentID}
+                            onClick={() => handleShipmentClick(item)}
                         />
                     </motion.div>
                 ))}

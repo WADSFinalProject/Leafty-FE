@@ -1,7 +1,7 @@
-import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from "react-router-dom";
-import './style/App.css'
-import './style/font.css'
-import LoadingCircle from "@components/LoadingCircle"
+import { BrowserRouter as Router, Routes, Route, Navigate, Outlet, useParams } from "react-router-dom";
+import './style/App.css';
+import './style/font.css';
+import LoadingCircle from "@components/LoadingCircle";
 import OnBoarding from "./pages/OnBoarding";
 import Verification from "./pages/Verification";
 import Register from "./pages/Register";
@@ -70,7 +70,6 @@ const USER_TYPES = {
   NULL: "NULL"
 }
 
-
 function App() {
   const [auth, setAuth] = useState(false);
   const [CURRENT_USER, setUser] = useState(null);
@@ -84,7 +83,7 @@ function App() {
       if (response.data) {
         setUser(response.data.user_id);
         setRole(response.data.user_role);
-        if(!auth) {
+        if (!auth) {
           setAuth(true);
         }
       }
@@ -93,7 +92,8 @@ function App() {
     } finally {
       setLoading(false);
     }
-}
+  }
+
   useEffect(() => {
     handleWhoAmI();
   }, [auth]);
@@ -104,123 +104,119 @@ function App() {
 
   const ProtectedLogin = ({}) => {
     const { auth } = React.useContext(AuthApi);
-  
+
     if (auth) {
-      if(CURRENT_USER_ROLE == 1){
-        return <Navigate to="/centra/dashboard"/>;
+      if (CURRENT_USER_ROLE == 1) {
+        return <Navigate to="/centra/dashboard" />;
       }
-      if(CURRENT_USER_ROLE == 2){
-        return <Navigate to="/harbor/dashboard"/>;
+      if (CURRENT_USER_ROLE == 2) {
+        return <Navigate to="/harbor/dashboard" />;
       }
-      if(CURRENT_USER_ROLE == 3){
-        return <Navigate to="/company/dashboard"/>;
+      if (CURRENT_USER_ROLE == 3) {
+        return <Navigate to="/company/dashboard" />;
       }
-      if(CURRENT_USER_ROLE == 4){
-        return <Navigate to="/admin/dashboard"/>;
+      if (CURRENT_USER_ROLE == 4) {
+        return <Navigate to="/admin/dashboard" />;
       }
-      if(CURRENT_USER_ROLE == 5){
-        return <Navigate to="/approval"/>;
+      if (CURRENT_USER_ROLE == 5) {
+        return <Navigate to="/approval" />;
       }
-      if(CURRENT_USER_ROLE == 6){
-        return <Navigate to="/aa"/>;
+      if (CURRENT_USER_ROLE == 6) {
+        return <Navigate to="/aa" />;
       }
     }
-  
-    return <Outlet/>;
+
+    return <Outlet />;
   };
 
   const ProtectedCentra = ({}) => {
-  
     if (CURRENT_USER_ROLE != 1) {
       return <Navigate to="/" />;
     }
-  
-    return <Outlet/>;
+
+    return <Outlet />;
   };
 
   const ProtectedHarbor = ({}) => {
-  
     if (CURRENT_USER_ROLE != 2) {
       return <Navigate to="/" />;
     }
-  
-    return <Outlet/>;
+
+    return <Outlet />;
   };
 
   const ProtectedCompany = ({}) => {
-  
     if (CURRENT_USER_ROLE != 3) {
       return <Navigate to="/" />;
     }
-  
-    return <Outlet/>;
+
+    return <Outlet />;
   };
 
   const ProtectedAdmin = ({}) => {
-  
     if (CURRENT_USER_ROLE != 4) {
       return <Navigate to="/" />;
     }
-  
-    return <Outlet/>;
+
+    return <Outlet />;
   };
 
   return (
-    <AuthApi.Provider value={{auth, setAuth}}>
+    <AuthApi.Provider value={{ auth, setAuth }}>
       <Router>
         <Routes>
-          <Route exact path="/" element={<ProtectedLogin/>}>
-            <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI}/>}></Route>
+          <Route exact path="/" element={<ProtectedLogin />}>
+            <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI} />} />
           </Route>
-          <Route path="verify" element={<Verification />}></Route>
-          <Route path="register" element={<Register />}></Route>
-          <Route path="approval" element={<Approval />}></Route>
-          <Route path="*" element={<PageNotFound />}></Route>
+          <Route path="verify" element={<Verification />} />
+          <Route path="register" element={<Register />} />
+          <Route path="approval" element={<Approval />} />
+          <Route path="*" element={<PageNotFound />} />
           {/* <Route path="company" element={<PageNotFound />}></Route> */}
 
-          <Route exact path="/" element={<ProtectedRoute/>}>
-            <Route exact path="/" element={<ProtectedCompany/>}>
-              <Route path="company" element={<DashboardLayout CURRENT_USER = {CURRENT_USER}/>}>
-                <Route path="dashboard" element={<Dashboard />}></Route>
-                <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
-                <Route path="wetoverview" element={<WetLeavesOverview />}></Route>
-                <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
-                <Route path="dryoverview" element={<DryLeavesOverview/>}></Route>
-                <Route path="powder" element={<PowderXYZ />}></Route>
-                <Route path="powderoverview" element={<PowderOverview/>}></Route>
-                <Route path="shipment" element={<ShipmentXYZ />}></Route>
-                <Route path="performance" element={<Performance />}></Route>
-                <Route path="pickup" element={<Pickup />}></Route>
-                <Route path="shipmentdetails" element={<ShipmentDetails />}></Route>
+          <Route exact path="/" element={<ProtectedRoute />}>
+            <Route exact path="/" element={<ProtectedCompany />}>
+              <Route path="company" element={<DashboardLayout CURRENT_USER={CURRENT_USER} />}>
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="wetleaves" element={<WetLeavesXYZ />} />
+                <Route path="wetoverview" element={<WetLeavesOverview />} />
+                <Route path="dryleaves" element={<DryLeavesXYZ />} />
+                <Route path="dryoverview" element={<DryLeavesOverview />} />
+                <Route path="powder" element={<PowderXYZ />} />
+                <Route path="powderoverview" element={<PowderOverview />} />
+                <Route path="shipment" element={<ShipmentXYZ />} />
+                <Route path="performance" element={<Performance />} />
+                <Route path="pickup" element={<Pickup />} />
+                <Route path="shipmentdetails" element={<ShipmentDetails />} />
                 <Route path="reception" element={<Reception />}>
-                  <Route path="centra" element={<CentraTabContent />}></Route>
-                  <Route path="harbor" element={<HarborTabContent />}></Route>
+                  <Route path="centra" element={<CentraTabContent />} />
+                  <Route path="harbor" element={<HarborTabContent />} />
                 </Route>
               </Route>
             </Route>
           </Route>
 
-          <Route exact path="/" element={<ProtectedRoute/>}>
-            <Route exact path="/" element={<ProtectedHarbor/>}>
+          <Route exact path="/" element={<ProtectedRoute />}>
+            <Route exact path="/" element={<ProtectedHarbor />}>
               <Route path="harbor" element={<HarborLayout />}>
-                  <Route path="dashboard" element={<DashboardHarbor />} />
-                  <Route path="reception" element={<HarborReception />} />
-                  <Route path="Scanner" element={<HarborScanner />} />
-                </Route>
+                <Route path="dashboard" element={<DashboardHarbor />} />
+                <Route path="reception" element={<HarborReception />} />
+                <Route path="Scanner" element={<HarborScanner />} />
               </Route>
+            </Route>
           </Route>
 
-          <Route exact path="/" element={<ProtectedRoute/>}>
-            <Route exact path="/" element={<ProtectedCentra/>}>
-              <Route path="centra" element={<CentraLayout CURRENT_USER = {CURRENT_USER} />}>
-                <Route path="Dashboard" element={<DashboardCentra />}></Route>
-                <Route path="Wet Leaves" element={<WetLeaves />}></Route>
-                <Route path="Dry Leaves" element={<DryLeaves />}></Route>
-                <Route path="Powder" element={<Powder />}></Route>
+          <Route exact path="/" element={<ProtectedRoute />}>
+            <Route exact path="/" element={<ProtectedCentra />}>
+              <Route path="centra" element={<CentraLayout CURRENT_USER={CURRENT_USER} />}>
+                <Route path="Dashboard" element={<DashboardCentra />} />
+                <Route path="Wet Leaves" element={<WetLeaves />} />
+                <Route path="Dry Leaves" element={<DryLeaves />} />
+                <Route path="Powder" element={<Powder />} />
                 <Route path="Shipment" element={<Shipment />}>
-                  <Route path="ShipmentOrder" element={<ShipmentOrders />}></Route>
-                  <Route path="ShipmentSent" element={<ShipmentSent />}></Route>
-                  <Route path="ShipmentCompleted" element={<ShipmentCompleted />}></Route>
+                  <Route path="ShipmentOrder" element={<ShipmentOrders />} />
+                  <Route path="ShipmentSent" element={<ShipmentSent />} />
+                  <Route path="ShipmentCompleted" element={<ShipmentCompleted />} />
                 </Route>
               </Route>
             </Route>
@@ -230,12 +226,12 @@ function App() {
             <Route path="dashboard" element={<DashboardXYZ />} />
             <Route path="Shipment List" element={<XYZShipmentList />} />
             <Route path="Scanner" element={<XYZScanner />} />
-            <Route path="Tracker" element={<Tracker />} />
-          </Route>  
+            <Route path="Tracker/:id" element={<Tracker />} /> {/* Dynamic route for Tracker */}
+          </Route>
           <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
 
-          <Route exact path="/" element={<ProtectedRoute/>}>
-            <Route exact path="/" element={<ProtectedAdmin/>}>
+          <Route exact path="/" element={<ProtectedRoute />}>
+            <Route exact path="/" element={<ProtectedAdmin />}>
               <Route path="admin" element={<AdminLayout />}>
                 <Route path="dashboard" element={<DashboardAdmin />} />
                 <Route path="wet leaves" element={<AdminWetLeaves />} />
@@ -246,25 +242,12 @@ function App() {
               </Route>
             </Route>
           </Route>
-          
-          <Route path="qr" element={<QRPage />} />
-          {/* <Route path="Admin" element={<TempAdmin />}> */}
-          {/* <Route path="admindashboard" element={<DashboardAdmin />}/> */}
-          {/* <Route path="adminwetleaves" element={<AdminWetLeaves />} />
-          <Route path="admindryleaves" element={<AdminDryLeaves />} />
-          <Route path="adminpowder" element={<AdminPowder />} />
-          <Route path="adminusermanagement" element={<AdminUserTable />} /> */}
-          {/* </Route> */}
 
-          {/* <Route path="/wetleavesdetail" element={<WetLeavesDetail />} /> */}
-        
-       
-          <Route path="/xyzshipmentdetail" element={<XYZShipmentDetail />} />
-          <Route path="/usersetting" element={<UserSetting />} />
+          <Route path="qr" element={<QRPage />} />
         </Routes>
       </Router>
     </AuthApi.Provider>
-  )
+  );
 }
 
 const ProtectedRoute = ({}) => {
