@@ -53,7 +53,7 @@ function Dashboard() {
         const fetchStatistics = async () => {
             try {
                 console.log("Fetching statistics from API");
-                const response = await axios.get(`${API_URL}/statistics/all`);
+                const response = await axios.get(`${API_URL}/statistics/all_no_format`);
                 console.log("Statistics fetched successfully:", response.data);
                 setStatistics(response.data);
             } catch (error) {
