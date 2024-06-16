@@ -14,6 +14,7 @@ import TotalDryLeaves from '@assets/TotalDryLeaves.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import axios from 'axios';  // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
+import dayjs from 'dayjs';
 
 const header = 'Recently Gained Dry Leaves'; // Example header
 
@@ -25,6 +26,16 @@ const columns = [
   { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
 ];
+
+const formatDate = (dateString) => {
+  return dayjs(dateString).format('MM/DD/YYYY HH:mm');
+};
+
+const addMonth = (dateString) => {
+  return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
+};
+
+
 
 const DryLeaves = () => {
   const [dryLeaves, setDryLeaves] = useState([]);
@@ -80,7 +91,7 @@ const DryLeaves = () => {
       weight: leaf.Processed_Weight,
       date: leaf.ReceivedTime,
       status: leaf.Status,
-      expiration: leaf.Expiration,
+      expiration: formatDate((leaf.Expiration)),
     };
   });
 
