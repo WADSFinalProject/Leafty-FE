@@ -24,6 +24,7 @@ function DashboardLayout(CURRENT_USER) {
     const [title, setTitle] = useState("Dashboard");
     const navigate = useNavigate();
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
+    const user_id = CURRENT_USER.CURRENT_USER
 
     // async function handleWhoAmI() {
     //     try {
@@ -42,7 +43,6 @@ function DashboardLayout(CURRENT_USER) {
 
     const getUser = async () => {
         try {
-          const user_id = CURRENT_USER.CURRENT_USER
           console.log("this is user id: " + user_id);
           if (user_id) {
             const response = await axios.get(API_URL + `/user/get_user/${user_id}`);

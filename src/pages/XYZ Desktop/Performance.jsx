@@ -90,9 +90,9 @@ const Performance = () => {
                         <span className='text-md text-[#94C3B3]'>See all</span>
                     </div>
                     <div className='flex flex-col gap-2'>
-                        <LongUser Atis='test' Mailis={"test"} Phonis=''/>
-                        <LongUser />
-                        <LongUser />
+                        <LongUser Atis='test' Mailis={"test"} Phonis='+62 811-8200-334' centra/>
+                        <LongUser Atis='test' Mailis={"test"} Phonis='+62 811-8200-334' centra/>
+                        <LongUser Atis='test' Mailis={"test"} Phonis='+62 811-8200-334' centra />
                     </div>
                 </div>
                 <div className='flex flex-col w-1/2'>
@@ -101,7 +101,7 @@ const Performance = () => {
                     <div className='flex justify-between items-center mt-2'>
                         <span className='text-xl font-semibold'>Harbor</span>
                     </div>
-                    <LongUser />
+                    <LongUser Atis='test' Mailis={"test"} Phonis='+62 811-8200-334' harbor />
                 </div>
             </div>
         </div>

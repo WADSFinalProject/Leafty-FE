@@ -2,7 +2,7 @@ import React from 'react'
 import profile from "../assets/icons/sidebar/profile_pic.svg"
 import notification from "../assets/icons/notification.svg"
 
-const Profile = ({Username}) => {
+const Profile = ({Username = "Error"}) => {
   return (
     <div className="w-fit h-fit">
       <div className="flex flex-row rounded-full border-2 border-solid border-[#79b2b7] items-center gap-2">
