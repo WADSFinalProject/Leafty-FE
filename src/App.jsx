@@ -57,6 +57,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import React from "react";
 import AuthApi from "./AuthApi";
+import DryLeavesOverview from "./pages/XYZ Desktop/DryLeavesOverview";
+import PowderOverview from "./pages/XYZ Desktop/PowderOverview";
 
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
@@ -183,7 +185,9 @@ function App() {
                 <Route path="wetleaves" element={<WetLeavesXYZ />}></Route>
                 <Route path="wetoverview" element={<WetLeavesOverview />}></Route>
                 <Route path="dryleaves" element={<DryLeavesXYZ />}></Route>
+                <Route path="dryoverview" element={<DryLeavesOverview/>}></Route>
                 <Route path="powder" element={<PowderXYZ />}></Route>
+                <Route path="powderoverview" element={<PowderOverview/>}></Route>
                 <Route path="shipment" element={<ShipmentXYZ />}></Route>
                 <Route path="performance" element={<Performance />}></Route>
                 <Route path="pickup" element={<Pickup />}></Route>

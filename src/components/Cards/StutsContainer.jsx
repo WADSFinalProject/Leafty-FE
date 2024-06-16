@@ -35,7 +35,7 @@ function StutsContainer({ row = true, label, value, unit = false, icon_unit = fa
                             {value && icon_unit ? (
                                 <>
                                     <div className="flex flex-row items-center mt-2">
-                                        <img src={icon_unit} className="w-8 h-8" alt="Icon Unit" />
+                                        <img src={icon_unit} className="w-9 h-9" alt="Icon Unit" />
                                     </div>
                                 </>
                             ) : null}
@@ -43,7 +43,7 @@ function StutsContainer({ row = true, label, value, unit = false, icon_unit = fa
                         <span style={{ color: "#6B6A6A" }}>
                             {description ? description : <></>}
                         </span>
-                        {frontIcon && <img src={frontIcon} className="w-3/4" alt="Front Icon" />}
+                        {frontIcon && <img src={frontIcon} className=" flex-auto h-1/2 w-1/2" alt="Front Icon" />}
                     </div>
                     {backIcon && <img src={backIcon} alt="Back Icon" />}
                     <div className="w-[20px] h-[100px] place-self-center">
