@@ -22,6 +22,7 @@ function Dashboard() {
         sum_flour: 0,
         sum_shipment_quantity: 0
     });
+    const [unreceivedPackages, setUnreceivedPackages] = useState([]);
 
     const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Flour'];
     const Piedata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
@@ -60,7 +61,22 @@ function Dashboard() {
             }
         };
 
+        const fetchShipments = async () => {
+            try {
+                console.log("Fetching shipments from API");
+                const response = await axios.get(`${API_URL}/shipment/get`);
+                console.log("Shipments fetched successfully:", response.data);
+                const unreceived = response.data
+                    .filter(shipment => shipment.ShipmentDate && !shipment.Rescalled_Weight && !shipment.Rescalled_Date)
+                    .sort((a, b) => new Date(a.ShipmentDate) - new Date(b.ShipmentDate));
+                setUnreceivedPackages(unreceived);
+            } catch (error) {
+                console.error('Error fetching shipments:', error);
+            }
+        };
+
         fetchStatistics();
+        fetchShipments();
     }, []);
 
     return (
@@ -70,13 +86,13 @@ function Dashboard() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 0.5 }} className="flex flex-col justify-stretch gap-2 xl:flex-row items-center">
                 <div className="container h-full md:max-w-2xl xl:max-w-4xl">
-                    <WidgetContainer title="Total Production" container = {false}>
+                    <WidgetContainer title="Total Production" container={false}>
                         <BarChart title={Bartitle} labels={Barlabels} data={Bardata} />
                     </WidgetContainer>
                 </div>
                 <div className="container h-full md:max-w-2xl xl:max-w-sm">
                     <WidgetContainer>
-                        <PieChart labels={Pielabels} data={Piedata} container = {false} />
+                        <PieChart labels={Pielabels} data={Piedata} container={false} />
                     </WidgetContainer>
                 </div>
             </motion.div>
@@ -107,11 +123,18 @@ function Dashboard() {
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 2 }} className="flex flex-col gap-2">
                 <span className="text-xl font-bold">
-                    Unscaled Pickups
+                    Unreceived Packages
                 </span>
-                <LongContainer showWeight={!tabletMode}></LongContainer>
-                <LongContainer showWeight={!tabletMode}></LongContainer>
-                <LongContainer showWeight={!tabletMode}></LongContainer>
+                {unreceivedPackages.map((item, index) => (
+                    <LongContainer
+                        key={index}
+                        showWeight={!tabletMode}
+                        packageCount={item.ShipmentQuantity}
+                        weightValue={item.Rescalled_Weight}
+                        dateValue={item.ShipmentDate}
+                        expeditionId={item.ShipmentID}
+                    />
+                ))}
             </motion.div>
         </>
     );
