@@ -106,7 +106,7 @@ function XYZShipmentDetail() {
                 <div className=''>
                     {currentComponent === 2 && <VerificationWait />}
                     {currentComponent === 3 && <HarborReception title="Harbor Reception " containers={containers} />}
-                    {currentComponent === 1 && <ReceptionDetail />}
+                    {currentComponent === 1 && <ReceptionDetail  />}
                 </div>
                 <div className='p-2'>
                     <WidgetContainer borderRadius='20px'>

@@ -5,17 +5,15 @@ import Upload from '../assets/icons/upload.svg';
 import Download from "@assets/icons/download.svg";
 import Open from "@assets/icons/open_file.svg";
 import ReceptionFile from './ReceptionFile';
-
+import QRPage from '../pages/QRPage';
 const ReceptionDetail = ({harbor = false, centra = false}) => {
     return (
             <WidgetContainer borderRadius='20px'>
-                <span className='font-montserrat text-16px font-semibold'>
-                    Reception
-                </span>
-                <div className='flex flex-wrap items-center gap-4 justify-between'>
-                    {harbor ? <ReceptionFile harbor = {harbor}/> : <></>}
-                    {centra ? <ReceptionFile centra = {centra}/> : <></>}
-                </div>
+                <div className='p-2'>
+                        <WidgetContainer container={false} borderRadius='20px'>
+                            <QRPage />
+                        </WidgetContainer>
+                    </div>
             </WidgetContainer>
        
     );
