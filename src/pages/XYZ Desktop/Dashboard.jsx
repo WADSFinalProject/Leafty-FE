@@ -68,7 +68,8 @@ function Dashboard() {
                 console.log("Shipments fetched successfully:", response.data);
                 const unreceived = response.data
                     .filter(shipment => shipment.ShipmentDate && !shipment.Rescalled_Weight && !shipment.Rescalled_Date)
-                    .sort((a, b) => new Date(a.ShipmentDate) - new Date(b.ShipmentDate));
+                    .sort((a, b) => new Date(a.ShipmentDate) - new Date(b.ShipmentDate))
+                    .slice(0, 3); // Limit to only 3
                 setUnreceivedPackages(unreceived);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
@@ -141,3 +142,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+
