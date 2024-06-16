@@ -9,23 +9,11 @@ import TotalPackagesReceived from '@assets/TotalPackagesReceived.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import LongContainer from '@components/Cards/LongContainer';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
+import axios from 'axios'; // Ensure you have axios installed and imported
+import { API_URL } from "../../App"; // Adjust the import according to your project structure
 
 function Shipment() {
-    const data = [
-        { status: "Awaiting", id: 1, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
-        { status: "Awaiting", id: 2, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Awaiting", id: 3, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Thrown", id: 4, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Expired", id: 5, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Processed", id: 6, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Awaiting", id: 7, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/08/2024 13:05" },
-        { status: "Awaiting", id: 8, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Awaiting", id: 9, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Thrown", id: 10, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Expired", id: 11, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-        { status: "Processed", id: 12, name: 'John Doe', weight: 10, date: '17/06/2024 13:05', expiration: "17/07/2024 13:05" },
-    ];
-
+    const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
 
@@ -49,14 +37,27 @@ function Shipment() {
         return () => window.removeEventListener('resize', calculateItemsPerPage);
     }, []);
 
+    useEffect(() => {
+        const fetchShipments = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/shipment/get`);
+                setShipments(response.data);
+            } catch (error) {
+                console.error('Error fetching shipments:', error);
+            }
+        };
+
+        fetchShipments();
+    }, []);
+
     const offset = currentPage * itemsPerPage;
-    const currentPageData = data.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(data.length / itemsPerPage);
+    const currentPageData = shipments.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(shipments.length / itemsPerPage);
 
     const stats = [
         {
             label: "Verified Packages",
-            value: "243",
+            value: "",
             unit: "Kg",
             color: "#C0CD30",
             icon: VerifiedPackages,
@@ -64,7 +65,7 @@ function Shipment() {
         },
         {
             label: "Departured Packages",
-            value: "243",
+            value: "",
             unit: "Kg",
             color: "#79B2B7",
             icon: DeparturedPackages,
@@ -72,7 +73,7 @@ function Shipment() {
         },
         {
             label: "Rescalled Packages",
-            value: "250",
+            value: "",
             unit: "Kg",
             color: "#0F7275",
             icon: RescalledPackages,
@@ -80,7 +81,7 @@ function Shipment() {
         },
         {
             label: "Total Packages Received",
-            value: "1500",
+            value: "",
             unit: "Kg",
             color: "#0F7275",
             icon: TotalPackagesReceived,
@@ -96,7 +97,7 @@ function Shipment() {
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
                     <motion.div
-                        key={item.id}
+                        key={item.ShipmentID}
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
@@ -104,9 +105,9 @@ function Shipment() {
                     >
                         <LongContainer
                             showWeight={true}
-                            weightValue={item.weight}
-                            dateValue={item.date}
-                            expeditionId={item.id}
+                            weightValue={item.ShipmentQuantity}
+                            dateValue={item.ShipmentDate}
+                            expeditionId={item.ShipmentID}
                         />
                     </motion.div>
                 ))}
@@ -154,6 +155,6 @@ function Shipment() {
             </div>
         </div>
     );
-};
+}
 
 export default Shipment;
