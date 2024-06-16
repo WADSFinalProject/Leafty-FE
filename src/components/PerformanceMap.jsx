@@ -7,6 +7,13 @@ const containerStyle = {
   height: '400px'
 };
 
+const indonesiaBounds = {
+  north: 6.1,
+  south: -11.2,
+  west: 95,
+  east: 141
+};
+
 function getRandomCoordinates() {
   const lat = -11 + Math.random() * (6 + 11);
   const lng = 95 + Math.random() * (141 - 95);
@@ -41,7 +48,6 @@ function PerformanceMap({ setShowMap, setAddressDetails }) {
     // Generate 10 random markers within Indonesia
     const newMarkers = Array.from({ length: 10 }, () => getRandomCoordinates());
     setMarkers(newMarkers);
-    console.log(markers)
   }, []);
 
   const handleMapClick = async (event) => {
@@ -76,6 +82,15 @@ function PerformanceMap({ setShowMap, setAddressDetails }) {
         center={center}
         zoom={5}
         onClick={handleMapClick}
+        options={{
+          restriction: {
+            latLngBounds: indonesiaBounds,
+            strictBounds: true,
+          },
+          mapTypeControl: false,
+          streetViewControl: false,
+          fullscreenControl: false,
+        }}
       >
         {markers.map((marker, index) => (
           <Marker key={index} position={marker} />
