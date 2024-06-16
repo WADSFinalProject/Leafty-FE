@@ -56,7 +56,8 @@ function ChoosePowderDrawer(props) {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
-                setPowderData(response.data);
+
+                setPowderData(response.data.filter(item => item.Status === "Awaiting" && new Date(item.Expiration) > new Date()));
                 console.log(response.data);
             } catch (error) {
                 console.error('Error fetching Powder data:', error);
@@ -107,45 +108,47 @@ function ChoosePowderDrawer(props) {
                 >
                     <StyledBox>
                         <Puller />
-                        <div className='flex flex-col gap-2'>
-                            <span className='font-bold text-2xl'>Choose Powder</span>
-                            {PowderData.length > 0 ? (
-                                PowderData.map((item) => (
-                                    <div key={item.FlourID} className='flex justify-between'> {/* Corrected key prop */}
-                                        <WidgetContainer container = {false} borderRadius="10px" className="w-full flex items-center ">
-                                            <Checkbox
-                                                sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
-                                                checked={selectedFlours.some(f => f.FlourID === item.FlourID)}
-                                                onChange={() => handleSelectFlour(item.FlourID, item.Flour_Weight)}
-                                            />
-                                            <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
-                                            <div className='flex flex-col ml-3'>
-                                                <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                                                    {item.Flour_Weight} Kg
-                                                </span>
-                                                <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                                                    P01{item.FlourID}
-                                                </span>
-                                            </div>
-                                            <div className="flex ml-auto items-center">
-                                                <Countdown time={item.Expiration} color={"#C0CD30"} image={ReadyIcon} />
-                                                {/* <Button onClick={() => handleSelectFlour(item.FlourID, item.Flour_Weight)}>Select</Button> */}
-                                            </div>
-                                        </WidgetContainer>
-                                    </div>
-                                ))
-                            ) : (
-                                <span className='text-md'>No Powder Found</span>
-                            )}
+                        <div className='flex justify-between flex-col h-full'>
+                            <div className='flex flex-col gap-2'>
+                                <span className='font-bold text-2xl'>Choose Powder</span>
+                                {PowderData.length > 0 ? (
+                                    PowderData.map((item) => (
+                                        <div key={item.FlourID} className='flex justify-between'> {/* Corrected key prop */}
+                                            <WidgetContainer container={false} borderRadius="10px" className="w-full flex items-center ">
+                                                <Checkbox
+                                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+                                                    checked={selectedFlours.some(f => f.FlourID === item.FlourID)}
+                                                    onChange={() => handleSelectFlour(item.FlourID, item.Flour_Weight)}
+                                                />
+                                                <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+                                                <div className='flex flex-col ml-3'>
+                                                    <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                                                        {item.Flour_Weight} Kg
+                                                    </span>
+                                                    <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                                                        P01{item.FlourID}
+                                                    </span>
+                                                </div>
+                                                <div className="flex ml-auto items-center">
+                                                    <Countdown time={item.Expiration} color={"#C0CD30"} image={ReadyIcon} />
+                                                    {/* <Button onClick={() => handleSelectFlour(item.FlourID, item.Flour_Weight)}>Select</Button> */}
+                                                </div>
+                                            </WidgetContainer>
+                                        </div>
+                                    ))
+                                ) : (
+                                    <span className='text-md'>No Powder Found</span>
+                                )}
+                            </div>
+                            <Button
+                                className={"mt-2 flex w-full justify-center items-center"}
+                                noMax={true}
+                                label={"Confirm"}
+                                color={"white"}
+                                background={"#0F7275"}
+                                onClick={handleConfirmSelection}
+                            />
                         </div>
-                        <Button
-                            className={"mt-2 flex w-full justify-center items-center"}
-                            noMax={true}
-                            label={"Confirm"}
-                            color={"white"}
-                            background={"#0F7275"}
-                            onClick={handleConfirmSelection}
-                        />
                     </StyledBox>
                 </SwipeableDrawer>
             </Root>

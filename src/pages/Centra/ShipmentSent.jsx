@@ -55,7 +55,9 @@ function ShipmentSent() {
 
     const handleButtonClick = (item) => {
         setSelectedData(item);
-        document.getElementById('ShipmentPopup').showModal();
+        setTimeout(() => {
+            document.getElementById('ShipmentPopup').showModal();
+        }, 5);
     };
 
     const deliveredShipments = shipmentData.filter(item => !item.Check_in_Date && !item.Check_in_Quantity);

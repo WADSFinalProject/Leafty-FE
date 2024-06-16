@@ -24,6 +24,23 @@ function XYZPopup({ shipment, open, onClose }) {
     }, [open]);
 
 
+    function convertToLocalPhoneNumber(localPhoneNumber) {
+        // Check if the number starts with '0'
+        if (localPhoneNumber.startsWith('0')) {
+            // Remove leading '0' and prepend '62'
+            return '62' + localPhoneNumber.substring(1);
+        } else {
+            // If it doesn't start with '0', assume it's already formatted correctly
+            return localPhoneNumber;
+        }
+    }
+
+    
+    function PhoneToSendWhatsappFormat(phoneNumber, text){
+        const encodedText = encodeURIComponent(text);
+        const encodedPhoneNumber = convertToLocalPhoneNumber(phoneNumber);
+        return `https://api.whatsapp.com/send/?phone={phoneNumber}&text=${encodedText}&type=phone_number&app_absent=0`
+    }
 
     const handleNext = () => {
         setCurrentComponent(prevComponent => (prevComponent % 7) + 1); 

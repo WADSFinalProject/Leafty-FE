@@ -60,7 +60,9 @@ function ShipmentOrders() {
 
     const handleButtonClick = (item) => {
         setSelectedData(item);
-        document.getElementById('ShipmentPopup').showModal();
+        setTimeout(() => {
+            document.getElementById('ShipmentPopup').showModal();
+        }, 5);
     };
 
     const refreshData = async () => {
