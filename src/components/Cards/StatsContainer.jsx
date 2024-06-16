@@ -25,7 +25,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                         {modal ? <button className="" onClick={() => document.getElementById('my_modal').showModal()}><img src={information}></img></button> : <></>}
                         <div></div>
                     </div>
-                    <span style={{ color: "#6B6A6A" }} className="w-3/4">
+                    <span style={{ color: "#6B6A6A" }} className="">
                         {label ? label : <></>}
                     </span>
                     <span className="font-bold text-2xl">
@@ -34,7 +34,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                             <>
                                 <div className="flex flex-row gap-4">
                                     <span>{value + " "}</span>
-                                    <img src={icon_unit} className = "w-8 h-8" alt="" />
+                                    <img src={icon_unit} className = "" alt="" />
                                 </div>
                             </>
                         ) : null}
@@ -44,7 +44,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                     </span>
                 </div>
                 {backIcon ? <img src={backIcon}></img> : <></>}
-                {dashboardStats && <img src = {dashboardStats} className={`w-1/3 ${truck && "mr-6"}`}></img>}
+                {dashboardStats && <img src = {dashboardStats} className={`w-[100px] h-[100px] ${truck && "mr-6"}`}></img>}
                 {/* <img src={powder} className="w-1/4 transform -scale-x-100 opacity-10 place-self-end"></img> */}
                 <div className="w-[20px] h-[100px] place-self-center">
                     <div className="w-[20px] h-[100px] rounded-[10px_0px_0px_10px] shadow-[inset_0px_4px_4px_#0000001a] left-20 " style={{ background: color }} />
