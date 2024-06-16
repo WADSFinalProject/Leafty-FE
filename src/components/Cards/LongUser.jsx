@@ -19,11 +19,6 @@ function LongUser({ showWeight = false, Atis, Mailis, Phonis, UserId, centra, ha
             "value": Mailis,
             "unit": ""
         },
-        {
-            "image": Phone,
-            "value": Phonis,
-            "unit": ""
-        },
     ];
 
     // const filteredData = showWeight ? data : data.filter(item => item.image !== weight);

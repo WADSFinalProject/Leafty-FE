@@ -13,8 +13,8 @@ import ProcessedLeaves from '@assets/In-ProcessLeaves.svg';
 import TotalDryLeaves from '@assets/TotalDryLeaves.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import axios from 'axios';  // Ensure you have axios installed and imported
-import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 import dayjs from 'dayjs';
+import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 
 const header = 'Recently Gained Dry Leaves'; // Example header
 
@@ -23,19 +23,8 @@ const columns = [
   { field: 'id', header: 'Batch Id' },
   { field: 'name', header: 'Centra Name' },
   { field: 'weight', header: 'Weight' },
-  { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
 ];
-
-const formatDate = (dateString) => {
-  return dayjs(dateString).format('MM/DD/YYYY HH:mm');
-};
-
-const addMonth = (dateString) => {
-  return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
-};
-
-
 
 const DryLeaves = () => {
   const [dryLeaves, setDryLeaves] = useState([]);
@@ -65,13 +54,15 @@ const DryLeaves = () => {
 
         dryLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Processed_Weight;
-          if (leaf.Status === 'Awaiting') {
-            stats.awaiting += leaf.Processed_Weight;
-          } else if (leaf.Status === 'Processed') {
+          if (leaf.Status === 'Processed') {
             stats.processed += leaf.Processed_Weight;
-          } else if (leaf.Status === 'Expired') {
+          }
+          else if (new Date(leaf.Expiration) < new Date()) {
             stats.wasted += leaf.Processed_Weight;
           }
+          else if (leaf.Status === 'Awaiting') {
+            stats.awaiting += leaf.Processed_Weight;
+          } 
         });
 
         setStats(stats);
@@ -83,16 +74,34 @@ const DryLeaves = () => {
     fetchDryLeaves();
   }, []);
 
+  const formatDate = (dateString) => {
+    return dayjs(dateString).format('MM/DD/YYYY HH:mm');
+  };
+
+  const addMonth = (dateString) => {
+    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
+  };
+
+
   const mergedData = dryLeaves.map(leaf => {
     const user = users.find(u => u.UserID === leaf.UserID);
     return {
       id: leaf.DryLeavesID,
       name: user ? user.Username : 'Unknown',
       weight: leaf.Processed_Weight,
-      date: leaf.ReceivedTime,
-      status: leaf.Status,
-      expiration: formatDate((leaf.Expiration)),
+      status: new Date(leaf.Expiration) < new Date() ? "Expired" : leaf.Status,
+      expiration: formatDate(leaf.Expiration),
     };
+  });
+
+  mergedData.sort((a, b) => {
+    if (a.status < b.status) {
+      return -1;
+    }
+    if (a.status > b.status) {
+      return 1;
+    }
+    return 0;
   });
 
   const statusBodyTemplate = (rowData) => {

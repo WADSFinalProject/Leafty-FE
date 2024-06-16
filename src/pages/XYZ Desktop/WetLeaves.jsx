@@ -62,6 +62,7 @@ const WetLeaves = () => {
         const usersResponse = await axios.get(`${API_URL}/user/get`);
         setWetLeaves(wetLeavesResponse.data);
         setUsers(usersResponse.data);
+        console.log(wetLeavesResponse.data)
 
         const stats = {
           awaiting: 0,
@@ -72,16 +73,20 @@ const WetLeaves = () => {
 
         wetLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Weight;
-          if (leaf.Status === 'Awaiting') {
-            stats.awaiting += leaf.Weight;
-          } else if (leaf.Status === 'Processed') {
+          if (leaf.Status === 'Processed') {
             stats.processed += leaf.Weight;
-          } else if (leaf.Status === 'Expired') {
+          }
+          else if (new Date(leaf.ReceivedTime) < new Date()) {
             stats.wasted += leaf.Weight;
           }
+          else if (leaf.Status === 'Awaiting') {
+            stats.awaiting += leaf.Weight;
+          } 
         });
 
         setStats(stats);
+
+        console.log(stats)
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -96,11 +101,21 @@ const WetLeaves = () => {
       id: leaf.WetLeavesID,
       name: user ? user.Username : 'Unknown',
       weight: leaf.Weight,
-      status: leaf.Status,
+      status: new Date(leaf.ReceivedTime) < new Date() ? "Expired" : leaf.Status,
       expiration: formatDate((leaf.ReceivedTime)),
     };
   });
 
+  mergedData.sort((a, b) => {
+    if (a.status < b.status) {
+      return -1;
+    }
+    if (a.status > b.status) {
+      return 1;
+    }
+    return 0;
+  });
+  
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;

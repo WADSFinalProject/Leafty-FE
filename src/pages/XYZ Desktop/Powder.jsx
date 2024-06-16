@@ -14,6 +14,7 @@ import PackagedPowder from '@assets/PackagedPowder.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 import axios from 'axios';  // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
+import dayjs from 'dayjs';
 
 const header = 'Recently Gained Powder'; // Example header
 
@@ -22,11 +23,11 @@ const columns = [
   { field: 'id', header: 'Batch Id' },
   { field: 'name', header: 'Centra Name' },
   { field: 'weight', header: 'Weight' },
-  { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
 ];
 
 const Powder = () => {
+  
   const [flour, setFlour] = useState([]);
   const [users, setUsers] = useState([]);
   const [stats, setStats] = useState({
@@ -53,13 +54,13 @@ const Powder = () => {
         };
 
         flourResponse.data.forEach(item => {
-          stats.total += item.Processed_Weight;
+          stats.total += item.Flour_Weight;
           if (item.Status === 'Awaiting') {
-            stats.awaiting += item.Processed_Weight;
+            stats.awaiting += item.Flour_Weight;
           } else if (item.Status === 'Processed') {
-            stats.processed += item.Processed_Weight;
+            stats.processed += item.Flour_Weight;
           } else if (item.Status === 'Expired') {
-            stats.wasted += item.Processed_Weight;
+            stats.wasted += item.Flour_Weight;
           }
         });
 
@@ -72,16 +73,33 @@ const Powder = () => {
     fetchFlour();
   }, []);
 
-  const mergedData = flour.map(item => {
-    const user = users.find(u => u.UserID === item.UserID);
+  const formatDate = (dateString) => {
+    return dayjs(dateString).format('MM/DD/YYYY HH:mm');
+  };
+
+  const addMonth = (dateString) => {
+    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
+  };
+
+  const mergedData = flour.map(leaf => {
+    const user = users.find(u => u.UserID === leaf.UserID);
     return {
-      id: item.FlourID,
+      id: leaf.FlourID,
       name: user ? user.Username : 'Unknown',
-      weight: item.Flour_Weight,
-      date: item.ReceivedTime,
-      status: item.Status,
-      expiration: item.Expiration,
+      weight: leaf.Flour_Weight,
+      status: new Date(leaf.Expiration) < new Date() ? "Expired" : leaf.Status,
+      expiration: formatDate(leaf.Expiration),
     };
+  });
+
+  mergedData.sort((a, b) => {
+    if (a.status < b.status) {
+      return -1;
+    }
+    if (a.status > b.status) {
+      return 1;
+    }
+    return 0;
   });
 
   const statusBodyTemplate = (rowData) => {
@@ -158,7 +176,7 @@ const Powder = () => {
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Powder Produced"
+            label="Ready Powder"
             value={stats.awaiting}
             unit="Kg"
             description=""
@@ -175,13 +193,13 @@ const Powder = () => {
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="In-Process Powder"
+            label="Packaged Powder"
             value={stats.processed}
             unit="Kg"
             description=""
             color="#79B2B7"
             modal={false}
-            frontIcon={InProcessPowder}
+            frontIcon={PackagedPowder}
           />
         </motion.div>
         <motion.div
@@ -192,7 +210,7 @@ const Powder = () => {
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Unpackaged Powder"
+            label="Thrown Powder"
             value={stats.wasted}
             unit="Kg"
             description=""
@@ -209,13 +227,13 @@ const Powder = () => {
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Packaged Powder"
+            label="Total Produced Powder"
             value={stats.total}
             unit="Kg"
             description=""
             color="#0F7275"
             modal={false}
-            frontIcon={PackagedPowder}
+            frontIcon={InProcessPowder}
           />
         </motion.div>
       </div>

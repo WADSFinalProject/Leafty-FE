@@ -51,10 +51,18 @@ function Pickup() {
     const currentPageData = shipments.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(shipments.length / itemsPerPage);
 
+    function formatDate(dateString) {
+        if (!dateString) return "Not Delivered";
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return "    "+date.toLocaleDateString(undefined, options);
+    }
+
+
     return (
         <div className="container mx-auto w-full">
             <span className="text-xl font-bold">
-                Unscaled Pickups
+                Uncompleted Delivery
             </span>
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
@@ -69,7 +77,7 @@ function Pickup() {
                             showWeight={true}
                             packageCount={item.ShipmentQuantity}
                             weightValue={item.Rescalled_Weight}
-                            dateValue={item.ShipmentDate}
+                            dateValue={formatDate(item.ShipmentDate) || "Not Delivered"}
                             expeditionId={item.ShipmentID}
                         />
                     </motion.div>

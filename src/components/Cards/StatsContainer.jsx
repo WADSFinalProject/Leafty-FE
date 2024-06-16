@@ -29,7 +29,7 @@ function StatsContainer({ row = true, label, value, unit = false, icon_unit = fa
                         {label ? label : <></>}
                     </span>
                     <span className="font-bold text-2xl">
-                        {value && unit ? value + " " + unit : null}
+                        {value && unit ? value + " " + unit : 0 + " Kg"}
                         {value && icon_unit ? (
                             <>
                                 <div className="flex flex-row gap-4">
