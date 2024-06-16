@@ -7,7 +7,7 @@ import PowderLogo from '../../assets/Powder.svg';
 import PowderDetail from '../../assets/PowderDetail.svg';
 import PowderStatus from "@components/PowderStatus";
 import Drawer from '../../components/Drawer';
-import Date from '../../assets/Date.svg';
+import DateIcon from '../../assets/Date.svg';
 import WeightLogo from '../../assets/Weight.svg';
 import LoadingStatic from "@components/LoadingStatic";
 import ReadyIcon from '../../assets/ReadyIcon.svg';
@@ -15,22 +15,25 @@ import axios from 'axios';
 import { API_URL } from '../../App';
 import AddLeavesPopup from '../../components/Popups/AddLeavesPopup';
 import AccordionUsage from '../../components/AccordionUsage';
+import Throw from "@assets/Thrown.svg";
 
 function Powder() {
   const [flourData, setFlourData] = useState([]);
   const [ProcessedFlourData, setProcessedFlourData] = useState([]);
-  const [ThrownFlourData, setThrownFlourData] = useState([]);
+  const [ExpiredFlourData, setExpiredFlourData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
+  const [ThrownPowderData, setThrownPowderData] = useState([]);
   const UserID = useOutletContext();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
-        setFlourData(response.data.filter(item => item.Status === "Awaiting"));
+        const currentTime = new Date();
+        setFlourData(response.data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
         setProcessedFlourData(response.data.filter(item => item.Status === "Processed"));
-        setThrownFlourData(response.data.filter(item => item.Status === "Thrown")); // Corrected line
-        console.log(response.data);
+        setExpiredFlourData(response.data.filter(item => new Date(item.Expiration).toDateString() > new Date().toDateString())); // Corrected line
+        setThrownPowderData(response.data.filter(item => item.Status === "Thrown"));
       } catch (error) {
         console.error('Error fetching flour data:', error);
       }
@@ -41,7 +44,9 @@ function Powder() {
 
   const handleButtonClick = (item) => {
     setSelectedData(item);
-    document.getElementById('AddLeaves').showModal();
+    setTimeout(() => {
+      document.getElementById('AddLeaves').showModal();
+    }, 5);
   };
 
   const accordions = [
@@ -101,10 +106,37 @@ function Powder() {
       ),
     },
     {
-      summary: 'Thrown Powder',
+      summary: 'Expired Powder',
       details: () => (
         <>
-          {ThrownFlourData.map((item) => (
+          {ExpiredFlourData.map((item) => (
+            <div key={item.FlourID} className='flex justify-between p-1'>
+              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                <button onClick={() => handleButtonClick(item)}>
+                  <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+                </button>
+                <div className='flex flex-col ml-3'>
+                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                    {item.Flour_Weight} Kg
+                  </span>
+                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                    {item.FlourID}
+                  </span>
+                </div>
+                <div className="flex ml-auto items-center">
+                  <PowderStatus expired />
+                </div>
+              </WidgetContainer>
+            </div>
+          ))}
+        </>
+      )
+    },
+    {
+      summary: 'Thrown Powder', // New section for Thrown Powder
+      details: () => (
+        <>
+          {ThrownPowderData.map((item) => (
             <div key={item.FlourID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <button onClick={() => handleButtonClick(item)}>
@@ -134,13 +166,12 @@ function Powder() {
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
-
           code={selectedData.FlourID}
           weight={selectedData.Flour_Weight + " Kg"}
           expirationDate={selectedData.Expiration}
           imageSrc={PowderDetail}
           text="Powder"
-          showExpiredIn={false}
+          status = {selectedData.Status}
         />
       )}
 
@@ -154,7 +185,7 @@ function Powder() {
         firstText="Expiry Date"
         secondText="Weight"
         thirdText="Dry leaves"
-        firstImgSrc={Date}
+        firstImgSrc={DateIcon}
         secondImgSrc={WeightLogo}
       />
     </>

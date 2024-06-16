@@ -20,14 +20,18 @@ import AccordionUsage from '../../components/AccordionUsage';
 import { API_URL } from '../../App';
 import WetLeavesDetail from '../../assets/WetLeavesDetail.svg';
 import LoadingStatic from "@components/LoadingStatic"
+import Throw from "@assets/Thrown.svg";
 
 function WetLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [wetLeavesData, setWetLeavesData] = useState([]);
   const [expiredLeavesData, setExpiredLeavesData] = useState([]);
+  const [ThrownLeavesData, setThrownLeavesData] = useState([]);
   const [processedLeavesData, setProcessedLeavesData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
   const UserID = useOutletContext();
+
+  const WetLeavesDailyLimit = 30;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,8 +40,9 @@ function WetLeaves() {
         const data = response.data;
         const currentTime = new Date();
         setWetLeavesData(data.filter(item => new Date(item.ReceivedTime) > currentTime && item.Status === "Awaiting"));
-        setExpiredLeavesData(data.filter(item => new Date(item.ReceivedTime) < currentTime || item.Status === "Thrown")); // Corrected line
+        setExpiredLeavesData(data.filter(item => new Date(item.ReceivedTime) < currentTime && item.Status === "Awaiting")); // Corrected line
         setProcessedLeavesData(data.filter(item => item.Status === "Processed"));
+        setThrownLeavesData(data.filter(item => item.Status === "Thrown"))
         console.log(data);
       } catch (error) {
         console.error('Error fetching wet leaves data:', error);
@@ -49,8 +54,14 @@ function WetLeaves() {
 
   const handleButtonClick = (item) => {
     setSelectedData(item);
-    document.getElementById('AddLeaves').showModal();
+    setTimeout(() => {
+      document.getElementById('AddLeaves').showModal();
+    }, 5);
   };
+
+  function WarningDailyLimit(){
+
+  }
 
   const accordions = [
     {
@@ -90,6 +101,34 @@ function WetLeaves() {
       defaultExpanded: true,
     },
     {
+      summary: 'Processed Leaves',
+      details: () => (
+        <>
+          {processedLeavesData.map((item) => (
+            <div key={item.WetLeavesID} className='flex justify-between p-1'>
+              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                <button onClick={() => handleButtonClick(item)}>
+                  <CircularButton imageUrl={WetLeavesLogo} backgroundColor="#94C3B3" />
+                </button>
+                <div className='flex flex-col ml-3'>
+                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                    {item.Weight} Kg
+                  </span>
+                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                    {item.WetLeavesID}
+                  </span>
+                </div>
+                <div className="flex ml-auto items-center">
+                  <Countdown processed={true} expiredTime={item.ReceivedTime} color="#D4965D80" image={ProcessedLogo} />
+                </div>
+              </WidgetContainer>
+            </div>
+          ))}
+        </>
+      ),
+      defaultExpanded: false,
+    },
+    {
       summary: 'Expired Leaves',
       details: () => (
         <>
@@ -118,10 +157,10 @@ function WetLeaves() {
       defaultExpanded: false,
     },
     {
-      summary: 'Processed Leaves',
+      summary: "Thrown Leaves",
       details: () => (
         <>
-          {processedLeavesData.map((item) => (
+          {ThrownLeavesData.map((item) => (
             <div key={item.WetLeavesID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <button onClick={() => handleButtonClick(item)}>
@@ -136,7 +175,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown processed={true} expiredTime={item.ReceivedTime} color="#D4965D80" image={ProcessedLogo} />
+                  <Countdown thrown color="#D45D5D" image={Throw} expiredTime={item.ReceivedTime} />
                 </div>
               </WidgetContainer>
             </div>
@@ -156,7 +195,9 @@ function WetLeaves() {
           weight={selectedData.Weight + " Kg"}
           expirationDate={selectedData.ReceivedTime}
           imageSrc={WetLeavesDetail}
+          status = {selectedData.Status}
           text="Wet Leaves"
+          showExpiredIn
         />
       )}
       <Drawer WetLeaves Data={wetLeavesData} setData={setWetLeavesData} UserID={UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo} />

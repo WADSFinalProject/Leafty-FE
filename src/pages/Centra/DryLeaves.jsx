@@ -19,12 +19,14 @@ import AccordionUsage from '../../components/AccordionUsage';
 import { API_URL } from '../../App';
 import LoadingStatic from "@components/LoadingStatic"
 import DryLeavesDetail from '../../assets/DryLeavesDetail.svg';
+import Throw from "@assets/Thrown.svg";
 
 function DryLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [DryLeavesData, setDryLeavesData] = useState([]);
   const [ExpiredLeavesData, setExpiredLeavesData] = useState([]);
   const [ProcessedLeavesData, setProcessedLeavesData] = useState([]);
+  const [thrownLeavesData, setThrownLeavesData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
   const UserID = useOutletContext();
 
@@ -35,7 +37,8 @@ function DryLeaves() {
         const data = response.data;
         const currentTime = new Date();
         setDryLeavesData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
-        setExpiredLeavesData(data.filter(item => new Date(item.Expiration) < currentTime || item.Status === "Thrown")); // Corrected line
+        setExpiredLeavesData(data.filter(item => new Date(item.Expiration) < currentTime));
+        setThrownLeavesData(data.filter(item => item.Status === "Thrown")); // Corrected line
         setProcessedLeavesData(data.filter(item => item.Status === "Processed"));
       } catch (error) {
         console.error('Error fetching dry leaves data:', error);
@@ -48,7 +51,10 @@ function DryLeaves() {
   const handleButtonClick = (item) => {
     console.log('Selected Item:', item)
     setSelectedData(item);
-    document.getElementById('AddLeaves').showModal();
+    setTimeout(() => {
+      document.getElementById('AddLeaves').showModal();
+    }, 5);
+   
   };
 
   const accordions = [
@@ -90,6 +96,34 @@ function DryLeaves() {
       defaultExpanded: true,
     },
     {
+      summary: 'Processed Leaves',
+      details: () => (
+        <>
+          {ProcessedLeavesData.map((item) => (
+            <div key={item.DryLeavesID} className='flex justify-between p-1'>
+              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                <button onClick={() => handleButtonClick(item)}>
+                  <CircularButton imageUrl={DryLeavesLogo} backgroundColor="#94C3B3" />
+                </button>
+                <div className='flex flex-col ml-3'>
+                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                    {item.Processed_Weight} Kg
+                  </span>
+                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                    {item.WetLeavesID}
+                  </span>
+                </div>
+                <div className="flex ml-auto items-center">
+                  <Countdown processed={true} expiredTime={item.Expiration} color="#D4965D80" image={ProcessedLogo} />
+                </div>
+              </WidgetContainer>
+            </div>
+          ))}
+        </>
+      ),
+      defaultExpanded: false,
+    },
+    {
       summary: 'Expired Leaves',
       details: () => (
         <>
@@ -118,10 +152,10 @@ function DryLeaves() {
       defaultExpanded: false,
     },
     {
-      summary: 'Processed Leaves',
+      summary: "Thrown Leaves",
       details: () => (
         <>
-          {ProcessedLeavesData.map((item) => (
+          {thrownLeavesData.map((item) => (
             <div key={item.DryLeavesID} className='flex justify-between p-1'>
               <WidgetContainer borderRadius="10px" className="w-full flex items-center">
                 <button onClick={() => handleButtonClick(item)}>
@@ -132,11 +166,12 @@ function DryLeaves() {
                     {item.Processed_Weight} Kg
                   </span>
                   <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                    {item.WetLeavesID}
+                    {item.DryLeavesID}
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown processed={true} expiredTime={item.Expiration} color="#D4965D80" image={ProcessedLogo} />
+                  {/* Adjust Countdown component for thrown leaves if necessary */}
+                  <Countdown thrown color="#D45D5D" image={Throw} expiredTime={item.Expiration} />
                 </div>
               </WidgetContainer>
             </div>
@@ -157,6 +192,7 @@ function DryLeaves() {
           weight={selectedData.Processed_Weight + " Kg"}
           expirationDate={selectedData.Expiration}
           imageSrc={DryLeavesDetail}
+          status = {selectedData.Status}
           text="Dry Leaves"
         />
       )}

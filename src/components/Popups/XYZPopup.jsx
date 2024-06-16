@@ -23,6 +23,8 @@ function XYZPopup({ shipment, open, onClose }) {
         }
     }, [open]);
 
+
+
     const handleNext = () => {
         setCurrentComponent(prevComponent => (prevComponent % 7) + 1); 
     };
@@ -74,7 +76,7 @@ function XYZPopup({ shipment, open, onClose }) {
                         <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                {shipment.FlourWeightSum} Kg Flour
+                                {shipment.FlourWeightSum} Kg
                             </span>
                             <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">

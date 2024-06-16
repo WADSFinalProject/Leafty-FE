@@ -17,6 +17,7 @@ const LeavesPopup = forwardRef(({
   expiredDate,
   collectedDate,
   editable = false,
+  Status,
   onSubmit
 }, ref) => {
   const currentDate = new Date();
@@ -25,7 +26,8 @@ const LeavesPopup = forwardRef(({
     name: centra_name,
     weight: weight,
     date: collectedDate,
-    expiration: expiredDate
+    expiration: expiredDate,
+    status: Status
   });
 
   const handleInputChange = (e) => {
@@ -89,8 +91,9 @@ const LeavesPopup = forwardRef(({
                   className="flex items-center justify-center rounded-md overflow-hidden"
                 >
                   <div className="flex items-center gap-2">
+                    {status === "Processed" &&<>
                     <span style={{ color: "rgba(212, 150, 93)" }}>Processing</span>
-                    <img src={ProcessedLeaves} alt="Processing" />
+                    <img src={ProcessedLeaves} alt="Processed" /></>}
                   </div>
                 </div>
               </div>

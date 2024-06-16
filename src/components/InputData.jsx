@@ -48,12 +48,21 @@ const InputData = ({
 
   useEffect(() => {
     if (WetLeaves) {
-      console.log("triggered wet");
       const currentDate = new Date();
       currentDate.setHours(currentDate.getHours() + 3); // Add 3 hours to the current time
       setDate(formatDate(currentDate));
     }
-  }, [WetLeaves, drawerOpen]);
+    if (DryLeaves) {
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + 3); // Add 3 days to the current date
+      setDate(formatDate(currentDate));
+    }
+    if (Flour) {
+      const currentDate = new Date();
+      currentDate.setMonth(currentDate.getMonth() + 6); // Add 3 days to the current date
+      setDate(formatDate(currentDate));
+    }
+  }, [WetLeaves, DryLeaves, Flour, drawerOpen]);
 
   useEffect(() => {
     if (DryLeaves) {
@@ -140,7 +149,7 @@ const InputData = ({
     try {
       // Update the status of selected wet leaves to "Processed"
       await axios.put(API_URL + "/wetleaves/update_status/" + selectedWetLeavesID, { "Status": "Processed" });
-  
+
       // Post new dry leaves
       const response = await axios.post(API_URL + "/dryleaves/post", {
         UserID: String(UserID),
@@ -149,11 +158,11 @@ const InputData = ({
         Expiration: date,
         Status: "Awaiting",
       });
-  
+
       // Update state to remove the processed wet leaves
       const updatedWetLeaves = wetLeaves.filter(item => item.WetLeavesID !== selectedWetLeavesID);
       setWetLeaves(updatedWetLeaves);
-  
+
       // Update the main data with the new dry leaves entry
       const newData = [
         ...Data,
@@ -167,13 +176,13 @@ const InputData = ({
         }
       ];
       setData(newData);
-  
+
       // Reset relevant states
       setRefresh(!Refresh);
       setSelectedWetLeavesID("");
       setWeight(30);
       setDate("");
-  
+
       console.log("Dry Leaves posted successfully:", response.data);
     } catch (error) {
       console.error("Error posting dry leaves:", error);
@@ -184,7 +193,7 @@ const InputData = ({
     try {
       // Update the status of selected dry leaves to "Processed"
       await axios.put(API_URL + "/dryleaves/update_status/" + selectedDryLeavesID, { "Status": "Processed" });
-  
+
       // Post new flour
       const response = await axios.post(API_URL + "/flour/post", {
         UserID: String(UserID),
@@ -193,7 +202,7 @@ const InputData = ({
         Expiration: date,
         Status: "Awaiting",
       });
-      
+
       const newData = [
         ...Data,
         {
@@ -210,19 +219,19 @@ const InputData = ({
       // Update state to remove the processed dry leaves
       const updatedDryLeaves = dryLeaves.filter(item => item.DryLeavesID !== selectedDryLeavesID);
       setDryLeaves(updatedDryLeaves);
-  
+
       // Reset relevant states
       setRefresh(!Refresh);
       setSelectedDryLeavesID("");
       setWeight(30);
       setDate("");
-  
+
       console.log("Flour posted successfully:", response.data);
     } catch (error) {
       console.error("Error posting flour:", error);
     }
   };
-  
+
 
   const postShipment = async () => {
     console.log("Posting Shipment with data:", {

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import WidgetContainer from '../components/Cards/WidgetContainer';
 
-const Countdown = ({ expired = false, expiredTime, color, image, processed = false }) => {
+const Countdown = ({ expired = false, expiredTime, color, image, processed = false, thrown = false }) => {
   const [timeLeft, setTimeLeft] = useState({ hours: '0h', minutes: '0m' });
 
   useEffect(() => {
@@ -36,7 +36,7 @@ const Countdown = ({ expired = false, expiredTime, color, image, processed = fal
       >
         <div className="flex justify-center items-center mr-1 gap-2">
           <span className="font-montserrat text-xs font-medium leading-14 tracking-normal text-center truncate flex items-center">
-            {processed ? "Processed" : (expired ? "Expired": <>{timeLeft.hours}{timeLeft.minutes}</>)}
+            {processed ? "Processed" : (thrown ? "Thrown" : (expired ? "Expired" : <>{timeLeft.hours}{timeLeft.minutes}</>))}
           </span>
           <img src={image} alt="Countdown" className="w-4 h-4" /> 
         </div>
@@ -49,6 +49,9 @@ Countdown.propTypes = {
   expiredTime: PropTypes.string.isRequired,
   color: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
+  expired: PropTypes.bool,
+  processed: PropTypes.bool,
+  thrown: PropTypes.bool,
 };
 
 export default Countdown;

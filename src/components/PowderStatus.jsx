@@ -3,15 +3,19 @@ import PropTypes from 'prop-types';
 import WidgetContainer from './Cards/WidgetContainer';
 import ReadyIcon from "@assets/ReadyIcon.svg";
 import ProcessedIcon from "@assets/Status.svg";
+import ExpiredIcon from "@assets/ExpiredWarning.svg";
 import ThrownIcon from "@assets/Thrown.svg";
 
-const PowderStatus = ({ ready, processed, thrown }) => {
+const PowderStatus = ({ ready, processed, thrown, expired }) => {
   const getStatusTheme = () => {
     if (ready) {
       return { color: "#C0CD30", image: ReadyIcon, text: "Ready"};
     }
     if (processed) {
       return { color: "#D4965D80", image: ProcessedIcon, text: "Processed" };
+    }
+    if (expired) {
+      return { color: "#D45D5D", image: ExpiredIcon, text: "Expired" };
     }
     if (thrown) {
       return { color: "#9E2B2B80", image: ThrownIcon, text: "Thrown" };
