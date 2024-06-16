@@ -49,10 +49,10 @@ function Dashboard() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.35, delay: 0.5 }} className="flex flex-col justify-stretch gap-2 xl:flex-row items-center">
-           <div className=" container h-full md:max-w-2xl xl:max-w-4xl"><WidgetContainer title="Total Production">
+           <div className=" container h-full md:max-w-2xl xl:max-w-4xl"><WidgetContainer title="Total Production" container = {false}>
                 <BarChart title={Bartitle} labels={Barlabels} data={Bardata} />
             </WidgetContainer></div>
-            <div className=" container h-full md:max-w-2xl xl:max-w-sm"><WidgetContainer>
+            <div className=" container h-full md:max-w-2xl xl:max-w-sm"><WidgetContainer container = {false}>
                 <PieChart labels={Pielabels} data={Piedata} />
             </WidgetContainer></div>
         </motion.div>
