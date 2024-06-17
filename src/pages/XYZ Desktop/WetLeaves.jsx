@@ -76,7 +76,7 @@ const WetLeaves = () => {
           if (leaf.Status === 'Processed') {
             stats.processed += leaf.Weight;
           }
-          else if (new Date(leaf.ReceivedTime) < new Date()) {
+          else if (new Date(leaf.Expiration) < new Date() || leaf.Status == "Thrown") {
             stats.wasted += leaf.Weight;
           }
           else if (leaf.Status === 'Awaiting') {
@@ -101,8 +101,8 @@ const WetLeaves = () => {
       id: leaf.WetLeavesID,
       name: user ? user.Username : 'Unknown',
       weight: leaf.Weight,
-      status: new Date(leaf.ReceivedTime) < new Date() ? "Expired" : leaf.Status,
-      expiration: formatDate((leaf.ReceivedTime)),
+      status: new Date(leaf.Expiration) < new Date() ? "Expired" : leaf.Status,
+      expiration: formatDate((leaf.Expiration)),
     };
   });
 
@@ -261,7 +261,7 @@ const WetLeaves = () => {
         <LeavesPopup
           weight={selectedRowData.weight}
           centra_name={selectedRowData.name}
-          collectedDate={selectedRowData.receivedTime}
+          collectedDate={selectedRowData.Expiration}
           expiredDate={selectedRowData.expiration}
           ref={leavesModalRef}
           wet_leaves={true}

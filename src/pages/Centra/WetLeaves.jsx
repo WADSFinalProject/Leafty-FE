@@ -21,6 +21,8 @@ import { API_URL } from '../../App';
 import WetLeavesDetail from '../../assets/WetLeavesDetail.svg';
 import LoadingStatic from "@components/LoadingStatic"
 import Throw from "@assets/Thrown.svg";
+import { useCookies } from 'react-cookie';
+import Popup from '../../components/Popups/Popup';
 
 function WetLeaves() {
   const [openDrawer, setOpenDrawer] = useState(false);
@@ -29,9 +31,16 @@ function WetLeaves() {
   const [ThrownLeavesData, setThrownLeavesData] = useState([]);
   const [processedLeavesData, setProcessedLeavesData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
+  const [WetLeavesDailyLimit, setWetLeavesDailyLimit] = useState(30);
   const UserID = useOutletContext();
+  const refModal = useRef();
+  const [cookies, setCookie] = useCookies(['WetLeavesDailyLimit']);
 
-  const WetLeavesDailyLimit = 30;
+  function handleWetLeavesDailyLimit() {
+    const newWetLeavesDailyLimit = !WetLeavesDailyLimit; // Negate the current value to get the new value
+    setWetLeavesDailyLimit(newWetLeavesDailyLimit); // Update the state
+    setCookie("WetLeavesDailyLimit", newWetLeavesDailyLimit); // Set the cookie with the new value
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -201,6 +210,7 @@ function WetLeaves() {
         />
       )}
       <Drawer WetLeaves Data={wetLeavesData} setData={setWetLeavesData} UserID={UserID} includeFourthSection={false} showThirdInput={false} firstText="Date" secondText="Weight" firstImgSrc={DateIcon} secondImgSrc={WeightLogo} />
+      <Popup />
     </>
   );
 }
