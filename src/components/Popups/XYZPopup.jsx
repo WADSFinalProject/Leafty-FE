@@ -19,20 +19,24 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [currentComponent, setCurrentComponent] = useState(1);
     const [shipmentData, setShipmentData] = useState(shipment);
     const [harbor, setHarbor] = useState({});
+    const [harborName, setHarborName] = useState("Username");
+    const [harborPhone, setHarborPhone] = useState("0");
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_URL}/user/get_role/2`);
-                setHarbor(response.data);
+                setHarbor(response.data[0])
+                setHarborName(response.data[0].Username);
+                setHarborPhone(response.data[0].PhoneNumber);
             } catch (error) {
                 console.error('Error fetching data:', error);
                 // Handle error states here if needed
             }
         };
-
         fetchData();
+        setLoading(false);
     }, []);
 
     useEffect(() => {
@@ -89,7 +93,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
 
     const [rescalledWeight, SetRescalledWeight] = useState(0);
 
-    const textHarborContact = `Hello, ${harbor[0].Username},
+    const textHarborContact = `Hello, ${harborName || "Username"},
 I hope this message finds you well. I am writing to inquire about the status of Expedition #${shipment.ShipmentID}. 
 Could you please provide an update on whether it has arrived safely at its destination?
 As we await confirmation, any details regarding the condition of the shipment or any special instructions would be greatly appreciated.
@@ -158,11 +162,11 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                     </div>
                     <div className='mt-2'>
                         {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor[0].PhoneNumber} text = {textHarborContact}/>}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harborPhone} text = {textHarborContact}/>}
                         {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
-                        {currentComponent === 3 && <DownloadPDF harbor UserID={shipment.UserID} shipment = {shipment} />}
+                        {currentComponent === 3 && <DownloadPDF harbor UserID={harbor.UserID} shipment = {shipment} />}
                         {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
                             <div className='p-2'>
@@ -187,7 +191,7 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         {/* If rescalling weight == Shipment Weight show this 6th current component*/}
                         {currentComponent === 6 && <HarborReception title="Centra Reception" containers={centracontainers} />}
                         {/* Update the Centra reception file to true*/}
-                        {currentComponent === 7 && <ReceptionDetail />}
+                        {currentComponent === 7 && <DownloadPDF centra UserID={shipment.UserID} shipment = {shipment} />}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>
                         {currentComponent !== 1 ? (
