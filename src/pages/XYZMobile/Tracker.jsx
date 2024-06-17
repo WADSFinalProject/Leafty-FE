@@ -110,7 +110,7 @@ function Tracker() {
                             </span>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
-                                {formatDate(shipment.ShipmentDate)}
+                                {shipment.ShipmentDate && formatDate(shipment.ShipmentDate)}
                             </span>
                         </div>
                         {courier && (
