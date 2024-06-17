@@ -6,16 +6,16 @@ import WidgetContainer from '../../components/Cards/WidgetContainer';
 import InnerPlugins from '../../assets/InnerPlugins.svg';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import axios from 'axios';
-import { API_URL } from "../../App"; // Adjust the import according to your project structure
-import Tracker from './Tracker'; // Import Tracker component
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { API_URL } from "../../App"; 
+import Tracker from './Tracker'; 
+import { useNavigate } from 'react-router-dom'; 
 
 function XYZShipmentList() {
     const [shipments, setShipments] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedShipment, setSelectedShipment] = useState(null);
 
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate(); 
 
     useEffect(() => {
         const fetchShipments = async () => {
@@ -40,7 +40,7 @@ function XYZShipmentList() {
     const handleShipmentClick = (shipment) => {
         console.log("Shipment clicked:", shipment);
         setSelectedShipment(shipment);
-        navigate(`/xyzmobile/tracker/${shipment.ShipmentID}`); // Navigate to Tracker page with shipment ID
+        navigate(`/xyzmobile/tracker/${shipment.ShipmentID}`); 
     };
 
     const filteredShipments = shipments.filter(shipment =>

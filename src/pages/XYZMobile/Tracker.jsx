@@ -13,6 +13,8 @@ import { API_URL } from "../../App"; // Adjust the import according to your proj
 function Tracker() {
     const { id } = useParams(); // Get shipment ID from URL params
     const [shipment, setShipment] = useState(null);
+    const [courier, setCourier] = useState(null);
+    const [users, setUsers] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
 
     useEffect(() => {
@@ -22,12 +24,36 @@ function Tracker() {
                 const response = await axios.get(`${API_URL}/shipment/getid/${id}`);
                 console.log("Shipment details fetched successfully:", response.data);
                 setShipment(response.data);
+                fetchCourier(response.data.CourierID);
             } catch (error) {
                 console.error('Error fetching shipment details:', error);
             }
         };
 
+        const fetchCourier = async (courierId) => {
+            try {
+                console.log("Fetching courier details from API...");
+                const response = await axios.get(`${API_URL}/courier/get/${courierId}`);
+                console.log("Courier details fetched successfully:", response.data);
+                setCourier(response.data);
+            } catch (error) {
+                console.error('Error fetching courier details:', error);
+            }
+        };
+
+        const fetchUsers = async () => {
+            try {
+                console.log("Fetching all users from API...");
+                const response = await axios.get(`${API_URL}/user/get`);
+                console.log("Users fetched successfully:", response.data);
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
         fetchShipment();
+        fetchUsers();
     }, [id]);
 
     const handleButtonClick = () => {
@@ -62,11 +88,18 @@ function Tracker() {
                                 {shipment.ShipmentDate}
                             </span>
                         </div>
+                        {courier && (
+                            <div className="flex space-x-2 mt-2">
+                                <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
+                                    Courier: {courier.CourierName}
+                                </span>
+                            </div>
+                        )}
                     </div>
                 </div>
             </WidgetContainer>
             <VerticalStepper step={1} />
-            <XYZPopup shipment={shipment} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+            <XYZPopup shipment={shipment} courier={courier} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </>
     );
 }

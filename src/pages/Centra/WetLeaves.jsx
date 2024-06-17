@@ -39,8 +39,8 @@ function WetLeaves() {
         const response = await axios.get(`${API_URL}/wetleaves/get_by_user/${UserID}`);
         const data = response.data;
         const currentTime = new Date();
-        setWetLeavesData(data.filter(item => new Date(item.ReceivedTime) > currentTime && item.Status === "Awaiting"));
-        setExpiredLeavesData(data.filter(item => new Date(item.ReceivedTime) < currentTime && item.Status === "Awaiting")); // Corrected line
+        setWetLeavesData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
+        setExpiredLeavesData(data.filter(item => new Date(item.Expiration) < currentTime && item.Status === "Awaiting")); // Corrected line
         setProcessedLeavesData(data.filter(item => item.Status === "Processed"));
         setThrownLeavesData(data.filter(item => item.Status === "Thrown"))
         console.log(data);
@@ -84,7 +84,7 @@ function WetLeaves() {
                     </span>
                   </div>
                   <div className="flex ml-auto items-center">
-                    <Countdown expiredTime={item.ReceivedTime} color="#79B2B7" image={CountdownIcon} />
+                    <Countdown expiredTime={item.Expiration} color="#79B2B7" image={CountdownIcon} />
                   </div>
                 </WidgetContainer>
               </div>
@@ -119,7 +119,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown processed={true} expiredTime={item.ReceivedTime} color="#D4965D80" image={ProcessedLogo} />
+                  <Countdown processed={true} expiredTime={item.Expiration} color="#D4965D80" image={ProcessedLogo} />
                 </div>
               </WidgetContainer>
             </div>
@@ -147,7 +147,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown expired={true} expiredTime={item.ReceivedTime} color="#D45D5D" image={ExpiredWarningIcon} />
+                  <Countdown expired={true} expiredTime={item.Expiration} color="#D45D5D" image={ExpiredWarningIcon} />
                 </div>
               </WidgetContainer>
             </div>
@@ -175,7 +175,7 @@ function WetLeaves() {
                   </span>
                 </div>
                 <div className="flex ml-auto items-center">
-                  <Countdown thrown color="#D45D5D" image={Throw} expiredTime={item.ReceivedTime} />
+                  <Countdown thrown color="#D45D5D" image={Throw} expiredTime={item.Expiration} />
                 </div>
               </WidgetContainer>
             </div>
@@ -193,7 +193,7 @@ function WetLeaves() {
         <AddLeavesPopup
           code={selectedData.WetLeavesID}
           weight={selectedData.Weight + " Kg"}
-          expirationDate={selectedData.ReceivedTime}
+          expirationDate={selectedData.Expiration}
           imageSrc={WetLeavesDetail}
           status = {selectedData.Status}
           text="Wet Leaves"

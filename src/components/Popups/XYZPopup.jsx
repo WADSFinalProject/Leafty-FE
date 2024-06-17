@@ -12,7 +12,7 @@ import VerificationWait from '../../components/VerificationWait';
 import ReceptionDetail from '../../components/ReceptionDetail';
 import Centralogo from '../../assets/centra.svg';
 
-function XYZPopup({ shipment, open, onClose }) {
+function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [currentComponent, setCurrentComponent] = useState(1); 
 
     useEffect(() => {
@@ -22,25 +22,6 @@ function XYZPopup({ shipment, open, onClose }) {
             document.getElementById('XYZPopup').close();
         }
     }, [open]);
-
-
-    function convertToLocalPhoneNumber(localPhoneNumber) {
-        // Check if the number starts with '0'
-        if (localPhoneNumber.startsWith('0')) {
-            // Remove leading '0' and prepend '62'
-            return '62' + localPhoneNumber.substring(1);
-        } else {
-            // If it doesn't start with '0', assume it's already formatted correctly
-            return localPhoneNumber;
-        }
-    }
-
-    
-    function PhoneToSendWhatsappFormat(phoneNumber, text){
-        const encodedText = encodeURIComponent(text);
-        const encodedPhoneNumber = convertToLocalPhoneNumber(phoneNumber);
-        return `https://api.whatsapp.com/send/?phone={phoneNumber}&text=${encodedText}&type=phone_number&app_absent=0`
-    }
 
     const handleNext = () => {
         setCurrentComponent(prevComponent => (prevComponent % 7) + 1); 
@@ -53,6 +34,11 @@ function XYZPopup({ shipment, open, onClose }) {
     if (!shipment) {
         return null;
     }
+
+    const getUser = (userId) => {
+        const user = users.find(u => u.UserID === userId);
+        return user ? user.Username : 'Unknown User';
+    };
 
     const containers = [
         { label: 'Centra Name' },
@@ -90,24 +76,25 @@ function XYZPopup({ shipment, open, onClose }) {
                                 {shipment.ShipmentDate}
                             </span>
                         </div>
+                        <div className="flex space-x-2 mt-2">
+                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
+                                Centra: {getUser(shipment.UserID)}
+                            </span>
+                        </div>
                         <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                                 {shipment.FlourWeightSum} Kg
                             </span>
+                        </div>
+                        {courier && (
+                        <div className="flex space-x-2">
                             <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                Courier - {shipment.CourierName}
+                                Courier - {courier.CourierName}
                             </span>
                         </div>
-                        <div className="flex space-x-2">
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                User ID: {shipment.UserID}
-                            </span>
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                User Name: {shipment.UserName}
-                            </span>
-                        </div>
+                        )}
                     </div>
                     <div className='p-1'>
                         <WidgetContainer borderRadius="20px" container={false}>
@@ -131,11 +118,7 @@ function XYZPopup({ shipment, open, onClose }) {
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
                                     <div className='flex pb-1'>
                                         <img src={Centralogo} alt="Central Logo" style={{ maxWidth: '100px' }} className='w-4 h-7' />
-                                        <span className='font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>{shipment.CentraName}</span>
-                                    </div>
-                                    <div className='flex pb-1'>
-                                        <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
-                                        <span className='font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>{shipment.Address}</span>
+                                        <span className='font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>{getUser(shipment.UserID)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -200,6 +183,8 @@ function XYZPopup({ shipment, open, onClose }) {
 
 XYZPopup.propTypes = {
     shipment: PropTypes.object,
+    courier: PropTypes.object,
+    users: PropTypes.array,
     open: PropTypes.bool.isRequired,
     onClose: PropTypes.func.isRequired,
 };

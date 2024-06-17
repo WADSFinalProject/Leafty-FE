@@ -72,7 +72,7 @@ const InputData = ({
         .then((response) => {
           // Filter items based on ReceivedTime and Status
           const filteredWetLeaves = response.data.filter(item =>
-            new Date(item.ReceivedTime) > currentTime && item.Status === "Awaiting"
+            new Date(item.Expiration) > currentTime && item.Status === "Awaiting"
           );
           setWetLeaves(filteredWetLeaves);
         })
@@ -122,7 +122,8 @@ const InputData = ({
       const response = await axios.post(API_URL + "/wetLeaves/post", {
         UserID: String(UserID),
         Weight: weight,
-        ReceivedTime: date,
+        ReceivedTime: new Date(),
+        Expiration: date,
         Status: "Awaiting",
       });
       const newData = [
@@ -131,7 +132,8 @@ const InputData = ({
           WetLeavesID: response.data.WetLeavesID,
           UserID: String(UserID),
           Weight: weight,
-          ReceivedTime: date,
+          ReceivedTime: new Date(),
+          Expiration: date,
           Status: "Awaiting",
         }
       ];
@@ -248,6 +250,8 @@ const InputData = ({
         ShipmentQuantity: shipmentQuantity, // Include Shipment Quantity
         FlourIDs: powderIDs.map((item) => item.FlourID), // Extract FlourIDs for posting
       });
+      // Update the status of selected dry leaves to "Processed"
+      powderIDs.map(async(item) => await axios.put(API_URL + "/flour/update_status/" + item.FlourID, { "Status": "Processed" }),)
       console.log("Shipment posted successfully:", response.data);
     } catch (error) {
       console.error("Error posting shipment:", error);
