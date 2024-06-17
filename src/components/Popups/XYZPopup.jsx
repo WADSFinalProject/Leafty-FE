@@ -84,9 +84,10 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                 {shipment.ShipmentQuantity} Packages
                             </span>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            {shipment.ShipmentDate ?
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
                                 {formatDate(shipment.ShipmentDate)}
-                            </span>
+                            </span> : <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Not Delivered</span>}
                         </div>
                         {/* <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
