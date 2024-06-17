@@ -37,6 +37,7 @@ const WetLeaves = () => {
     wasted: 0,
     total: 0
   });
+  const [dailyLimit, setDailyLimit] = useState(0);
   const leavesModalRef = useRef(null);
 
   const formatDate = (dateString) => {
@@ -54,7 +55,6 @@ const WetLeaves = () => {
     }
   };
 
-
   useEffect(() => {
     const fetchWetLeaves = async () => {
       try {
@@ -62,7 +62,6 @@ const WetLeaves = () => {
         const usersResponse = await axios.get(`${API_URL}/user/get`);
         setWetLeaves(wetLeavesResponse.data);
         setUsers(usersResponse.data);
-        console.log(wetLeavesResponse.data)
 
         const stats = {
           awaiting: 0,
@@ -71,22 +70,29 @@ const WetLeaves = () => {
           total: 0
         };
 
+        let dailyWeight = 0;
+        const today = dayjs().startOf('day');
+
         wetLeavesResponse.data.forEach(leaf => {
+          const receivedTime = dayjs(leaf.ReceivedTime);
           stats.total += leaf.Weight;
           if (leaf.Status === 'Processed') {
             stats.processed += leaf.Weight;
           }
           else if (new Date(leaf.Expiration) < new Date() || leaf.Status == "Thrown") {
             stats.wasted += leaf.Weight;
-          }
-          else if (leaf.Status === 'Awaiting') {
+          } else if (leaf.Status === 'Awaiting') {
             stats.awaiting += leaf.Weight;
-          } 
+          }
+
+          // Check if the leaf was received today
+          if (receivedTime.isSame(today, 'day')) {
+            dailyWeight += leaf.Weight;
+          }
         });
 
         setStats(stats);
-
-        console.log(stats)
+        setDailyLimit(dailyWeight);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -115,7 +121,7 @@ const WetLeaves = () => {
     }
     return 0;
   });
-  
+
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
@@ -187,6 +193,9 @@ const WetLeaves = () => {
         admin={false}
         onDetailsClick={handleDetailsClick}
       />
+      <div className="daily-limit">
+        <h3>Daily Limit: {dailyLimit}/30 kg</h3>
+      </div>
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
