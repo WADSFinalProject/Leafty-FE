@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import ShipmentLogo from '../../assets/ShipmentDetail.svg';
 import PackageCount from '../../assets/Packagecount.svg';
-import Date from '../../assets/Date.svg';
+import DateIcon from '../../assets/Date.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import ShipmentWeight from '../../assets/ShipmentWeight.svg';
 import Courier from '../../assets/Courier.svg';
@@ -53,6 +53,19 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
         { label: 'Date Received' }
     ];
 
+    const formatDate = (date, includeTime = false) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const dateString = new Date(date).toLocaleDateString('id-ID', options);
+        
+        if (includeTime) {
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const timeString = new Date(date).toLocaleDateString('id-ID', timeOptions);
+            return `${dateString} ${timeString}`;
+        }
+    
+        return dateString;
+    }
+    
     return (
         <>
             <dialog id="XYZPopup" className="modal modal-bottom">
@@ -70,18 +83,18 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                                 {shipment.ShipmentQuantity} Packages
                             </span>
-                            <img src={Date} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                {shipment.ShipmentDate}
+                                {formatDate(shipment.ShipmentDate)}
                             </span>
                         </div>
-                        <div className="flex space-x-2">
+                        {/* <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                                 {shipment.ShipmentWeight} Kg
                             </span>
                         </div>
-   
+    */}
                     </div>
                     <div className='p-1'>
                         <WidgetContainer borderRadius="20px" container={false}>
@@ -169,7 +182,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
-                    <button>close</button>
+                    <button onClick = {onClose}>close</button>
                 </form>
             </dialog>
         </>

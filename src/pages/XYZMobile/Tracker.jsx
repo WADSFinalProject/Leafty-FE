@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useOutlet, useOutletContext, useParams } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import PackageCount from '../../assets/Packagecount.svg';
-import Date from '../../assets/Date.svg';
+import DateIcon from '../../assets/Date.svg';
 import VerticalStepper from '../../components/VerticalStepper';
 import CircularButton from '../../components/CircularButton';
 import Shipments from '../../assets/Shipments.svg';
@@ -76,6 +76,20 @@ function Tracker() {
         return <div>Loading shipment details...</div>;
     }
 
+    const formatDate = (date, includeTime = false) => {
+        const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+        const dateString = new Date(date).toLocaleDateString('id-ID', options);
+        
+        if (includeTime) {
+            const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
+            const timeString = new Date(date).toLocaleDateString('id-ID', timeOptions);
+            return `${dateString} ${timeString}`;
+        }
+    
+        return dateString;
+    }
+    
+
     return (
         <>
             <WidgetContainer borderRadius="20px">
@@ -89,14 +103,14 @@ function Tracker() {
                         <span className="font-montserrat text-16px font-semibold tracking-02em ">
                             Expedition #{shipment.ShipmentID}
                         </span>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 items-center">
                             <img src={PackageCount} alt="Package Count" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
-                                {shipment.ShipmentQuantity} Packages
+                                {shipment.ShipmentQuantity} 
                             </span>
-                            <img src={Date} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
-                                {shipment.ShipmentDate}
+                                {formatDate(shipment.ShipmentDate)}
                             </span>
                         </div>
                         {courier && (
