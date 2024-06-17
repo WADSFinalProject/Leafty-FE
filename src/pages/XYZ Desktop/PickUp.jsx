@@ -7,11 +7,13 @@ import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io'; // Import ar
 import axios from 'axios';
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
 import '../../style/PaginatorColoring.css';
+import search from "../../assets/SearchLogo.svg";
 
 function Pickup() {
     const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
-    const [itemsPerPage, setItemsPerPage] = useState(8); // Default value
+    const [itemsPerPage, setItemsPerPage] = useState(8); // Default value\
+    const [searchTerm, setSearchTerm] = useState('');
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected);
@@ -47,9 +49,19 @@ function Pickup() {
         fetchShipments();
     }, []);
 
+    const filteredShipments = shipments.filter(shipment => {
+        const searchTermLower = searchTerm.toLowerCase();
+        const shipmentIDMatch = shipment.ShipmentID.toString().includes(searchTerm.replace(/#/i, ''));
+        // const shipmentWeightMatch = shipment.Rescalled_Weight.toString().includes(searchTermLower.replace(/ kg/i, ''));
+        const shipmentDateMatch = formatDate(shipment.ShipmentDate).toLowerCase().includes(searchTermLower);
+        const shipmentAmountMatch = shipment.ShipmentQuantity.toString().includes(searchTermLower.replace(/ packages/i, ''));
+        return shipmentIDMatch || shipmentAmountMatch || shipmentDateMatch;
+    });
+
     const offset = currentPage * itemsPerPage;
-    const currentPageData = shipments.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(shipments.length / itemsPerPage);
+    const currentPageData = filteredShipments.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(filteredShipments.length / itemsPerPage);
+    const header = "Shipment";
 
     function formatDate(dateString) {
         if (!dateString) return "Not Delivered";
@@ -61,9 +73,21 @@ function Pickup() {
 
     return (
         <div className="container mx-auto w-full">
-            <span className="text-xl font-bold">
-                Uncompleted Delivery
-            </span>
+            <div className="flex flex-row justify-between m-0 items-center">
+                <h3 className="text-xl font-bold">{header}</h3>
+                <div className="table-header-actions flex flex-row gap-4 items-center justify-center">
+                    <label className="input input-bordered flex items-center gap-2 input-md">
+                        <img src={search} className="w-4 h-4" alt="search" />
+                        <input 
+                            type="text" 
+                            placeholder="Search by Courier Name or Expedition#ID" 
+                            value={searchTerm} 
+                            onChange={e => setSearchTerm(e.target.value)} 
+                            className="grow"
+                        />
+                    </label>
+                </div>
+            </div>
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
                     <motion.div

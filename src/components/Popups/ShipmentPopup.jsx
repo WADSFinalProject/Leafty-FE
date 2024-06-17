@@ -1,5 +1,5 @@
 import React from 'react';
-import axios from 'axios'; // Import axios for making API calls
+import axios from 'axios';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import ShipmentLogo from '../../assets/ShipmentDetail.svg';
 import PackageCount from '../../assets/Packagecount.svg';
@@ -11,7 +11,7 @@ import QRPage from '../../pages/QRPage';
 import Button from '@components/Button';
 import { API_URL } from '../../App'; // Adjust the import path as needed
 
-function ShipmentPopup({ code, weight, quantity, courier, onConfirm, ShipmentDate = false, confirmDeliver = false }) {
+function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfirm, ShipmentDate = false, confirmDeliver = false }) {
     const ShipmentText = `Expedition #${code}`;
 
     const handleConfirm = async () => {
@@ -29,6 +29,13 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm, ShipmentDat
         }
     };
 
+    const getUserName = (userID) => {
+        const user = users.find(user => user.UserID === userID);
+        return user ? user.Username : 'Unknown User';
+    };
+
+    console.log('Rendering ShipmentPopup with userID:', userID);
+
     return (
         <>
             <dialog id="ShipmentPopup" className="modal modal-bottom">
@@ -40,6 +47,9 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm, ShipmentDat
                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                             {ShipmentText}
                         </span>
+                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
+                            {getUserName(userID)}
+                        </span>
                         <div className="flex space-x-2">
                             <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
@@ -49,7 +59,6 @@ function ShipmentPopup({ code, weight, quantity, courier, onConfirm, ShipmentDat
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
                                 {ShipmentDate}
                             </span></>:<></> }
-                          
                         </div>
                     </div>
 
