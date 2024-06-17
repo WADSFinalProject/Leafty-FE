@@ -60,8 +60,8 @@ const CustomStepIcon = ({ active, completed }) => {
   };
   
 
-const VerticalStepper = (step = -1) => {
-  const [activeStep, setActiveStep] = useState(-1);
+const VerticalStepper = (step) => {
+  const [activeStep, setActiveStep] = useState(0);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);

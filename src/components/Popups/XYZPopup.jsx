@@ -177,11 +177,11 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                     </div>
                     <div className='mt-2'>
                         {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harborPhone} text = {textHarborContact}/>}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harborPhone} text={textHarborContact} />}
                         {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
-                        {currentComponent === 3 && <DownloadPDF harbor UserID={harbor.UserID} shipment = {shipment} />}
+                        {currentComponent === 3 && <DownloadPDF harbor UserID={harbor.UserID} shipment={shipment} />}
                         {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
                             <div className='p-2'>
@@ -205,10 +205,13 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         {currentComponent === 5 && <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
                         {currentComponent === 6 && <HarborReception title="Centra Reception" containers={centracontainers} />}
                         {/* Update the Centra reception file to true*/}
-                        {currentComponent === 7 && <DownloadPDF centra UserID={shipment.UserID} shipment = {shipment} />}
+                        {currentComponent === 7 && <div className='flex gap-2 flex-col'>
+                            <DownloadPDF harbor UserID={harbor.UserID} shipment={shipment} />
+                            <DownloadPDF centra UserID={shipment.UserID} shipment={shipment} />
+                        </div>}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>
-                        {currentComponent !== 1 ? (
+                        {currentComponent !== 1 && currentComponent !== 3 ? (
                             <button
                                 onClick={handlePrevious}
                                 className='font-montserrat text-sm font-medium leading-4 tracking-wide text-green-900 ml-3'
@@ -218,7 +221,7 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         ) : (
                             <div className="w-20"></div> // Empty div to maintain spacing
                         )}
-                        {currentComponent !== 7 && (
+                        {(currentComponent !== 1 && currentComponent !== 7) && (
                             <WidgetContainer container={false} backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full max-w-20 mr-2'>
                                 <button
                                     onClick={handleNext}

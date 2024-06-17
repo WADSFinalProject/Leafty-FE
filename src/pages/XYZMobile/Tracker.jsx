@@ -90,7 +90,7 @@ function Tracker() {
         return dateString;
     }
     
-    
+
 
     return (
         <>
@@ -128,7 +128,7 @@ function Tracker() {
                     </div>
                 </div>
             </WidgetContainer>
-            <VerticalStepper step={1} />
+            <VerticalStepper />
             <XYZPopup shipment={shipment} courier={shipment.CourierName} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </>
     );

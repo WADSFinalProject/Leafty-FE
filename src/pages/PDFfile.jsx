@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
     }
 });
 
-const PDFFile = ({ user, role, company, shipment, companyRole, shipmentQuantity }) => {
+const PDFFile = ({ user, role, company, shipment, companyRole, shipmentQuantity, shipmentWeight }) => {
     const userName = user?.Username ?? "User data not available";
     const userRole = role ?? "Role data not available";
     const companyName = company?.Username ?? "Company data not available";
@@ -108,10 +108,10 @@ const PDFFile = ({ user, role, company, shipment, companyRole, shipmentQuantity 
                             <Text style={styles.tableCell}>1</Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Powder Packages</Text>
+                            <Text style={styles.tableCell}>{role === "Harbor" ? "Powder Packages":"Powder"}</Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>{shipmentQuantity} Units</Text>
+                            <Text style={styles.tableCell}>{role === "Harbor" ? `${shipmentQuantity} Units`:`${shipmentWeight} Kg`}</Text>
                         </View>
                     </View>
                 </View>

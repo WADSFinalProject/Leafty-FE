@@ -69,7 +69,7 @@ function ScanResultsDrawer(props) {
         const response = await axios.get(`${API_URL}/shipments/ids`);
         const shipmentIds = response.data;
         console.log("All shipment IDs received: ", shipmentIds);
-  
+
         const shipmentId = shipmentIds.find(id => {
           console.log(id);;
           console.log(data.trim());;
@@ -79,12 +79,18 @@ function ScanResultsDrawer(props) {
           }
           return isMatch;
         });
-  
+
         if (shipmentId) {
           const shipmentResponse = await axios.get(`${API_URL}/shipment/getid/${shipmentId}`);
-          setShipmentDetails(shipmentResponse.data);
           console.log("Shipment details fetched successfully:", shipmentResponse.data);
-          setLoading(false);
+          if (shipmentResponse.data.ShipmentDate) {
+            setLoading(false);
+            setShipmentDetails(shipmentResponse.data);
+          }
+          else {
+            setPopupDescription("Shipment has not been delivered yet.");
+            setShowPopup(true);
+          }
         } else {
           console.log("No matching shipment ID found.");
           setShipmentDetails(null);
@@ -98,7 +104,7 @@ function ScanResultsDrawer(props) {
         setShowPopup(true);
       }
     }
-  
+
     if (data) {
       handleCheckShipmentIDs();
     }
@@ -237,7 +243,7 @@ function ScanResultsDrawer(props) {
                     <img src={PackageCount} alt="Date" className='flex justify-end w-6 h-auto' />
                   </div>
                 </WidgetContainer>
-                <Button onClick = {handleConfirm} className={"flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
+                <Button onClick={handleConfirm} className={"flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
               </div>
             </>
             }

@@ -9,7 +9,7 @@ import Download from "@assets/icons/download.svg";
 import ReceptionDetail from '../components/ReceptionDetail';
 import ReceptionFile from '../components/ReceptionFile';
 
-function DownloadPDF({UserID, shipment, harbor}) {
+function DownloadPDF({UserID, shipment, harbor, centra}) {
   const [user, setUser] = useState(null);  // Initialize to null for clarity
   const [company, setCompany] = useState(null);  // Initialize to null for clarity
   const shipmentData = shipment;
@@ -47,8 +47,8 @@ function DownloadPDF({UserID, shipment, harbor}) {
 
   return (
     <WidgetContainer container = {false} className={"flex rounded-full"}>
-      <ReceptionFile fileName = {`Expedition #${shipment.ShipmentID} - ${harbor && "Harbor"} Official Statement.pdf`} harbor = {harbor} download =  {user ? (
-        <PDFDownloadLink document={<PDFFile user={user} role = {user.role.RoleName} shipment = {shipmentData} shipmentQuantity = {shipment.ShipmentQuantity} checkInDate = {shipment} company = {company} companyRole={company?.role.RoleName}/>} fileName={`Expedition #${shipment.ShipmentID} - ${harbor && "Harbor"} Official Statement.pdf`}>
+      <ReceptionFile fileName = {`Expedition #${shipment.ShipmentID} - ${harbor ? "Harbor" : ""} ${centra ? `Centra `:""}  Official Statement.pdf`} harbor = {harbor} download =  {user ? (
+        <PDFDownloadLink document={<PDFFile user={user} role = {user.role.RoleName} shipment = {shipmentData} shipmentQuantity = {shipment.ShipmentQuantity} shipmentWeight = {shipment.ShipmentWeight} checkInDate = {shipment} company = {company} companyRole={company?.role.RoleName}/>} fileName={`Expedition #${shipment.ShipmentID} - ${harbor && "Harbor"} ${centra && "Centra"} Official Statement.pdf`}>
           {({ loading }) => (
               <div
                 className="p-2 w-fit gap-2 h-fit rounded-full flex items-center justify-center mt-2"
