@@ -11,13 +11,33 @@ import HarborReception from '../../components/HarborReception';
 import VerificationWait from '../../components/VerificationWait';
 import ReceptionDetail from '../../components/ReceptionDetail';
 import Centralogo from '../../assets/centra.svg';
+import DownloadPDF from '../../pages/Downloadpdf';
+import axios from 'axios';
+import { API_URL } from '../../App';
 
 function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [currentComponent, setCurrentComponent] = useState(1);
+    const [shipmentData, setShipmentData] = useState(shipment);
+    const [harbor, setHarbor] = useState("");
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(`${API_URL}user/get_role/2`);
+                setHarbor(response.data);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                // Handle error states here if needed
+            }
+        };
+
+        fetchData();
+    }, []);
 
     useEffect(() => {
         if (open) {
             document.getElementById('XYZPopup').showModal();
+            console.log(shipment)
         } else {
             document.getElementById('XYZPopup').close();
         }
@@ -65,6 +85,19 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
 
         return dateString;
     }
+
+    const [rescalledWeight, SetRescalledWeight] = useState(0);
+
+    const textHarborContact = `
+    Hello, ${harbor.Username},
+    I hope this message finds you well. I am writing to inquire about the status of Expedition #${shipment.ShipmentID}. 
+    Could you please provide an update on whether it has arrived safely at its destination?
+    As we await confirmation, any details regarding the condition of the shipment or any special instructions would be greatly appreciated.
+    Thank you for your attention to this matter. Looking forward to your prompt response.
+    
+    Best regards,
+    
+`;
 
     return (
         <>
@@ -126,13 +159,13 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                             </div>
                         </WidgetContainer>
                     </div>
-                    <div>
+                    <div className='mt-2'>
                         {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" />}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor.phoneNumber}/>}
                         {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
-                        {currentComponent === 3 && <ReceptionDetail />}
+                        {currentComponent === 3 && <DownloadPDF harbor UserID={shipment.UserID} shipment = {shipment} />}
                         {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
                             <div className='p-2'>
@@ -146,7 +179,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                     <div className="w-full max-w ml- mt-4">
                                         <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>Re-scaled weight</p>
                                         <WidgetContainer backgroundColor="#94C3B380" borderRadius="13.5px" borderWidth="2px" borderColor="#79B2B7" className='mt-2'>
-                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" />
+                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" value = {rescalledWeight} onChange = {(e) =>{e.target.value}}/>
                                         </WidgetContainer>
                                     </div>
                                 </WidgetContainer>
