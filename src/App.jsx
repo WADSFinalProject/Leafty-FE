@@ -61,6 +61,7 @@ import DryLeavesOverview from "./pages/XYZ Desktop/DryLeavesOverview";
 import PowderOverview from "./pages/XYZ Desktop/PowderOverview";
 import DownloadPDF from "./pages/Downloadpdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import AdminShipment from "./pages/Admin/AdminShipment";
 
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
@@ -240,6 +241,7 @@ function App() {
                 <Route path="dry leaves" element={<AdminDryLeaves />} />
                 <Route path="powder" element={<AdminPowder />} />
                 <Route path="user management" element={<AdminUserTable />} />
+                <Route path="shipment" element={<AdminShipment />} />
                 <Route path="user approval" element={<AdminUserApproval />} />
               </Route>
             </Route>

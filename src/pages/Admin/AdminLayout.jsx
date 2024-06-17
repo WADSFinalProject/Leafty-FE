@@ -106,13 +106,13 @@ function AdminLayout() {
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves" />} onClick={() => navigate("/admin/dry leaves", { replace: true })}> Dry Leaves </MenuItem>
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} alt="Powder" />} onClick={() => navigate("/admin/powder", { replace: true })}> Powder </MenuItem>
                         </SubMenu>
-                        <MenuItem icon={<img src={shipment} alt="Shipment" />}> Shipment </MenuItem>
+                        <MenuItem icon={<img src={shipment} alt="Shipment" />} onClick={() => navigate("/admin/shipment", { replace: true })}> Shipment </MenuItem>
                         <MenuItem icon={<img src={pickup} alt="Pickup" />} onClick={() => navigate("/admin/user management", { replace: true })}> User Management </MenuItem>
                         <MenuItem icon={<img src={reception} alt="Reception" />} onClick={() => navigate("/admin/user approval", { replace: true })}> User Approval </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>
-            <motion.div initial={{ x: 750 }} transition={{ duration: 1.5, type: "spring" }} animate={{ x: 0 }} className="flex flex-col border h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl">
+            <motion.div initial={{ x: 750 }} transition={{ duration: 1.5, type: "spring" }} animate={{ x: 0 }} className="flex flex-col border h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-full h-full sm:rounded-2xl">
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">

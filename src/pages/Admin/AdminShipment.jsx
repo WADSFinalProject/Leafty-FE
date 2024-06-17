@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
@@ -11,13 +11,11 @@ import LongContainer from '@components/Cards/LongContainer';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import axios from 'axios'; // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
-import search from "../../assets/SearchLogo.svg";
 
-function Shipment() {
+function AdminShipment(){
     const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
-    const [searchTerm, setSearchTerm] = useState('');
 
     const handlePageClick = (newPage) => {
         setCurrentPage(newPage);
@@ -43,6 +41,7 @@ function Shipment() {
         const fetchShipments = async () => {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get`);
+                // Fetch details for each FlourID in each shipment
                 const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
@@ -52,6 +51,7 @@ function Shipment() {
                         };
                     }));
 
+                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
                     const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
 
                     const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
@@ -73,20 +73,8 @@ function Shipment() {
     }, []);
 
     const offset = currentPage * itemsPerPage;
-
-    const filteredShipments = shipments.filter(shipment => {
-        const searchTermLower = searchTerm.toLowerCase();
-        const courierMatch = shipment.CourierName.toLowerCase().includes(searchTermLower);
-        const shipmentIDMatch = shipment.ShipmentID.toString().includes(searchTerm.replace(/#/i, ''));
-        const shipmentWeightMatch = shipment.ShipmentWeight.toString().includes(searchTermLower.replace(/ kg/i, ''));
-        const shipmentDateMatch = formatDate(shipment.ShipmentDate).toLowerCase().includes(searchTermLower);
-        const shipmentAmountMatch = shipment.ShipmentQuantity.toString().includes(searchTermLower.replace(/ packages/i, ''));
-        return courierMatch || shipmentIDMatch || shipmentWeightMatch || shipmentAmountMatch || shipmentDateMatch;
-    });
-
-    const currentPageData = filteredShipments.slice(offset, offset + itemsPerPage);
-    const pageCount = Math.ceil(filteredShipments.length / itemsPerPage);
-    const header = "Shipment";
+    const currentPageData = shipments.slice(offset, offset + itemsPerPage);
+    const pageCount = Math.ceil(shipments.length / itemsPerPage);
 
     const stats = [
         {
@@ -127,26 +115,15 @@ function Shipment() {
         if (!dateString) return "Not Delivered";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const date = new Date(dateString);
-        return date.toLocaleDateString(undefined, options);
+        return "    "+date.toLocaleDateString(undefined, options);
     }
 
+    
     return (
         <div className="container mx-auto w-full">
-            <div className="flex flex-row justify-between m-0 items-center">
-                <h3 className="text-xl font-bold">{header}</h3>
-                <div className="table-header-actions flex flex-row gap-4 items-center justify-center">
-                    <label className="input input-bordered flex items-center gap-2 input-md">
-                        <img src={search} className="w-4 h-4" alt="search" />
-                        <input 
-                            type="text" 
-                            placeholder="Search by Courier Name or Expedition#ID" 
-                            value={searchTerm} 
-                            onChange={e => setSearchTerm(e.target.value)} 
-                            className="grow"
-                        />
-                    </label>
-                </div>
-            </div>
+            <span className="text-xl font-bold">
+                Shipment
+            </span>
             <div className='flex flex-col gap-2'>
                 {currentPageData.map((item, index) => (
                     <motion.div
@@ -185,30 +162,8 @@ function Shipment() {
                     <IoIosArrowForward size={24} />
                 </button>
             </div>
-            <div className="flex flex-wrap gap-4 justify-stretch">
-                {stats.map((stat, index) => (
-                    <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.1, delay: stat.delay }}
-                        className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
-                    >
-                        <StatsContainer
-                            label={stat.label}
-                            value={stat.value}
-                            unit={stat.unit}
-                            description=""
-                            color={stat.color}
-                            modal={false}
-                            frontIcon={stat.icon}
-                        />
-                    </motion.div>
-                ))}
-            </div>
         </div>
     );
 }
 
-export default Shipment;
+export default AdminShipment;
