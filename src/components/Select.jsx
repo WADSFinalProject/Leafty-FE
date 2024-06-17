@@ -1,21 +1,24 @@
 const SelectRoles = ({ role, onChange }) => {
-    const handleChange = (e) => {
-        onChange(e.target.value);
-    };
-    return (<>
-        <div className="flex flex-col justify-center">
-            <div className={`px-0 py-1`}>
-                <span className="label-text font-semibold">Role</span>
-            </div>
-            <select value={role} onChange={handleChange} className="select select-bordered w-full max-w-xs">
-                <option disabled selected={role.role === "unverified"}>Unverified</option>
-                <option selected={role.role === "Centra"}>Centra</option>
-                <option selected={role.role === "Company"}>Company</option>  
-                <option selected={role.role === "Admin"}>Admin</option>
-            </select>
-        </div>
-    </>
-    );
+  const handleChange = (e) => {
+    onChange(e.target.value);
+  };
+  
+  // Default role to "Unverified" if not provided
+  const currentRole = role || "Unverified";
+
+  return (
+    <div className="flex flex-col justify-center">
+      <div className={`px-0 py-1`}>
+        <span className="label-text font-semibold">Role</span>
+      </div>
+      <select value={currentRole} onChange={handleChange} className="select select-bordered w-full max-w-xs">
+        <option value="Unverified" disabled={currentRole === "Unverified"}>Unverified</option>
+        <option value="Centra" disabled={currentRole === "Centra"}>Centra</option>
+        <option value="Company" disabled={currentRole === "Company"}>Company</option>
+        <option value="Admin" disabled={currentRole === "Admin"}>Admin</option>
+      </select>
+    </div>
+  );
 }
 
 export default SelectRoles;

@@ -59,6 +59,8 @@ import React from "react";
 import AuthApi from "./AuthApi";
 import DryLeavesOverview from "./pages/XYZ Desktop/DryLeavesOverview";
 import PowderOverview from "./pages/XYZ Desktop/PowderOverview";
+import DownloadPDF from "./pages/Downloadpdf";
+import { PDFDownloadLink } from "@react-pdf/renderer";
 
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
@@ -242,6 +244,7 @@ function App() {
               </Route>
             </Route>
           </Route>
+          <Route path="/pdfdownload" element={<DownloadPDF/>} />
 
           <Route path="qr" element={<QRPage />} />
         </Routes>
