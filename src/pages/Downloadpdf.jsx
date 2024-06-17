@@ -3,13 +3,18 @@ import axios from 'axios';
 import PDFFile from './PDFfile'; 
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import { API_URL } from '../App';
+import LoadingStatic from "@components/LoadingStatic"
+import WidgetContainer from '../components/Cards/WidgetContainer';
+import Download from "@assets/icons/download.svg";
+import ReceptionDetail from '../components/ReceptionDetail';
+import ReceptionFile from '../components/ReceptionFile';
 
-function DownloadPDF() {
+function DownloadPDF({UserID, shipment, harbor}) {
   const [user, setUser] = useState(null);  // Initialize to null for clarity
   const [company, setCompany] = useState(null);  // Initialize to null for clarity
-  const UserID = "0de15ba4-ed58-4582-9b87-bd0f6e7c9998";
+  const shipmentData = shipment;
+  // const UserID = "0de15ba4-ed58-4582-9b87-bd0f6e7c9998";
   const CompanyID = "7bca9eb4-b64b-4a3d-a23e-b057107f1c33"
-
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,15 +46,23 @@ function DownloadPDF() {
   }, [CompanyID]);
 
   return (
-    <div>
-      {user ? (
-        <PDFDownloadLink document={<PDFFile user={user} role = {user.role.RoleName} company = {company} companyRole={company.role.RoleName}/>} fileName="OfficialStatement.pdf">
-          {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+    <WidgetContainer container = {false} className={"flex rounded-full"}>
+      <ReceptionFile fileName = {`Expedition #${shipment.ShipmentID} - ${harbor && "Harbor"} Official Statement.pdf`} harbor = {harbor} download =  {user ? (
+        <PDFDownloadLink document={<PDFFile user={user} role = {user.role.RoleName} shipment = {shipmentData} shipmentQuantity = {shipment.ShipmentQuantity} checkInDate = {shipment} company = {company} companyRole={company?.role.RoleName}/>} fileName={`Expedition #${shipment.ShipmentID} - ${harbor && "Harbor"} Official Statement.pdf`}>
+          {({ loading }) => (
+              <div
+                className="p-2 w-fit gap-2 h-fit rounded-full flex items-center justify-center mt-2"
+                style={{ backgroundColor: loading ? "#D9D9D9" : "#79B2B7" }}
+              >
+                <img src={Download} alt="Download icon" />
+              </div>
+            )}
         </PDFDownloadLink>)
        : (
-        <p>Loading user data...</p>
-      )}
-    </div>
+        <p><LoadingStatic /></p>
+      )}/>
+     
+    </WidgetContainer>
   );
 }
 

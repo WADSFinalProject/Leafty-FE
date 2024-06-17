@@ -8,6 +8,7 @@ import CircularButton from '../../components/CircularButton';
 import Shipments from '../../assets/Shipments.svg';
 import XYZPopup from '../../components/Popups/XYZPopup';
 import axios from 'axios';
+import LoadingStatic from "@components/LoadingStatic"
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
 
 function Tracker() {
@@ -73,7 +74,7 @@ function Tracker() {
     };
 
     if (!shipment) {
-        return <div>Loading shipment details...</div>;
+        return <div className='flex justify-center items-center place-self-center'><LoadingStatic /></div>;
     }
 
     const formatDate = (date, includeTime = false) => {
@@ -88,6 +89,7 @@ function Tracker() {
     
         return dateString;
     }
+    
     
 
     return (
@@ -112,7 +114,9 @@ function Tracker() {
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
                                  {formatDate(shipment.ShipmentDate)}
-                            </span></>:<>Not Delivered</>}
+                            </span></>:<> <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' /> <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
+                                 Not Delivered
+                            </span></>}
                         </div>
                         {courier && (
                             <div className="flex space-x-2 mt-2">
