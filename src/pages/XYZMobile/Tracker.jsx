@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useOutlet, useOutletContext, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import PackageCount from '../../assets/Packagecount.svg';
 import DateIcon from '../../assets/Date.svg';
@@ -8,7 +8,7 @@ import CircularButton from '../../components/CircularButton';
 import Shipments from '../../assets/Shipments.svg';
 import XYZPopup from '../../components/Popups/XYZPopup';
 import axios from 'axios';
-import LoadingStatic from "@components/LoadingStatic"
+import LoadingStatic from "@components/LoadingStatic";
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
 
 function Tracker() {
@@ -17,6 +17,7 @@ function Tracker() {
     const [courier, setCourier] = useState(null);
     const [users, setUsers] = useState([]);
     const [isPopupOpen, setIsPopupOpen] = useState(false);
+    const [currentComponent, setCurrentComponent] = useState(1);
 
     useEffect(() => {
         const fetchShipment = async () => {
@@ -47,6 +48,7 @@ function Tracker() {
                 };
 
                 setShipment(updatedShipment);
+                determineCurrentComponent(updatedShipment);
                 console.log('Updated shipment:', updatedShipment);
             } catch (error) {
                 console.error('Error fetching shipment:', error);
@@ -67,6 +69,20 @@ function Tracker() {
         fetchShipment();
         fetchUsers();
     }, [id]);
+
+    const determineCurrentComponent = (shipment) => {
+        if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
+            setCurrentComponent(1);
+        } else if (shipment.Check_in_Date && shipment.Check_in_Weight) {
+            setCurrentComponent(2);
+        } else if (!shipment.Harbor_Reception_File) {
+            setCurrentComponent(3);
+        } else if (!shipment.Rescalled_Weight) {
+            setCurrentComponent(4);
+        } else {
+            setCurrentComponent(1); // Default to component 1 if none of the above conditions are met
+        }
+    };
 
     const handleButtonClick = () => {
         console.log('Selected Item:', shipment);
@@ -89,8 +105,6 @@ function Tracker() {
     
         return dateString;
     }
-    
-
 
     return (
         <>
@@ -110,11 +124,11 @@ function Tracker() {
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
                                 {shipment.ShipmentQuantity} 
                             </span>
-                            {shipment.ShipmentDate   ? <>
+                            {shipment.ShipmentDate ? <>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
                                  {formatDate(shipment.ShipmentDate)}
-                            </span></>:<> <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' /> <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
+                            </span></> : <> <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' /> <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
                                  Not Delivered
                             </span></>}
                         </div>
@@ -128,7 +142,7 @@ function Tracker() {
                     </div>
                 </div>
             </WidgetContainer>
-            <VerticalStepper />
+            <VerticalStepper step={currentComponent} />
             <XYZPopup shipment={shipment} courier={shipment.CourierName} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </>
     );

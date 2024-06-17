@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Check from '@mui/icons-material/Check';
 import WidgetContainer from '../components/Cards/WidgetContainer';
+import PropTypes from 'prop-types';
 
 const steps = [
   {
@@ -40,28 +41,31 @@ const steps = [
 ];
 
 const CustomStepIcon = ({ active, completed }) => {
-    return (
-      <div
-        style={{
-          width: '24px',
-          height: '24px',
-          borderRadius: '50%',
-          backgroundColor: completed ? '#C0CD30' : 'transparent',
-          border: `2.56px solid ${completed ? '#C0CD30' : '#C0CD3080'}`,
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          transition: 'background-color 0.3s, border-color 0.3s',
-        }}
-      >
-        {completed ? <Check style={{ color: '#fff', fontSize: '16px' }} /> : null}
-      </div>
-    );
-  };
-  
+  return (
+    <div
+      style={{
+        width: '24px',
+        height: '24px',
+        borderRadius: '50%',
+        backgroundColor: completed ? '#C0CD30' : 'transparent',
+        border: `2.56px solid ${completed ? '#C0CD30' : '#C0CD3080'}`,
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        transition: 'background-color 0.3s, border-color 0.3s',
+      }}
+    >
+      {completed ? <Check style={{ color: '#fff', fontSize: '16px' }} /> : null}
+    </div>
+  );
+};
 
-const VerticalStepper = (step) => {
-  const [activeStep, setActiveStep] = useState(0);
+const VerticalStepper = ({ step }) => {
+  const [activeStep, setActiveStep] = useState(step - 1);
+
+  useEffect(() => {
+    setActiveStep(step - 1);
+  }, [step]);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -84,10 +88,9 @@ const VerticalStepper = (step) => {
               {step.label}
             </StepLabel>
             <StepContent>
-                <WidgetContainer borderRadius="20px">
-                    <Typography>{step.description}</Typography>
-                </WidgetContainer>
-              
+              <WidgetContainer borderRadius="20px">
+                <Typography>{step.description}</Typography>
+              </WidgetContainer>
               <Box sx={{ mb: 2, display: 'flex', justifyContent: 'space-between' }}>
                 <Button disabled={activeStep === 0} onClick={handleBack} sx={{ mt: 1, mr: 1 }}>
                   Back
@@ -129,6 +132,10 @@ const VerticalStepper = (step) => {
       )}
     </Box>
   );
+};
+
+VerticalStepper.propTypes = {
+  step: PropTypes.number.isRequired,
 };
 
 export default VerticalStepper;
