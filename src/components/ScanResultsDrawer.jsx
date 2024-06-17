@@ -16,6 +16,7 @@ import Button from './Button';
 import Popup from '@components/Popups/Popup';
 import "./Drawer.css";
 import { API_URL } from '../App';
+import { redirect, useNavigate } from 'react-router';
 
 const drawerBleeding = 0;
 
@@ -51,13 +52,14 @@ const theme = createTheme({
 });
 
 function ScanResultsDrawer(props) {
-  const { window, open, toggleDrawer, data } = props;
+  const { window, open, toggleDrawer, data, companyMode = false } = props;
   const [receivedPackages, setReceivedPackages] = useState("3");
   const [shipmentDetails, setShipmentDetails] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showPopup, setShowPopup] = useState(false);
   const [popupDescription, setPopupDescription] = useState("");
   const popupRef = useRef(null);
+  const navigate = useNavigate();
 
   const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -117,14 +119,16 @@ function ScanResultsDrawer(props) {
       const shipmentId = shipmentDetails.ShipmentID;
       const checkInDate = new Date().toISOString();
       const checkInQuantity = parseInt(receivedPackages, 10);
-
+      if (companyMode){
+        navigate(`/xyzmobile/tracker/${shipmentId}`, {replace: true})
+      } else{
       const response = await axios.put(`${API_URL}/shipment/update_check_in/${shipmentId}`, {
         Check_in_Date: checkInDate,
         Check_in_Quantity: checkInQuantity,
       });
 
       console.log("Shipment check-in details updated successfully:", response.data);
-      handleConfirmPopup()
+      handleConfirmPopup();}
     } catch (error) {
       console.error("Error updating shipment check-in details: ", error);
     }
@@ -133,6 +137,7 @@ function ScanResultsDrawer(props) {
   const handleConfirmPopup = () => {
     console.log("Confirm clicked");
     setShowPopup(false);
+    toggleDrawer(false); // Ensure toggleDrawer is called correctly to close the drawer
   };
 
   useEffect(() => {
@@ -150,7 +155,7 @@ function ScanResultsDrawer(props) {
           color="primary"
           aria-label="add"
           style={{ position: 'fixed', bottom: '75px', right: '16px', zIndex: '1000' }}
-          onClick={toggleDrawer(true)}
+          onClick={() => toggleDrawer(true)} // Use arrow function to invoke toggleDrawer correctly
         >
           <HistoryIcon />
         </Fab>
@@ -158,8 +163,8 @@ function ScanResultsDrawer(props) {
           container={container}
           anchor="bottom"
           open={open}
-          onClose={toggleDrawer(false)}
-          onOpen={toggleDrawer(true)}
+          onClose={() => toggleDrawer(false)} // Use arrow function to invoke toggleDrawer correctly
+          onOpen={() => toggleDrawer(true)} // Use arrow function to invoke toggleDrawer correctly
           swipeAreaWidth={drawerBleeding}
           disableSwipeToOpen={false}
           ModalProps={{
@@ -230,6 +235,7 @@ function ScanResultsDrawer(props) {
                     </div>
                   </div>
                 </WidgetContainer>
+                {!companyMode && <>
                 <label className='font-bold'>Received Packages</label>
                 <WidgetContainer container={false} backgroundColor="#FFFFFF" borderRadius="20px" borderWidth="" borderColor="" className='mt-2 mb-2'>
                   <div className='flex'>
@@ -242,8 +248,8 @@ function ScanResultsDrawer(props) {
                     />
                     <img src={PackageCount} alt="Date" className='flex justify-end w-6 h-auto' />
                   </div>
-                </WidgetContainer>
-                <Button onClick={handleConfirm} className={"flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
+                </WidgetContainer></>}
+                <Button onClick={handleConfirm} className={"mt-4 flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
               </div>
             </>
             }

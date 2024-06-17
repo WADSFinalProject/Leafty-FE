@@ -54,7 +54,7 @@ function Tracker() {
                 console.error('Error fetching shipment:', error);
             }
         };
-        
+
         const fetchUsers = async () => {
             try {
                 console.log("Fetching all users from API...");
@@ -65,22 +65,32 @@ function Tracker() {
                 console.error('Error fetching users:', error);
             }
         };
-        
+
+        const interval = setInterval(() => {
+            fetchShipment();
+        }, 1000); // Fetch shipment details every 5 seconds
+
+        // Fetch initial data
         fetchShipment();
         fetchUsers();
+
+        return () => clearInterval(interval); // Clean up interval on component unmount
     }, [id]);
 
     const determineCurrentComponent = (shipment) => {
-        if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
+        if (!shipment.ShipmentDate) {
             setCurrentComponent(1);
-        } else if (shipment.Check_in_Date && shipment.Check_in_Weight) {
+        } else if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
             setCurrentComponent(2);
         } else if (!shipment.Harbor_Reception_File) {
             setCurrentComponent(3);
-        } else if (!shipment.Rescalled_Weight) {
+        } else if (!shipment.Rescalled_Weight && !shipment.Rescalled_Date) {
             setCurrentComponent(4);
-        } else {
-            setCurrentComponent(1); // Default to component 1 if none of the above conditions are met
+        } else if (!shipment.Centra_Reception_File) {
+            setCurrentComponent(5);
+        } 
+        else if (shipment.Centra_Reception_File) {
+            setCurrentComponent(6);
         }
     };
 
@@ -96,13 +106,13 @@ function Tracker() {
     const formatDate = (date, includeTime = false) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const dateString = new Date(date).toLocaleDateString('id-ID', options);
-        
+
         if (includeTime) {
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const timeString = new Date(date).toLocaleDateString('id-ID', timeOptions);
             return `${dateString} ${timeString}`;
         }
-    
+
         return dateString;
     }
 
@@ -122,15 +132,15 @@ function Tracker() {
                         <div className="flex space-x-2 items-center">
                             <img src={PackageCount} alt="Package Count" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
-                                {shipment.ShipmentQuantity} 
+                                {shipment.ShipmentQuantity}
                             </span>
                             {shipment.ShipmentDate ? <>
-                            <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
-                            <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
-                                 {formatDate(shipment.ShipmentDate)}
-                            </span></> : <> <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' /> <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
-                                 Not Delivered
-                            </span></>}
+                                <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                                <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
+                                    {formatDate(shipment.ShipmentDate)}
+                                </span></> : <> <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' /> <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
+                                        Not Delivered
+                                </span></>}
                         </div>
                         {courier && (
                             <div className="flex space-x-2 mt-2">
@@ -142,7 +152,7 @@ function Tracker() {
                     </div>
                 </div>
             </WidgetContainer>
-            <VerticalStepper step={currentComponent} />
+            <VerticalStepper step={currentComponent} onOpen={() => setIsPopupOpen(true)} />
             <XYZPopup shipment={shipment} courier={shipment.CourierName} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </>
     );
