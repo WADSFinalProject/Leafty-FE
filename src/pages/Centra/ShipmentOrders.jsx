@@ -6,7 +6,6 @@ import CountdownIcon from '../../assets/Countdown.svg';
 import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
-import ShipmentLogo from '../../assets/ShipmentDetail.svg';
 import AccordionUsage from '../../components/AccordionUsage';
 import { useOutletContext } from 'react-router';
 import axios from 'axios';
@@ -16,6 +15,7 @@ import ShipmentStatus from '@components/ShipmentStatus';
 function ShipmentOrders() {
     const [shipmentData, setShipmentData] = useState([]);
     const [selectedData, setSelectedData] = useState(null);
+    const [users, setUsers] = useState([]);
     const UserID = useOutletContext();
 
     useEffect(() => {
@@ -29,6 +29,7 @@ function ShipmentOrders() {
                 const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
                         return {
                             FlourID: flourID,
                             Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
@@ -49,17 +50,29 @@ function ShipmentOrders() {
                 }));
 
                 setShipmentData(updatedShipments);
-                console.log(updatedShipments)
+                console.log('Updated shipments:', updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
         };
 
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/users/get`);
+                console.log('Fetched users:', response.data);
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
         fetchShipments();
+        fetchUsers();
     }, [UserID]);
 
     const handleButtonClick = (item) => {
         setSelectedData(item);
+        console.log('Selected shipment data:', item);
         setTimeout(() => {
             document.getElementById('ShipmentPopup').showModal();
         }, 5);
@@ -72,6 +85,7 @@ function ShipmentOrders() {
             const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                 const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                     const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                    console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
                     return {
                         FlourID: flourID,
                         Flour_Weight: flourResponse.data.Flour_Weight
@@ -90,6 +104,7 @@ function ShipmentOrders() {
             }));
 
             setShipmentData(updatedShipments);
+            console.log('Refreshed shipments:', updatedShipments);
         } catch (error) {
             console.error('Error refreshing shipments:', error);
         }
@@ -135,10 +150,11 @@ function ShipmentOrders() {
                     confirmDeliver
                     courier={selectedData.CourierName}
                     code={selectedData.ShipmentID}
-                    time={selectedData.time}
+                    userID={selectedData.UserID}
+                    users={users}
                     quantity={selectedData.ShipmentQuantity}
                     weight={selectedData.ShipmentWeight + " Kg"}
-                    date={selectedData.date}
+                    date={selectedData.ShipmentDate}
                     imageSrc={selectedData.detailImage}
                     onConfirm={refreshData} // Pass the refreshData function as a prop
                 />

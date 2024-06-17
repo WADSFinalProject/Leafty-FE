@@ -13,6 +13,7 @@ import ShipmentStatus from '../../components/ShipmentStatus';
 function ShipmentSent() {
     const [shipmentData, setShipmentData] = useState([]);
     const [selectedData, setSelectedData] = useState(null);
+    const [users, setUsers] = useState([]);
     const UserID = useOutletContext();
 
     useEffect(() => {
@@ -25,6 +26,7 @@ function ShipmentSent() {
                 const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
                         return {
                             FlourID: flourID,
                             Flour_Weight: flourResponse.data?.Flour_Weight || 0
@@ -44,17 +46,29 @@ function ShipmentSent() {
                 }));
 
                 setShipmentData(updatedShipments);
-                console.log(updatedShipments)
+                console.log('Updated shipments:', updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
         };
 
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/user/get`);
+                console.log('Fetched users:', response.data);
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
         fetchShipments();
+        fetchUsers();
     }, [UserID]);
 
     const handleButtonClick = (item) => {
         setSelectedData(item);
+        console.log('Selected shipment data:', item);
         setTimeout(() => {
             document.getElementById('ShipmentPopup').showModal();
         }, 5);
@@ -63,7 +77,9 @@ function ShipmentSent() {
     const deliveredShipments = shipmentData.filter(item => !item.Check_in_Date && !item.Check_in_Quantity);
     const verifiedShipments = shipmentData.filter(item => item.Check_in_Date && item.Check_in_Quantity && item.Rescalled_Weight === null);
     const rescalledShipments = shipmentData.filter(item => item.Rescalled_Weight !== null);
-    console.log('hello',rescalledShipments);
+    console.log('Delivered shipments:', deliveredShipments);
+    console.log('Verified shipments:', verifiedShipments);
+    console.log('Rescalled shipments:', rescalledShipments);
 
     return (
         <>
@@ -155,11 +171,11 @@ function ShipmentSent() {
                 <ShipmentPopup
                     courier={selectedData.CourierName}
                     code={selectedData.ShipmentID}
-                    time={selectedData.time}
+                    userID={selectedData.UserID}
+                    users={users}
                     quantity={selectedData.ShipmentQuantity}
                     weight={selectedData.ShipmentWeight + " Kg"}
-                    date={selectedData.date}
-                    imageSrc={selectedData.detailImage}
+                    date={selectedData.ShipmentDate}
                 />
             )}
         </>

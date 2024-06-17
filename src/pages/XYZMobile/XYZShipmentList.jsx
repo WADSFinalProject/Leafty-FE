@@ -7,29 +7,90 @@ import InnerPlugins from '../../assets/InnerPlugins.svg';
 import SearchLogo from '../../assets/SearchLogo.svg';
 import axios from 'axios';
 import { API_URL } from "../../App"; 
-import Tracker from './Tracker'; 
 import { useNavigate } from 'react-router-dom'; 
 
 function XYZShipmentList() {
     const [shipments, setShipments] = useState([]);
+    const [flourDetails, setFlourDetails] = useState({});
+    const [shipmentFlourAssociations, setShipmentFlourAssociations] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
-    const [selectedShipment, setSelectedShipment] = useState(null);
-
     const navigate = useNavigate(); 
 
+    function formatDate(dateString) {
+        if (!dateString) return "Not Delivered";
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        const date = new Date(dateString);
+        return "    "+date.toLocaleDateString(undefined, options);
+    }
+
     useEffect(() => {
+        const fetchFlourDetails = async () => {
+            try {
+                console.log("Fetching all flour details from API...");
+                const response = await axios.get(`${API_URL}/flour/get`);
+                console.log("Flour details fetched successfully:", response.data);
+                
+                const flourDetailsMap = response.data.reduce((acc, flour) => {
+                    acc[flour.FlourID] = flour.Flour_Weight;
+                    return acc;
+                }, {});
+
+                setFlourDetails(flourDetailsMap);
+            } catch (error) {
+                console.error('Error fetching flour details:', error);
+            }
+        };
+
+        const fetchShipmentFlourAssociations = async () => {
+            try {
+                console.log("Fetching shipment-flour associations from API...");
+                const response = await axios.get(`${API_URL}/shipment_flour_association/get`);
+                console.log("Shipment-flour associations fetched successfully:", response.data);
+                setShipmentFlourAssociations(response.data);
+            } catch (error) {
+                console.error('Error fetching shipment-flour associations:', error);
+            }
+        };
+
         const fetchShipments = async () => {
             try {
                 console.log("Fetching shipments from API...");
                 const response = await axios.get(`${API_URL}/shipment/get`);
                 console.log("Shipments fetched successfully:", response.data);
-                setShipments(response.data);
+
+                const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
+                    const associatedFlourIDs = shipmentFlourAssociations
+                        .filter(assoc => assoc.shipment_id === shipment.ShipmentID)
+                        .map(assoc => assoc.flour_id);
+
+                    const totalFlourWeight = associatedFlourIDs.reduce((sum, flourID) => {
+                        return sum + (flourDetails[flourID] || 0);
+                    }, 0);
+
+                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                    const courierName = courierResponse.data.CourierName;
+
+                    return {
+                        ...shipment,
+                        ShipmentWeight: totalFlourWeight,
+                        CourierName: courierName
+                    };
+                }));
+
+                setShipments(updatedShipments);
+                console.log('Updated shipments:', updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
         };
 
-        fetchShipments();
+        const fetchData = async () => {
+            await fetchFlourDetails();
+            await fetchShipmentFlourAssociations();
+            fetchShipments();
+        };
+
+        fetchData();
     }, []);
 
     const handleSearchChange = (e) => {
@@ -37,9 +98,10 @@ function XYZShipmentList() {
         setSearchTerm(e.target.value);
     };
 
+    
+
     const handleShipmentClick = (shipment) => {
         console.log("Shipment clicked:", shipment);
-        setSelectedShipment(shipment);
         navigate(`/xyzmobile/tracker/${shipment.ShipmentID}`); 
     };
 
@@ -50,7 +112,6 @@ function XYZShipmentList() {
     );
 
     console.log("Filtered shipments:", filteredShipments);
-    console.log("Selected shipment:", selectedShipment);
 
     return (
         <>
@@ -82,8 +143,8 @@ function XYZShipmentList() {
                         <ShipmentLongContainer
                             showWeight={true}
                             packageCount={item.ShipmentQuantity}
-                            weightValue={item.Rescalled_Weight}
-                            dateValue={item.ShipmentDate}
+                            weightValue={item.ShipmentWeight}
+                            dateValue={formatDate(item.ShipmentDate)}
                             expeditionId={item.ShipmentID}
                             onClick={() => handleShipmentClick(item)}
                         />
@@ -95,3 +156,5 @@ function XYZShipmentList() {
 }
 
 export default XYZShipmentList;
+
+
