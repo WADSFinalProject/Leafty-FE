@@ -15,7 +15,7 @@ function XYZShipmentList() {
     const [shipmentFlourAssociations, setShipmentFlourAssociations] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate(); 
-
+    
     function formatDate(dateString) {
         if (!dateString) return "Not Delivered";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };

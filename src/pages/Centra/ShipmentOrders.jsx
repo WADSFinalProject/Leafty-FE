@@ -58,7 +58,7 @@ function ShipmentOrders() {
 
         const fetchUsers = async () => {
             try {
-                const response = await axios.get(`${API_URL}/users/get`);
+                const response = await axios.get(`${API_URL}/user/get`);
                 console.log('Fetched users:', response.data);
                 setUsers(response.data);
             } catch (error) {

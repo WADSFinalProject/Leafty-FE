@@ -235,7 +235,7 @@ function App() {
 
           <Route exact path="/" element={<ProtectedRoute />}>
             <Route exact path="/" element={<ProtectedAdmin />}>
-              <Route path="admin" element={<AdminLayout />}>
+              <Route path="admin" element={<AdminLayout CURRENT_USER={CURRENT_USER}/>}>
                 <Route path="dashboard" element={<DashboardAdmin />} />
                 <Route path="wet leaves" element={<AdminWetLeaves />} />
                 <Route path="dry leaves" element={<AdminDryLeaves />} />

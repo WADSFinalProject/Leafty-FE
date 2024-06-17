@@ -9,8 +9,11 @@ import LongUser from "../../components/Cards/LongUser";
 import box from "../../assets/PackageBox.svg";
 import axios from 'axios';
 import { API_URL } from '../../App.jsx';
+import { useOutletContext } from "react-router";
+
 
 function DashboardAdmin() {
+    const user_id = useOutletContext()
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [users, setUsers] = useState([]);
@@ -31,6 +34,7 @@ function DashboardAdmin() {
     const Bardata = [1200, 1500, 1100, 1700, 1300, 1900, 1400];
 
     useEffect(() => {
+        console.log("user:"+user_id)
         const tabletMediaQuery = window.matchMedia('(max-width: 1024px)');
 
         const handleScreenChange = (e) => {
