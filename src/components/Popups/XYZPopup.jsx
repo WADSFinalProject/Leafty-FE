@@ -18,12 +18,13 @@ import { API_URL } from '../../App';
 function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [currentComponent, setCurrentComponent] = useState(1);
     const [shipmentData, setShipmentData] = useState(shipment);
-    const [harbor, setHarbor] = useState("");
+    const [harbor, setHarbor] = useState({});
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_URL}user/get_role/2`);
+                const response = await axios.get(`${API_URL}/user/get_role/2`);
                 setHarbor(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
@@ -88,16 +89,12 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
 
     const [rescalledWeight, SetRescalledWeight] = useState(0);
 
-    const textHarborContact = `
-    Hello, ${harbor.Username},
-    I hope this message finds you well. I am writing to inquire about the status of Expedition #${shipment.ShipmentID}. 
-    Could you please provide an update on whether it has arrived safely at its destination?
-    As we await confirmation, any details regarding the condition of the shipment or any special instructions would be greatly appreciated.
-    Thank you for your attention to this matter. Looking forward to your prompt response.
-    
-    Best regards,
-    
-`;
+    const textHarborContact = `Hello, ${harbor[0].Username},
+I hope this message finds you well. I am writing to inquire about the status of Expedition #${shipment.ShipmentID}. 
+Could you please provide an update on whether it has arrived safely at its destination?
+As we await confirmation, any details regarding the condition of the shipment or any special instructions would be greatly appreciated.
+Thank you for your attention to this matter. Looking forward to your prompt response.
+    `;
 
     return (
         <>
@@ -161,7 +158,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                     </div>
                     <div className='mt-2'>
                         {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor.phoneNumber}/>}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor[0].PhoneNumber} text = {textHarborContact}/>}
                         {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
