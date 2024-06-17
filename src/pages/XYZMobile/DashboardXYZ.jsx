@@ -49,6 +49,22 @@ function DashboardXYZ() {
         calculateStatistics();
     }, [shipments]);
 
+    useEffect(() => {
+        const calculateStatistics = () => {
+            const rescalledPackagesCount = shipments.filter(shipment => shipment.Rescalled_Weight).length;
+            const unscalledPackagesCount = shipments.filter(shipment => !shipment.Rescalled_Weight).length;
+            
+
+            setStatistics({
+                rescalled_packages_count: rescalledPackagesCount,
+                unscalled_packages_count: unscalledPackagesCount,
+                received_powder_count: 0 // Placeholder value, replace it with actual logic if needed
+            });
+        };
+
+        calculateStatistics();
+    }, [shipments]);
+
     return (
         <>
             <div className='flex items-center justify-between'>
