@@ -11,9 +11,11 @@ import FilterDashboard from "../../components/filterDashboard"
 import Profile from "../../components/Profile";
 import LongUser from "../../components/Cards/LongUser";
 import box from "../../assets/PackageBox.svg";
+import { useOutletContext } from "react-router";
 
 
 function DashboardAdmin() {
+    const user_id = useOutletContext()
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [currentFilter, setCurrentFilter] = useState("All Time");
@@ -24,6 +26,7 @@ function DashboardAdmin() {
     const Bardata = [1200, 1500, 1100, 1700, 1300, 1900, 1400];
 
     useEffect(() => {
+        console.log("user:"+user_id)
         const tabletMediaQuery = window.matchMedia('(max-width: 1024px)');
 
         // Function to update 'collapsed' state based on the current screen width

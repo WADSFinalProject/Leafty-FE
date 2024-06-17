@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useOutlet, useOutletContext, useParams } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import PackageCount from '../../assets/Packagecount.svg';
 import Date from '../../assets/Date.svg';
@@ -20,27 +20,38 @@ function Tracker() {
     useEffect(() => {
         const fetchShipment = async () => {
             try {
-                console.log("Fetching shipment details from API...");
                 const response = await axios.get(`${API_URL}/shipment/getid/${id}`);
-                console.log("Shipment details fetched successfully:", response.data);
-                setShipment(response.data);
-                fetchCourier(response.data.CourierID);
+                const shipment = response.data;
+
+                // Fetch details for each FlourID in the shipment
+                const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                    const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                    console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
+                    return {
+                        FlourID: flourID,
+                        Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                    };
+                }));
+
+                // Calculate the total ShipmentWeight as the sum of Flour_Weight
+                const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
+                const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                const courierName = courierResponse.data.CourierName;
+
+                const updatedShipment = {
+                    ...shipment,
+                    ShipmentWeight: totalFlourWeight,
+                    CourierName: courierName
+                };
+
+                setShipment(updatedShipment);
+                console.log('Updated shipment:', updatedShipment);
             } catch (error) {
-                console.error('Error fetching shipment details:', error);
+                console.error('Error fetching shipment:', error);
             }
         };
-
-        const fetchCourier = async (courierId) => {
-            try {
-                console.log("Fetching courier details from API...");
-                const response = await axios.get(`${API_URL}/courier/get/${courierId}`);
-                console.log("Courier details fetched successfully:", response.data);
-                setCourier(response.data);
-            } catch (error) {
-                console.error('Error fetching courier details:', error);
-            }
-        };
-
+        
         const fetchUsers = async () => {
             try {
                 console.log("Fetching all users from API...");
@@ -51,7 +62,7 @@ function Tracker() {
                 console.error('Error fetching users:', error);
             }
         };
-
+        
         fetchShipment();
         fetchUsers();
     }, [id]);
@@ -91,7 +102,7 @@ function Tracker() {
                         {courier && (
                             <div className="flex space-x-2 mt-2">
                                 <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
-                                    Courier: {courier.CourierName}
+                                    Courier: {shipment.CourierName}
                                 </span>
                             </div>
                         )}
@@ -99,7 +110,7 @@ function Tracker() {
                 </div>
             </WidgetContainer>
             <VerticalStepper step={1} />
-            <XYZPopup shipment={shipment} courier={courier} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
+            <XYZPopup shipment={shipment} courier={shipment.CourierName} users={users} open={isPopupOpen} onClose={() => setIsPopupOpen(false)} />
         </>
     );
 }

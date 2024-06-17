@@ -11,7 +11,7 @@ import QRPage from '../../pages/QRPage';
 import Button from '@components/Button';
 import { API_URL } from '../../App'; // Adjust the import path as needed
 
-function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfirm, ShipmentDate = false, confirmDeliver = false }) {
+function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfirm, desktop, ShipmentDate = false, confirmDeliver = false }) {
     const ShipmentText = `Expedition #${code}`;
 
     const handleConfirm = async () => {
@@ -38,7 +38,7 @@ function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfi
 
     return (
         <>
-            <dialog id="ShipmentPopup" className="modal modal-bottom">
+            <dialog id="ShipmentPopup" className={`modal ${desktop ? "modal-middle" : "modal-bottom"}`}>
                 <div className='modal-box'>
                     <div className='flex justify-center'>
                         <img src={ShipmentLogo} alt="Profile" style={{ maxWidth: '100px' }} className='w-full h-auto' />
@@ -47,9 +47,9 @@ function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfi
                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                             {ShipmentText}
                         </span>
-                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
+                        {/* <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
                             {getUserName(userID)}
-                        </span>
+                        </span> */}
                         <div className="flex space-x-2">
                             <img src={PackageCount} alt="Profile" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">

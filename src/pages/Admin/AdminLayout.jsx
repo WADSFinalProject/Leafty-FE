@@ -20,30 +20,17 @@ import Profile from "@components/Profile";
 import Button from "@components/Button";
 import Popup from '@components/Popups/Popup'; // Ensure the import path is correct
 
-function AdminLayout() {
+function AdminLayout(CURRENT_USER) {
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
     const [title, setTitle] = useState("Dashboard");
     const navigate = useNavigate();
+    const user_id = CURRENT_USER.CURRENT_USER;
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     const modalRef = useRef(null);
 
-    async function handleWhoAmI() {
-        try {
-            const response = await axios.get(API_URL + "/whoami");
-            if (response) {
-                return response.data.user_id;
-            }
-            return false;
-        } catch (error) {
-            console.error("Error while checking session:", error);
-            return false;
-        }
-    }
-
     const getUser = async () => {
         try {
-            const user_id = await handleWhoAmI();
             if (user_id) {
                 const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
                 return response.data;
@@ -121,7 +108,7 @@ function AdminLayout() {
                         <Button onClick={openModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" />
                     </div>
                 </div>
-                <Outlet />
+                <Outlet context={user_id}/>
             </motion.div>
             <Popup ref={modalRef} leavesid="errorModal" info={true} description = {"You are deleting a data. Are you sure?"} confirm = {true} />
         </div>

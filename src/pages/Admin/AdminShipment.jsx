@@ -12,11 +12,16 @@ import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import axios from 'axios'; // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
+import { useOutletContext } from 'react-router';
 
 function AdminShipment(){
     const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
+    const [selectedShipment, setSelectedShipment] = useState([]);
     const [itemsPerPage, setItemsPerPage] = useState(8);
+    const user_id = useOutletContext()
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const handlePageClick = (newPage) => {
         setCurrentPage(newPage);
@@ -41,22 +46,24 @@ function AdminShipment(){
     useEffect(() => {
         const fetchShipments = async () => {
             try {
-                const response = await axios.get(`${API_URL}/shipment/get`);
-                // Fetch details for each FlourID in each shipment
-                const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
+                const response = await axios.get(`${API_URL}/shipment/get/`);
+                console.log('Fetched shipments:', response.data);
+                const shipments = response.data.filter(shipment => shipment.ShipmentDate);
+
+                const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
                         return {
                             FlourID: flourID,
-                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                            Flour_Weight: flourResponse.data?.Flour_Weight || 0
                         };
                     }));
 
-                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
                     const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
 
                     const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
+                    const courierName = courierResponse.data?.CourierName || 'Unknown Courier';
 
                     return {
                         ...shipment,
@@ -64,14 +71,28 @@ function AdminShipment(){
                         CourierName: courierName
                     };
                 }));
-                setShipments(updatedShipments)
+
+                setShipments(updatedShipments);
+                console.log('Updated shipments:', updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
             }
         };
 
+        const fetchUsers = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/user/get`);
+                console.log('Fetched users:', response.data);
+                setUsers(response.data);
+            } catch (error) {
+                console.error('Error fetching users:', error);
+            }
+        };
+
         fetchShipments();
-    }, []);
+        fetchUsers();
+        setLoading(false);
+    }, [user_id]);
 
     const offset = currentPage * itemsPerPage;
     const currentPageData = shipments.slice(offset, offset + itemsPerPage);
@@ -119,7 +140,18 @@ function AdminShipment(){
         return "    "+date.toLocaleDateString(undefined, options);
     }
 
-    
+    if (loading === true){
+        return <></>;
+    }
+
+    const handleButtonClick = (item) => {
+        setSelectedShipment(item);
+        console.log('Selected shipment data:', item);
+        setTimeout(() => {
+            document.getElementById('ShipmentPopup').showModal();
+        }, 5);
+    };
+
     return (
         <div className="container mx-auto w-full">
             <span className="text-xl font-bold">
@@ -135,6 +167,7 @@ function AdminShipment(){
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                     >
                         <LongContainer
+                            onClick = {handleButtonClick}
                             showWeight={true}
                             weightValue={item.ShipmentWeight}
                             packageCount={item.ShipmentQuantity}
@@ -163,7 +196,18 @@ function AdminShipment(){
                     <IoIosArrowForward size={24} />
                 </button>
             </div>
-            <ShipmentPopup />
+            {selectedShipment && (
+                <ShipmentPopup
+                    courier={selectedShipment.CourierName}
+                    code={selectedShipment.ShipmentID}
+                    userID={selectedShipment.UserID}
+                    users={users}
+                    quantity={selectedShipment.ShipmentQuantity}
+                    weight={selectedShipment.ShipmentWeight + " Kg"}
+                    date={selectedShipment.ShipmentDate}
+                    desktop
+                />
+            )}
         </div>
     );
 }

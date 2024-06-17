@@ -75,25 +75,13 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                 {shipment.ShipmentDate}
                             </span>
                         </div>
-                        <div className="flex space-x-2 mt-2">
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                Centra: {getUser(shipment.UserID)}
-                            </span>
-                        </div>
                         <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                {shipment.FlourWeightSum} Kg
+                                {shipment.ShipmentWeight} Kg
                             </span>
                         </div>
-                        {courier && (
-                        <div className="flex space-x-2">
-                            <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                Courier - {courier.CourierName}
-                            </span>
-                        </div>
-                        )}
+   
                     </div>
                     <div className='p-1'>
                         <WidgetContainer borderRadius="20px" container={false}>
@@ -106,12 +94,13 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                     </div>
                                     <div className='flex pb-1'>
                                         <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{shipment.Weight} Kg</span>
+                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{shipment.ShipmentWeight} Kg</span>
                                     </div>
+                                    {courier &&
                                     <div className='flex pb-1'>
                                         <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
                                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - {shipment.CourierName}</span>
-                                    </div>
+                                    </div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
