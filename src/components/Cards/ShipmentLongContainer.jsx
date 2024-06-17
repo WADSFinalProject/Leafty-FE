@@ -38,19 +38,22 @@ function ShipmentLongContainer({ showWeight, packageCount, weightValue, dateValu
     };
 
     return (
-        <div onClick={handleClick} className={`flex flex-col container gap-1 rounded-md border-4 border-white shadow-lg p-2`} style={{ background: "radial-gradient(50%_50%_at_50%_50%,rgb(255,255,255)_0%,rgb(211.65,211.65,211.65)_100%)" }}>
-            <div className="flex justify-between flex-row items-center font-semibold text-sm lg:text-base px-2">
-                <div className="flex flex-row justify-center items-center gap-2">
-                    <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
-                    <span className="w-min sm:w-full">Expedition #{expeditionId}</span>
-                </div>
+        <div 
+            onClick={handleClick} 
+            className="flex flex-col gap-1 rounded-md border-4 border-white shadow-lg p-2" 
+            style={{ background: "radial-gradient(50%_50%_at_50%_50%,rgb(255,255,255)_0%,rgb(211,211,211)_100%)" }}
+        >
+            <div className="flex justify-center items-center gap-2">
+                <CircularButton imageUrl={Shipments} backgroundColor="#C0CD30" />
+                <span className="font-semibold text-xs lg:text-sm">Expedition #{expeditionId}</span>
+            </div>
+            <div className={`grid grid-cols-2 gap-2 mt-2 ${filteredData.length % 2 === 1 ? 'place-items-center' : ''}`}>
                 {filteredData.map((e, index) => (
-                    <div key={index} className="flex flex-row justify-center items-center gap-2">
-                        <img src={e.image} alt="Icon"></img>
-                        <span>{e.value} {e.unit}</span>
+                    <div key={index} className="flex flex-col items-center justify-center">
+                        <img src={e.image} alt="Icon" className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 mb-1" />
+                        <span className="text-xs">{e.value} {e.unit}</span>
                     </div>
                 ))}
-                {showWeight ? <img src={arrow_square} alt="Arrow Square"></img> : null}
             </div>
         </div>
     );
