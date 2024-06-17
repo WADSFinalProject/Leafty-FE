@@ -15,7 +15,7 @@ function XYZShipmentList() {
     const [shipmentFlourAssociations, setShipmentFlourAssociations] = useState([]);
     const [searchTerm, setSearchTerm] = useState('');
     const navigate = useNavigate(); 
-    
+
     function formatDate(dateString) {
         if (!dateString) return "Not Delivered";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
@@ -24,51 +24,26 @@ function XYZShipmentList() {
     }
 
     useEffect(() => {
-        const fetchFlourDetails = async () => {
-            try {
-                console.log("Fetching all flour details from API...");
-                const response = await axios.get(`${API_URL}/flour/get`);
-                console.log("Flour details fetched successfully:", response.data);
-                
-                const flourDetailsMap = response.data.reduce((acc, flour) => {
-                    acc[flour.FlourID] = flour.Flour_Weight;
-                    return acc;
-                }, {});
-
-                setFlourDetails(flourDetailsMap);
-            } catch (error) {
-                console.error('Error fetching flour details:', error);
-            }
-        };
-
-        const fetchShipmentFlourAssociations = async () => {
-            try {
-                console.log("Fetching shipment-flour associations from API...");
-                const response = await axios.get(`${API_URL}/shipment_flour_association/get`);
-                console.log("Shipment-flour associations fetched successfully:", response.data);
-                setShipmentFlourAssociations(response.data);
-            } catch (error) {
-                console.error('Error fetching shipment-flour associations:', error);
-            }
-        };
-
         const fetchShipments = async () => {
             try {
-                console.log("Fetching shipments from API...");
                 const response = await axios.get(`${API_URL}/shipment/get`);
-                console.log("Shipments fetched successfully:", response.data);
+                console.log('Fetched shipments:', response.data);
+                const shipments = response.data
 
-                const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
-                    const associatedFlourIDs = shipmentFlourAssociations
-                        .filter(assoc => assoc.shipment_id === shipment.ShipmentID)
-                        .map(assoc => assoc.flour_id);
+                const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
+                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
+                        return {
+                            FlourID: flourID,
+                            Flour_Weight: flourResponse.data?.Flour_Weight || 0
+                        };
+                    }));
 
-                    const totalFlourWeight = associatedFlourIDs.reduce((sum, flourID) => {
-                        return sum + (flourDetails[flourID] || 0);
-                    }, 0);
+                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
 
                     const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
+                    const courierName = courierResponse.data?.CourierName || 'Unknown Courier';
 
                     return {
                         ...shipment,
@@ -84,9 +59,67 @@ function XYZShipmentList() {
             }
         };
 
+        // const fetchFlourDetails = async () => {
+        //     try {
+        //         console.log("Fetching all flour details from API...");
+        //         const response = await axios.get(`${API_URL}/flour/get`);
+        //         console.log("Flour details fetched successfully:", response.data);
+                
+        //         const flourDetailsMap = response.data.reduce((acc, flour) => {
+        //             acc[flour.FlourID] = flour.Flour_Weight;
+        //             return acc;
+        //         }, {});
+
+        //         setFlourDetails(flourDetailsMap);
+        //     } catch (error) {
+        //         console.error('Error fetching flour details:', error);
+        //     }
+        // };
+
+        // const fetchShipmentFlourAssociations = async () => {
+        //     try {
+        //         console.log("Fetching shipment-flour associations from API...");
+        //         const response = await axios.get(`${API_URL}/shipment_flour_association/get`);
+        //         console.log("Shipment-flour associations fetched successfully:", response.data);
+        //         setShipmentFlourAssociations(response.data);
+        //     } catch (error) {
+        //         console.error('Error fetching shipment-flour associations:', error);
+        //     }
+        // };
+
+        // const fetchShipments = async () => {
+        //     try {
+        //         console.log("Fetching shipments from API...");
+        //         const response = await axios.get(`${API_URL}/shipment/get`);
+        //         console.log("Shipments fetched successfully:", response.data);
+
+        //         const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
+        //             const associatedFlourIDs = shipmentFlourAssociations
+        //                 .filter(assoc => assoc.shipment_id === shipment.ShipmentID)
+        //                 .map(assoc => assoc.flour_id);
+
+        //             const totalFlourWeight = associatedFlourIDs.reduce((sum, flourID) => {
+        //                 return sum + (flourDetails[flourID] || 0);
+        //             }, 0);
+
+        //             const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+        //             const courierName = courierResponse.data.CourierName;
+
+        //             return {
+        //                 ...shipment,
+        //                 ShipmentWeight: totalFlourWeight,
+        //                 CourierName: courierName
+        //             };
+        //         }));
+
+        //         setShipments(updatedShipments);
+        //         console.log('Updated shipments:', updatedShipments);
+        //     } catch (error) {
+        //         console.error('Error fetching shipments:', error);
+        //     }
+        // };
+
         const fetchData = async () => {
-            await fetchFlourDetails();
-            await fetchShipmentFlourAssociations();
             fetchShipments();
         };
 

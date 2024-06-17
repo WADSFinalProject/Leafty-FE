@@ -108,10 +108,11 @@ function Tracker() {
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center">
                                 {shipment.ShipmentQuantity} 
                             </span>
+                            {shipment.ShipmentDate   ? <>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             <span className="font-montserrat text-14px font-semibold tracking-02em text-center ">
-                                {formatDate(shipment.ShipmentDate)}
-                            </span>
+                                 {formatDate(shipment.ShipmentDate)}
+                            </span></>:<>Not Delivered</>}
                         </div>
                         {courier && (
                             <div className="flex space-x-2 mt-2">

@@ -13,7 +13,7 @@ import ReceptionDetail from '../../components/ReceptionDetail';
 import Centralogo from '../../assets/centra.svg';
 
 function XYZPopup({ shipment, courier, users, open, onClose }) {
-    const [currentComponent, setCurrentComponent] = useState(1); 
+    const [currentComponent, setCurrentComponent] = useState(1);
 
     useEffect(() => {
         if (open) {
@@ -24,11 +24,11 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     }, [open]);
 
     const handleNext = () => {
-        setCurrentComponent(prevComponent => (prevComponent % 7) + 1); 
+        setCurrentComponent(prevComponent => (prevComponent % 7) + 1);
     };
 
     const handlePrevious = () => {
-        setCurrentComponent(prevComponent => (prevComponent + 5) % 7 + 1); 
+        setCurrentComponent(prevComponent => (prevComponent + 5) % 7 + 1);
     };
 
     if (!shipment) {
@@ -45,7 +45,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
         { label: 'Harbor Name' },
         { label: 'Total Packages' }
     ];
-    
+
     const centracontainers = [
         { label: 'Centra Name' },
         { label: 'Weight' },
@@ -56,16 +56,16 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const formatDate = (date, includeTime = false) => {
         const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
         const dateString = new Date(date).toLocaleDateString('id-ID', options);
-        
+
         if (includeTime) {
             const timeOptions = { hour: '2-digit', minute: '2-digit', second: '2-digit' };
             const timeString = new Date(date).toLocaleDateString('id-ID', timeOptions);
             return `${dateString} ${timeString}`;
         }
-    
+
         return dateString;
     }
-    
+
     return (
         <>
             <dialog id="XYZPopup" className="modal modal-bottom">
@@ -84,9 +84,10 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                 {shipment.ShipmentQuantity} Packages
                             </span>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
+                            {shipment.ShipmentDate ?
                             <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
                                 {formatDate(shipment.ShipmentDate)}
-                            </span>
+                            </span> : <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Not Delivered</span>}
                         </div>
                         {/* <div className="flex space-x-2">
                             <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
@@ -110,10 +111,10 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                         <span className="font-montserrat text-16px font-semibold tracking-02em text-center">{shipment.ShipmentWeight} Kg</span>
                                     </div>
                                     {courier &&
-                                    <div className='flex pb-1'>
-                                        <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
-                                        <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - {shipment.CourierName}</span>
-                                    </div>}
+                                        <div className='flex pb-1'>
+                                            <img src={Courier} alt="Courier" style={{ maxWidth: '100px' }} className='w-6 h-6 mr-2' />
+                                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Courier - {shipment.CourierName}</span>
+                                        </div>}
                                 </div>
                                 <div className="flex flex-col">
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
@@ -127,10 +128,10 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                     </div>
                     <div>
                         {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" />} 
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" />}
                         {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
-                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
+                        {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
                         {currentComponent === 3 && <ReceptionDetail />}
                         {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
@@ -151,17 +152,17 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                 </WidgetContainer>
                             </div>
                         )}
-                         {/* If Rescalling Weight != shipment Weight show this current component*/}
-                        {currentComponent === 5 &&  <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
+                        {/* If Rescalling Weight != shipment Weight show this current component*/}
+                        {currentComponent === 5 && <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
                         {/* If rescalling weight == Shipment Weight show this 6th current component*/}
-                        {currentComponent === 6 &&  <HarborReception title="Centra Reception" containers={centracontainers} />}
+                        {currentComponent === 6 && <HarborReception title="Centra Reception" containers={centracontainers} />}
                         {/* Update the Centra reception file to true*/}
                         {currentComponent === 7 && <ReceptionDetail />}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>
                         {currentComponent !== 1 ? (
-                            <button 
-                                onClick={handlePrevious} 
+                            <button
+                                onClick={handlePrevious}
                                 className='font-montserrat text-sm font-medium leading-4 tracking-wide text-green-900 ml-3'
                             >
                                 Previous
@@ -171,8 +172,8 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                         )}
                         {currentComponent !== 7 && (
                             <WidgetContainer container={false} backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full max-w-20 mr-2'>
-                                <button 
-                                    onClick={handleNext} 
+                                <button
+                                    onClick={handleNext}
                                     className='flex justify-items-center font-montserrat text-xs font-semibold leading-4 tracking-wide text-gray-100 ml-4'
                                 >
                                     Next
@@ -182,7 +183,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                     </div>
                 </div>
                 <form method="dialog" className="modal-backdrop">
-                    <button onClick = {onClose}>close</button>
+                    <button onClick={onClose}>close</button>
                 </form>
             </dialog>
         </>
