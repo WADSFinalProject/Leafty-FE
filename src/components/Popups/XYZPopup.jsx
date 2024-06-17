@@ -20,6 +20,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [shipmentData, setShipmentData] = useState(shipment);
     const [harbor, setHarbor] = useState({});
     const [loading, setLoading] = useState(true);
+    const [rescalledWeight, setRescalledWeight] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,7 +29,6 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                 setHarbor(response.data);
             } catch (error) {
                 console.error('Error fetching data:', error);
-                // Handle error states here if needed
             }
         };
 
@@ -38,40 +38,61 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     useEffect(() => {
         if (open) {
             document.getElementById('XYZPopup').showModal();
-            console.log(shipment)
+            console.log(shipment);
+            determineCurrentComponent(shipment);
         } else {
             document.getElementById('XYZPopup').close();
         }
-    }, [open]);
+    }, [open, shipment]);
+
+    const determineCurrentComponent = (shipment) => {
+        if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
+            setCurrentComponent(1);
+        } else if (shipment.Check_in_Date && shipment.Check_in_Weight) {
+            setCurrentComponent(2);
+        } else if (!shipment.Harbor_Reception_File) {
+            setCurrentComponent(3);
+        } else if (!shipment.Rescalled_Weight) {
+            setCurrentComponent(4);
+        } else {
+            setCurrentComponent(1); // Default to component 1 if none of the above conditions are met
+        }
+    };
 
     const handleNext = () => {
-        setCurrentComponent(prevComponent => (prevComponent % 7) + 1);
+        setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
     };
 
     const handlePrevious = () => {
-        setCurrentComponent(prevComponent => (prevComponent + 5) % 7 + 1);
+        setCurrentComponent((prevComponent) => (prevComponent + 5) % 7 + 1);
     };
 
-    if (!shipment) {
-        return null;
-    }
+    const updateRescalledWeight = async () => {
+        try {
+            const response = await axios.put(`${API_URL}/shipment/update_rescalled_weight/${shipment.ShipmentID}`, { Rescalled_Weight: rescalledWeight });
+            setShipmentData({ ...shipmentData, Rescalled_Weight: rescalledWeight });
+            setCurrentComponent(2); // Move to the next appropriate component
+        } catch (error) {
+            console.error('Error updating rescalled weight:', error);
+        }
+    };
 
     const getUser = (userId) => {
-        const user = users.find(u => u.UserID === userId);
+        const user = users.find((u) => u.UserID === userId);
         return user ? user.Username : 'Unknown User';
     };
 
     const containers = [
         { label: 'Centra Name' },
         { label: 'Harbor Name' },
-        { label: 'Total Packages' }
+        { label: 'Total Packages' },
     ];
 
     const centracontainers = [
         { label: 'Centra Name' },
         { label: 'Weight' },
         { label: 'Your Name' },
-        { label: 'Date Received' }
+        { label: 'Date Received' },
     ];
 
     const formatDate = (date, includeTime = false) => {
@@ -85,16 +106,17 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
         }
 
         return dateString;
-    }
+    };
 
-    const [rescalledWeight, SetRescalledWeight] = useState(0);
-
-    const textHarborContact = `Hello, ${harbor[0].Username},
+    const textHarborContact = `Hello, ${harbor[0]?.Username},
 I hope this message finds you well. I am writing to inquire about the status of Expedition #${shipment.ShipmentID}. 
 Could you please provide an update on whether it has arrived safely at its destination?
 As we await confirmation, any details regarding the condition of the shipment or any special instructions would be greatly appreciated.
-Thank you for your attention to this matter. Looking forward to your prompt response.
-    `;
+Thank you for your attention to this matter. Looking forward to your prompt response.`;
+
+    if (!shipment) {
+        return null;
+    }
 
     return (
         <>
@@ -115,17 +137,10 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                             </span>
                             <img src={DateIcon} alt="Date" style={{ maxWidth: '100px' }} className='w-6 h-auto' />
                             {shipment.ShipmentDate ?
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
-                                {formatDate(shipment.ShipmentDate)}
-                            </span> : <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Not Delivered</span>}
+                                <span className="font-montserrat text-16px font-semibold tracking-02em text-center ">
+                                    {formatDate(shipment.ShipmentDate)}
+                                </span> : <span className="font-montserrat text-16px font-semibold tracking-02em text-center">Not Delivered</span>}
                         </div>
-                        {/* <div className="flex space-x-2">
-                            <img src={ShipmentWeight} alt="Shipment Weight" style={{ maxWidth: '100px' }} className='w-5 h-auto' />
-                            <span className="font-montserrat text-16px font-semibold tracking-02em text-center">
-                                {shipment.ShipmentWeight} Kg
-                            </span>
-                        </div>
-    */}
                     </div>
                     <div className='p-1'>
                         <WidgetContainer borderRadius="20px" container={false}>
@@ -157,13 +172,9 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         </WidgetContainer>
                     </div>
                     <div className='mt-2'>
-                        {/* Current Component 1 if Harbor has not verified the shipment */}
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor[0].PhoneNumber} text = {textHarborContact}/>}
-                        {/* Current Component 2 if Harbor has verified the shipment */}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harbor[0]?.PhoneNumber} text={textHarborContact} />}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
-                        {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
-                        {currentComponent === 3 && <DownloadPDF harbor UserID={shipment.UserID} shipment = {shipment} />}
-                        {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
+                        {currentComponent === 3 && <DownloadPDF harbor UserID={shipment.UserID} shipment={shipment} />}
                         {currentComponent === 4 && (
                             <div className='p-2'>
                                 <WidgetContainer borderRadius='20px' container={false}>
@@ -176,17 +187,15 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                                     <div className="w-full max-w ml- mt-4">
                                         <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>Re-scaled weight</p>
                                         <WidgetContainer backgroundColor="#94C3B380" borderRadius="13.5px" borderWidth="2px" borderColor="#79B2B7" className='mt-2'>
-                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" value = {rescalledWeight} onChange = {(e) =>{e.target.value}}/>
+                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" value={rescalledWeight} onChange={(e) => setRescalledWeight(e.target.value)} />
                                         </WidgetContainer>
                                     </div>
+                                    <button onClick={updateRescalledWeight} className='mt-2 bg-green-500 text-white p-2 rounded'>Update Weight</button>
                                 </WidgetContainer>
                             </div>
                         )}
-                        {/* If Rescalling Weight != shipment Weight show this current component*/}
                         {currentComponent === 5 && <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
-                        {/* If rescalling weight == Shipment Weight show this 6th current component*/}
                         {currentComponent === 6 && <HarborReception title="Centra Reception" containers={centracontainers} />}
-                        {/* Update the Centra reception file to true*/}
                         {currentComponent === 7 && <ReceptionDetail />}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>
