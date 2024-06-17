@@ -58,7 +58,6 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
             <dialog id="XYZPopup" className="modal modal-bottom">
                 <div className='modal-box'>
                     <button className="modal-close" onClick={onClose}>×</button>
-                    
                     <div className='flex justify-center'>
                         <img src={ShipmentLogo} alt="Profile" style={{ maxWidth: '100px' }} className='w-full h-auto' />
                     </div>
@@ -125,9 +124,13 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                         </WidgetContainer>
                     </div>
                     <div>
-                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" />}
+                        {/* Current Component 1 if Harbor has not verified the shipment */}
+                        {currentComponent === 1 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" />} 
+                        {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <HarborReception title="Harbor Reception" containers={containers} />}
+                         {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
                         {currentComponent === 3 && <ReceptionDetail />}
+                        {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
                             <div className='p-2'>
                                 <WidgetContainer borderRadius='20px' container={false}>
@@ -146,8 +149,11 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
                                 </WidgetContainer>
                             </div>
                         )}
-                        {currentComponent === 5 && <HarborReception title="Centra Reception" containers={centracontainers} />}
-                        {currentComponent === 6 && <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
+                         {/* If Rescalling Weight != shipment Weight show this current component*/}
+                        {currentComponent === 5 &&  <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
+                        {/* If rescalling weight == Shipment Weight show this 6th current component*/}
+                        {currentComponent === 6 &&  <HarborReception title="Centra Reception" containers={centracontainers} />}
+                        {/* Update the Centra reception file to true*/}
                         {currentComponent === 7 && <ReceptionDetail />}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>

@@ -11,6 +11,7 @@ import LongContainer from '@components/Cards/LongContainer';
 import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import axios from 'axios'; // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
+import ShipmentPopup from '../../components/Popups/ShipmentPopup';
 
 function AdminShipment(){
     const [shipments, setShipments] = useState([]);
@@ -162,6 +163,7 @@ function AdminShipment(){
                     <IoIosArrowForward size={24} />
                 </button>
             </div>
+            <ShipmentPopup />
         </div>
     );
 }

@@ -118,7 +118,7 @@ function ScanResultsDrawer(props) {
       });
 
       console.log("Shipment check-in details updated successfully:", response.data);
-      toggleDrawer(false)();
+      handleConfirmPopup()
     } catch (error) {
       console.error("Error updating shipment check-in details: ", error);
     }
@@ -237,7 +237,7 @@ function ScanResultsDrawer(props) {
                     <img src={PackageCount} alt="Date" className='flex justify-end w-6 h-auto' />
                   </div>
                 </WidgetContainer>
-                <Button className={"flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
+                <Button onClick = {handleConfirm} className={"flex w-full justify-center items-center"} noMax={true} label={"Confirm"} color={"white"} background={"#0F7275"}></Button>
               </div>
             </>
             }
