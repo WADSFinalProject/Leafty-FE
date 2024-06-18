@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import { motion } from "framer-motion";
 import LongContainer from '@components/Cards/LongContainer';
@@ -8,8 +8,9 @@ import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
 import axios from 'axios'; // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
 import '../../style/PaginatorColoring.css';
+import LoadingStatic from "@components/LoadingStatic"
 
-function AdminShipment(){
+function AdminShipment() {
     const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
@@ -20,7 +21,7 @@ function AdminShipment(){
         setCurrentPage(newPage);
     };
 
-    const calculateItemsPerPage = () => {
+    const calculateItemsPerPage = useCallback(() => {
         const pageHeight = window.innerHeight;
         const itemHeight = 70;
         const headerHeight = 100;
@@ -28,52 +29,52 @@ function AdminShipment(){
         const availableHeight = pageHeight - headerHeight - footerHeight;
         const calculatedItems = Math.floor(availableHeight / itemHeight);
         setItemsPerPage(calculatedItems);
-    };
+    }, []);
 
     useEffect(() => {
         calculateItemsPerPage();
         window.addEventListener('resize', calculateItemsPerPage);
         return () => window.removeEventListener('resize', calculateItemsPerPage);
-    }, []);
+    }, [calculateItemsPerPage]);
 
     useEffect(() => {
         const fetchShipments = async () => {
             try {
-                const response = await axios.get(`${API_URL}/shipment/get/`);
-                console.log('Fetched shipments:', response.data);
-                const shipments = response.data.filter(shipment => shipment.ShipmentDate);
+                const [shipmentsResponse, couriersResponse, flourResponse] = await Promise.all([
+                    axios.get(`${API_URL}/shipment/get/`),
+                    axios.get(`${API_URL}/courier/get`),
+                    axios.get(`${API_URL}/flour/get`),
+                ]);
 
-                const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
-                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
-                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
-                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
-                        return {
-                            FlourID: flourID,
-                            Flour_Weight: flourResponse.data?.Flour_Weight || 0
-                        };
-                    }));
+                const couriers = couriersResponse.data.reduce((acc, courier) => {
+                    acc[courier.CourierID] = courier.CourierName;
+                    return acc;
+                }, {});
 
-                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+                const flourData = flourResponse.data.reduce((acc, flour) => {
+                    acc[flour.FlourID] = flour.Flour_Weight;
+                    return acc;
+                }, {});
 
-                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data?.CourierName || 'Unknown Courier';
-
+                const updatedShipments = shipmentsResponse.data.map(shipment => {
+                    const totalFlourWeight = shipment.FlourIDs.reduce((sum, flourID) => sum + (flourData[flourID] || 0), 0);
+                    const courierName = couriers[shipment.CourierID] || 'Unknown Courier';
                     return {
                         ...shipment,
                         ShipmentWeight: totalFlourWeight,
-                        CourierName: courierName
+                        CourierName: courierName,
                     };
-                }));
+                });
 
                 setShipments(updatedShipments);
-                console.log('Updated shipments:', updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchShipments();
-        setLoading(false);
     }, []);
 
     const offset = currentPage * itemsPerPage;
@@ -84,11 +85,13 @@ function AdminShipment(){
         if (!dateString) return "Not Delivered";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const date = new Date(dateString);
-        return "    "+date.toLocaleDateString(undefined, options);
+        return "    " + date.toLocaleDateString(undefined, options);
     }
 
-    if (loading === true){
-        return <></>;
+    if (loading === true) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <LoadingStatic />
+      </div>
     }
 
     const handleButtonClick = (item) => {

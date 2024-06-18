@@ -11,7 +11,7 @@ import TruckStats from "@assets/TruckStats.svg";
 import WetLeavesStats from "@assets/WetLeavesStats.svg";
 import axios from 'axios'; // Ensure you have axios installed and imported
 import { API_URL } from "../../App";
-
+import LoadingStatic from "@components/LoadingStatic"
 function Dashboard() {
     const [collapsed, setCollapsed] = useState(false);
     const [tabletMode, setTabletMode] = useState(false);
@@ -29,64 +29,51 @@ function Dashboard() {
     const Bartitle = 'Total Production';
     const Barlabels = ['Wet Leaves', 'Dry Leaves', 'Flour'];
     const Bardata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const tabletMediaQuery = window.matchMedia('(max-width: 1024px)');
-
-        const handleScreenChange = (e) => {
-            console.log("Screen size changed, updating collapsed and tabletMode states", e.matches);
-            setCollapsed(e.matches);
-            setTabletMode(e.matches);
-        };
-
-        console.log("Adding event listener for tablet media query");
-        handleScreenChange(tabletMediaQuery);
-        tabletMediaQuery.addListener(handleScreenChange);
-
-        return () => {
-            console.log("Removing event listener for tablet media query");
-            tabletMediaQuery.removeListener(handleScreenChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        const fetchStatistics = async () => {
+        const fetchData = async () => {
             try {
+                // Fetch statistics
                 console.log("Fetching statistics from API");
-                const response = await axios.get(`${API_URL}/statistics/all_no_format`);
-                console.log("Statistics fetched successfully:", response.data);
-                setStatistics(response.data);
-            } catch (error) {
-                console.error('Error fetching statistics:', error);
-            }
-        };
+                const statisticsResponse = await axios.get(`${API_URL}/statistics/all_no_format`);
+                console.log("Statistics fetched successfully:", statisticsResponse.data);
+                setStatistics(statisticsResponse.data);
 
-        const fetchShipments = async () => {
-            try {
+                // Fetch shipments
                 console.log("Fetching shipments from API");
-                const response = await axios.get(`${API_URL}/shipment/get`);
-                console.log("Shipments fetched successfully:", response.data);
-                const unreceived = response.data
+                const shipmentsResponse = await axios.get(`${API_URL}/shipment/get`);
+                console.log("Shipments fetched successfully:", shipmentsResponse.data);
+
+                // Process unreceived packages
+                const unreceived = shipmentsResponse.data
                     .filter(shipment => shipment.ShipmentDate && !shipment.Rescalled_Weight && !shipment.Rescalled_Date)
                     .sort((a, b) => new Date(a.ShipmentDate) - new Date(b.ShipmentDate))
-                    .slice(0, 3); // Limit to only 3
-                setUnreceivedPackages(unreceived);
-            } catch (error) {
-                console.error('Error fetching shipments:', error);
-            }
-        };  
+                    .slice(0, 3); // Limit to only 3 unreceived packages
 
-        fetchStatistics();
-        fetchShipments();
+                setUnreceivedPackages(unreceived);
+                setLoading(false)
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
     }, []);
+
 
     function formatDate(dateString) {
         if (!dateString) return "Not Delivered";
         const options = { year: 'numeric', month: 'long', day: 'numeric' };
         const date = new Date(dateString);
-        return "    "+date.toLocaleDateString(undefined, options);
+        return "    " + date.toLocaleDateString(undefined, options);
     }
 
+    if (loading) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <LoadingStatic />
+        </div>
+    }
     return (
         <>
             <motion.div initial={{ opacity: 0, y: 20 }}

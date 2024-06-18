@@ -3,6 +3,7 @@ import axios from "axios";
 import { motion } from "framer-motion";
 import LongContainer from "../../components/Cards/LongContainer";
 import { API_URL } from "../../App"; // Adjust the path according to your project structure
+import LoadingBackdrop from "../../components/LoadingBackdrop";
 
 function HarborReception() {
   const [shipments, setShipments] = useState([]);
@@ -66,7 +67,7 @@ function HarborReception() {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div><LoadingBackdrop /></div>;
   }
 
   return (

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import CircularButton from '../../components/CircularButton';
-import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
 import AccordionUsage from '../../components/AccordionUsage';
@@ -17,53 +16,38 @@ function ShipmentSent() {
     const UserID = useOutletContext();
 
     useEffect(() => {
-        const fetchShipments = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
-                console.log('Fetched shipments:', response.data);
-                const shipments = response.data.filter(shipment => shipment.ShipmentDate);
+                const [shipmentsResponse, usersResponse] = await Promise.all([
+                    axios.get(`${API_URL}/shipment/get_by_user/${UserID}`),
+                    axios.get(`${API_URL}/user/get`)
+                ]);
 
+                const shipments = shipmentsResponse.data;
+
+                // Calculate shipment details concurrently
                 const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
-                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
-                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
-                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
-                        return {
-                            FlourID: flourID,
-                            Flour_Weight: flourResponse.data?.Flour_Weight || 0
-                        };
-                    }));
-
-                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
-
-                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data?.CourierName || 'Unknown Courier';
+                    const shipmentWeight = await calculateShipmentWeight(shipment);
+                    const courierName = shipment.CourierID ? await getCourierName(shipment.CourierID) : 'Unknown Courier';
 
                     return {
                         ...shipment,
-                        ShipmentWeight: totalFlourWeight,
+                        ShipmentWeight: shipmentWeight,
                         CourierName: courierName
                     };
                 }));
 
                 setShipmentData(updatedShipments);
+                setUsers(usersResponse.data);
                 console.log('Updated shipments:', updatedShipments);
+                console.log('Fetched users:', usersResponse.data);
             } catch (error) {
-                console.error('Error fetching shipments:', error);
+                console.error('Error fetching data:', error);
+                // Handle error (e.g., show a message to the user)
             }
         };
 
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/user/get`);
-                console.log('Fetched users:', response.data);
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        fetchShipments();
-        fetchUsers();
+        fetchData();
     }, [UserID]);
 
     const handleButtonClick = (item) => {
@@ -74,12 +58,34 @@ function ShipmentSent() {
         }, 5);
     };
 
+    const calculateShipmentWeight = async (shipment) => {
+        try {
+            const totalFlourWeight = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
+                return flourResponse.data?.Flour_Weight || 0;
+            }));
+            return totalFlourWeight.reduce((sum, flourWeight) => sum + flourWeight, 0);
+        } catch (error) {
+            console.error('Error calculating shipment weight:', error);
+            return 0;
+        }
+    };
+
+    const getCourierName = async (courierID) => {
+        try {
+            const courierResponse = await axios.get(`${API_URL}/courier/get/${courierID}`);
+            console.log(`Fetched courier details for courier ID ${courierID}:`, courierResponse.data);
+            return courierResponse.data?.CourierName || 'Unknown Courier';
+        } catch (error) {
+            console.error(`Error fetching courier details for courier ID ${courierID}:`, error);
+            return 'Unknown Courier';
+        }
+    };
+
     const deliveredShipments = shipmentData.filter(item => !item.Check_in_Date && !item.Check_in_Quantity);
     const verifiedShipments = shipmentData.filter(item => item.Check_in_Date && item.Check_in_Quantity && item.Rescalled_Weight === null);
     const rescalledShipments = shipmentData.filter(item => item.Rescalled_Weight !== null);
-    console.log('Delivered shipments:', deliveredShipments);
-    console.log('Verified shipments:', verifiedShipments);
-    console.log('Rescalled shipments:', rescalledShipments);
 
     return (
         <>

@@ -14,7 +14,6 @@ import LongUser from '../../components/Cards/LongUser';
 import axios from 'axios';
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 
-
 const Performance = () => {
   const [centraUsers, setCentraUsers] = useState([]);
   const [harborUsers, setHarborUsers] = useState([]);
@@ -27,15 +26,12 @@ const Performance = () => {
 
   useEffect(() => {
     fetchUsers().then(data => {
-      console.log("Fetched users:", data); // Log all fetched users
       const centra = data.filter(user => user.RoleID === 1);
       const harbor = data.filter(user => user.RoleID === 2);
-      console.log("Centra users:", centra); // Log filtered Centra users
-      console.log("Harbor users:", harbor); // Log filtered Harbor users
       setCentraUsers(centra);
       setHarborUsers(harbor);
     }).catch(error => {
-      console.error("Error fetching users:", error); // Log any errors during fetching
+      console.error("Error fetching users:", error);
     });
 
     fetchWetLeaves().then(data => {
@@ -57,10 +53,9 @@ const Performance = () => {
         }
       });
 
-      console.log("Wet leaves stats:", stats); // Log wet leaves stats
       setWetLeavesStats(stats);
     }).catch(error => {
-      console.error("Error fetching wet leaves:", error); // Log any errors during fetching
+      console.error("Error fetching wet leaves:", error);
     });
   }, []);
 
@@ -76,17 +71,23 @@ const Performance = () => {
   };
 
   return (
-    <div className="container mx-auto w-full flex gap-2 flex-col">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -20 }}
+      transition={{ duration: 0.25 }}
+      className="container mx-auto w-full flex gap-2 flex-col"
+    >
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1 }}
+          transition={{ duration: 0.1}}
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Awaiting Leaves"
+            label="Wet Leaves Total"
             value={wetLeavesStats.awaiting}
             unit="Kg"
             description=""
@@ -99,11 +100,11 @@ const Performance = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.25 }}
+          transition={{ duration: 0.1 }}
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Processed Leaves"
+            label="Dry Leaves Total"
             value={wetLeavesStats.processed}
             unit="Kg"
             description=""
@@ -116,11 +117,11 @@ const Performance = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.5 }}
+          transition={{ duration: 0.1 }}
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Wasted Leaves"
+            label="Powder Total"
             value={wetLeavesStats.wasted}
             unit="Kg"
             description=""
@@ -133,11 +134,11 @@ const Performance = () => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.75 }}
+          transition={{ duration: 0.1 }}
           className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
         >
           <StatsContainer
-            label="Total Wet Leaves"
+            label="Packages Received"
             value={wetLeavesStats.total}
             unit="Kg"
             description=""
@@ -164,7 +165,7 @@ const Performance = () => {
           </div>
         </div>
         <div className='flex flex-col w-1/2'>
-          <MarkerDetails centra wet_leaves={200} dry_leaves={200} powder={100} packages={10} />
+          {/* <MarkerDetails centra wet_leaves={200} dry_leaves={200} powder={100} packages={10} /> */}
           <div className='flex justify-between items-center mt-2'>
             <span className='text-xl font-semibold'>Harbor List</span>
           </div>
@@ -175,7 +176,7 @@ const Performance = () => {
           </div>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

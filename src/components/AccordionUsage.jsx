@@ -1,15 +1,14 @@
-// AccordionUsage.jsx
-
 import React from 'react';
+import PropTypes from 'prop-types';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
-import AccordionActions from '@mui/material/AccordionActions'; // Import AccordionActions
-import './AccordionUsage.css'; // Import the CSS file
+import AccordionActions from '@mui/material/AccordionActions';
+import './AccordionUsage.css';
 
-export default function AccordionUsage({ accordions }) {
+const AccordionUsage = React.memo(({ accordions }) => {
   return (
     <div>
       {accordions.map((accordion, index) => (
@@ -39,4 +38,6 @@ export default function AccordionUsage({ accordions }) {
       ))}
     </div>
   );
-}
+});
+
+export default AccordionUsage;
