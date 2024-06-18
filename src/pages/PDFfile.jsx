@@ -56,27 +56,36 @@ const styles = StyleSheet.create({
     }
 });
 
-const PDFFile = ({ user, role, company, companyRole }) => {
+const PDFFile = ({ user, role, company, shipment, companyRole, shipmentQuantity, shipmentWeight }) => {
     const userName = user?.Username ?? "User data not available";
     const userRole = role ?? "Role data not available";
     const companyName = company?.Username ?? "Company data not available";
     const companyPosition = companyRole ?? "Position data not available";
+    const Check_in_Date = shipment.Check_in_Date;
 
+    const formatDate = (dateString) => {
+        console.log(Check_in_Date)
+        const date = new Date(dateString);
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        return date.toLocaleDateString('en-GB', options);
+    };
+
+    
     return (
         <Document>
             <Page style={styles.page}>
                 <Text style={styles.title}>Acceptance Official Statement</Text>
-                <Text>On this day Thursday, the 14th June, 2024. We, the undersigned below, are:</Text>
+                <Text>On this day {formatDate(Check_in_Date)}. We, the undersigned below, are:</Text>
                 <View style={styles.section}>
                     <Text>Name: {userName}</Text>
                     <Text>Position: {userRole}</Text>
-                    <Text>Address/Region: Central Sulawesi</Text>
+                    {/* <Text>Address/Region: Central Sulawesi</Text> */}
                     <Text>Who becomes the FIRST PARTY</Text>
                 </View>
                 <View style={styles.section}>
                     <Text>Name: {companyName}</Text>
                     <Text>Position: {companyPosition}</Text>
-                    <Text>Address/Region:</Text>
+                    {/* <Text>Address/Region:</Text> */}
                     <Text>Who becomes the SECOND PARTY</Text>
                 </View>
                 <View style={styles.section}>
@@ -99,13 +108,14 @@ const PDFFile = ({ user, role, company, companyRole }) => {
                             <Text style={styles.tableCell}>1</Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>Powder</Text>
+                            <Text style={styles.tableCell}>{role === "Harbor" ? "Powder Packages":"Powder"}</Text>
                         </View>
                         <View style={styles.tableCol}>
-                            <Text style={styles.tableCell}>5 Units</Text>
+                            <Text style={styles.tableCell}>{role === "Harbor" ? `${shipmentQuantity} Units`:`${shipmentWeight} Kg`}</Text>
                         </View>
                     </View>
                 </View>
+                <View></View>
                 <View style={styles.section}>
                     <Text>Thus an official report of the acceptance of these merchandises was made by both sides in earnest. The goods handed over are in good condition since the official report of this event was signed. After this, the item becomes the responsibility of the second party to maintain, care for, and use properly.</Text>
                 </View>

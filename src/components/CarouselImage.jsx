@@ -24,7 +24,7 @@ function CarouselImage({ images, initial, animate, transition }) {
     return (
         <motion.div initial={initial}
             animate={animate}
-            transition={transition} className={`carousel`} onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)}>
+            transition={transition} className={`carousel 2xl:block hidden`} onMouseEnter={() => setAutoPlay(false)} onMouseLeave={() => setAutoPlay(true)}>
             <div className="carousel_wrapper">
                 {images.map((image, index) => (
                     <div

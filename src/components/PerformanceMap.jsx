@@ -1,102 +1,62 @@
-import React, { useState, useEffect } from 'react';
-import { GoogleMap, LoadScript, Marker } from '@react-google-maps/api';
-import Button from "./Button";
+import React, { useState } from "react";
+import {
+  APIProvider,
+  Map,
+  AdvancedMarker,
+  Pin,
+  InfoWindow,
+} from "@vis.gl/react-google-maps";
 
-const containerStyle = {
-  width: '100%',
-  height: '400px'
-};
+// Define the points for five Indonesian cities
+const indonesianCities = [
+  { name: 'Jakarta', lat: -6.2088, lng: 106.8456, key: 'jakarta' },
+  { name: 'Surabaya', lat: -7.2575, lng: 112.7521, key: 'surabaya' },
+  { name: 'Bandung', lat: -6.9175, lng: 107.6191, key: 'bandung' },
+  { name: 'Medan', lat: 3.5952, lng: 98.6722, key: 'medan' },
+  { name: 'Denpasar', lat: -8.6705, lng: 115.2126, key: 'denpasar' },
+];
 
-const indonesiaBounds = {
-  north: 6.1,
-  south: -11.2,
-  west: 95,
-  east: 141
-};
+const PerformanceMap = () => {
+  const [open, setOpen] = useState(null);
 
-function getRandomCoordinates() {
-  const lat = -11 + Math.random() * (6 + 11);
-  const lng = 95 + Math.random() * (141 - 95);
-  return { lat, lng };
-}
-
-function PerformanceMap({ setShowMap, setAddressDetails }) {
-  const [center, setCenter] = useState(null);
-  const [markers, setMarkers] = useState([]);
-  const [address, setAddress] = useState("");
-  const [latitude, setLatitude] = useState(null);
-  const [longitude, setLongitude] = useState(null);
-
-  useEffect(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          setCenter({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-        },
-        () => console.log("Geolocation is not supported by this browser."),
-      );
-    } else {
-      // Default center if geolocation is not supported or permission denied
-      setCenter({ lat: -2.5489, lng: 118.0149 }); // Center of Indonesia
-    }
-  }, []);
-
-  useEffect(() => {
-    // Generate 10 random markers within Indonesia
-    const newMarkers = Array.from({ length: 10 }, () => getRandomCoordinates());
-    setMarkers(newMarkers);
-  }, []);
-
-  const handleMapClick = async (event) => {
-    const newCenter = {
-      lat: event.latLng.lat(),
-      lng: event.latLng.lng()
-    };
-    setCenter(newCenter);
-    setMarkers([{ lat: newCenter.lat, lng: newCenter.lng }]); // Reset markers to only include the new one
-
-    setLatitude(newCenter.lat);
-    setLongitude(newCenter.lng);
-
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${newCenter.lat},${newCenter.lng}&key=AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk`);
-    const data = await response.json();
-    if (data.results[0]) {
-      setAddress(data.results[0].formatted_address);
-    } else {
-      setAddress("Address not found");
-    }
+  const handleMarkerClick = (city) => {
+    console.log("Marker clicked:", city);
+    setOpen(city);
   };
-
-  const handleSaveAddress = () => {
-    setAddressDetails(address);
-    setShowMap(false);
+  
+  const handleCloseClick = () => {
+    console.log("InfoWindow closed");
+    setOpen(null);
   };
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={5}
-        onClick={handleMapClick}
-        options={{
-          restriction: {
-            latLngBounds: indonesiaBounds,
-            strictBounds: true,
-          },
-          mapTypeControl: false,
-          streetViewControl: false,
-          fullscreenControl: false,
-        }}
-      >
-        {markers.map((marker, index) => (
-          <Marker key={index} position={marker} />
-        ))}
-      </GoogleMap>
-    </LoadScript>
+    <APIProvider apiKey={'AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk'}>
+      <div style={{ height: "50vh", width: "100%" }}>
+        <Map center={{ lat: -2.548926, lng: 118.0148634 }} zoom={5} mapId={'5f23de08f244d7c0'}>
+          {indonesianCities.map((city) => (
+            <AdvancedMarker
+              key={city.key}
+              position={{ lat: city.lat, lng: city.lng }}
+              onClick={() => handleMarkerClick(city)}
+            >
+              <Pin background={"grey"} borderColor={"green"} glyphColor={"purple"} />
+            </AdvancedMarker>
+          ))}
+
+          {open && (
+            <InfoWindow
+              position={{ lat: open.lat, lng: open.lng }}
+              onCloseClick={handleCloseClick}
+            >
+              <div style={{ color: 'black' }}>
+                <h3>{open.name}</h3>
+                <p>Coordinates: {open.lat}, {open.lng}</p>
+              </div>
+            </InfoWindow>
+          )}
+        </Map>
+      </div>
+    </APIProvider>
   );
 }
 

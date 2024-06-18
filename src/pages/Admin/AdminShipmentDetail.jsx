@@ -46,7 +46,7 @@ const CentraContainers = [
     { label: 'Your Name' },
 ];
 
-function ShipmentDetails() {
+function AdminShipmentDetails() {
     const location = useLocation();
     const { shipment } = location.state || {};
     const [currentComponent, setCurrentComponent] = useState(0);
@@ -149,4 +149,4 @@ function ShipmentDetails() {
     );
 }
 
-export default ShipmentDetails;
+export default AdminShipmentDetails;

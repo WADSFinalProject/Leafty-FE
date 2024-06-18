@@ -17,7 +17,7 @@ function HarborScanner() {
         console.error(error?.message);
     };
 
-    const handleToggleDrawer = (isOpen) => () => {
+    const handleToggleDrawer = (isOpen) => {
         setOpen(isOpen);
     };
 

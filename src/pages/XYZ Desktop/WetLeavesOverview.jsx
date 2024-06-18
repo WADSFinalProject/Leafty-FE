@@ -13,6 +13,7 @@ import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
 import { useState } from 'react';
+import { Link, useNavigate } from "react-router-dom";
 
 function WetLeavesOverview() {
     const data = [
@@ -46,7 +47,6 @@ function WetLeavesOverview() {
         { field: 'id', header: 'Batch Id' },
         { field: 'name', header: 'Centra Name' },
         { field: 'weight', header: 'Weight' },
-        { field: 'date', header: 'Date' },
     ];
 
     const stats = [
@@ -145,12 +145,44 @@ function WetLeavesOverview() {
     const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Powder'];
     const Piedata = [100, 200, 700];
 
+    const navigate = useNavigate();
+
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex flex-row gap-2">
-                <WidgetContainer className=" flex-col flex-auto w-8/12 h-full">
-                    <LineChart xAxisLabel="Time" yAxisLabel="Values" datasets={datasets}  />
+        <div className="flex flex-row gap-2">
+            <div className="w-3/4">
+                <WidgetContainer className=" flex-col flex-auto">
+                    <LineChart xAxisLabel="Time" yAxisLabel="Values" datasets={datasets} />
                 </WidgetContainer>
+                <div className="flex flex-row gap-2">
+                    <div className="flex-auto w-2/5">
+                        <div className="flex items-center justify-between mb-0">
+                            <span className="font-bold text-xl">Recently Gained Wet Leaves</span>
+                            <button
+                                className="text-[#94C3B3]"
+                                onClick={() => navigate("/company/wetleaves", { replace: true })}
+                            >
+                                See all
+                            </button>
+                        </div>
+                        <WidgetContainer className={"w-fit"} >
+                            <TableComponent
+                                data={data}
+                                header={header}
+                                columns={columns}
+                                ColorConfig={statusBodyTemplate}
+                                admin={false}
+                                paginator={false}
+                                rows={5}
+                                showFilter={false}
+                                showSearch={false}
+                                widihmin={'45rem'}
+                            />
+                        </WidgetContainer>
+                    </div>
+
+                </div>
+            </div>
+            <div className="flex flex-col gap-2">
                 <div className="grid grid-cols-2 gap-2  ">
                     {stats.map((stat, index) => (
                         <motion.div
@@ -170,36 +202,14 @@ function WetLeavesOverview() {
                                 color={stat.color}
                                 modal={false}
                                 frontIcon={stat.icon}
-                                
+
                             />
                         </motion.div>
                     ))}
-                </div>
-            </div>
-            <div className="flex flex-row gap-2">
-                <div className="flex-auto w-3/5">
-                    <div className="flex items-center justify-between mb-0">
-                        <span className="font-bold text-xl">Recently Gained Wet Leaves</span>
-                        <span className="text-[#94C3B3]">See all</span>
-                    </div>
-                    <WidgetContainer>
-                        <TableComponent 
-                            data={data} 
-                            header={header} 
-                            columns={columns} 
-                            ColorConfig={statusBodyTemplate} 
-                            admin={false} 
-                            paginator={false} 
-                            rows={5} 
-                            showFilter={false} 
-                            showSearch={false}
-                            widihmin={'50rem'} 
-                        />
+                    <WidgetContainer container = {false} className="flex w-fit h-fit p-5">
+                        <PieChart labels={Pielabels} data={Piedata} />
                     </WidgetContainer>
                 </div>
-                <WidgetContainer className="flex-auto w-2/12 h-full">
-                    <PieChart labels={Pielabels} data={Piedata} />
-                </WidgetContainer>
             </div>
         </div>
     );

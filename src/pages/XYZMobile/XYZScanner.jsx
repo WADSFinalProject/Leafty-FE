@@ -51,7 +51,8 @@ function XYZScanner() {
             <ScanResultsDrawer 
                 open={open} 
                 toggleDrawer={handleToggleDrawer} 
-                data={data} 
+                data={data}
+                companyMode
             />
         </div>
     );

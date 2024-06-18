@@ -88,7 +88,7 @@ function DashboardXYZ() {
                                     <span className=' w-8 font-montserrat text-base font-semibold text-gray-600'>Received Powder</span>
                                     <span className='font-montserrat text-xl font-semibold'>{statistics.received_powder_count}</span>
                                 </div>
-                                <img src={ReceivedPowder} alt="ReceivedPowder" className='w-50 h-auto mr-3 ' />
+                                <img src={ReceivedPowder} alt="ReceivedPowder" className='w-40 h-auto mr-9 ' />
                             </div>
                         </WidgetContainer>
                         <WidgetContainer container = {false}>

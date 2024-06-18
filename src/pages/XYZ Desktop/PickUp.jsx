@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
 import { motion } from "framer-motion";
 import LongContainer from '@components/Cards/LongContainer';
 import 'daisyui/dist/full.css';
@@ -14,6 +15,8 @@ function Pickup() {
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8); // Default value\
     const [searchTerm, setSearchTerm] = useState('');
+
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handlePageClick = (event) => {
         setCurrentPage(event.selected);
@@ -58,6 +61,10 @@ function Pickup() {
         return shipmentIDMatch || shipmentAmountMatch || shipmentDateMatch;
     });
 
+    const handleShipmentClick = (shipment) => {
+        navigate(`/company/shipmentdetails`, { state: { shipment } }); // Navigate to ShipmentDetails with shipment data
+    };
+
     const offset = currentPage * itemsPerPage;
     const currentPageData = filteredShipments.slice(offset, offset + itemsPerPage);
     const pageCount = Math.ceil(filteredShipments.length / itemsPerPage);
@@ -69,7 +76,6 @@ function Pickup() {
         const date = new Date(dateString);
         return "    "+date.toLocaleDateString(undefined, options);
     }
-
 
     return (
         <div className="container mx-auto w-full">
@@ -96,6 +102,7 @@ function Pickup() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
+                        onClick={() => handleShipmentClick(item)} // Handle click event
                     >
                         <LongContainer
                             showWeight={true}
