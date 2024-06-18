@@ -134,8 +134,8 @@ function OnBoarding( ) {
         </form>
         <Divider label={"OR"} />
         <Button border={"2px solid #0F7275"} background="#F7FAFC" color="#4C4949" label={isRegister ? "Sign up with Google" : "Sign in with Google"} img={Google}></Button>
-        <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>Sign Up</button></span>
-      </div>
+        <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>{isRegister ? "Sign In" : "Sign Up"}</button></span>
+      </div>  
       {/* End of Login Contents */}
       {/* Features */}
       <motion.div className='w-1/2 h-screen relative justify-end items-center hidden md:block'
