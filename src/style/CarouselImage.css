@@ -8,6 +8,12 @@
     z-index: 10; /* Ensure overflow is hidden */
 }
 
+@media (max-width: 1399px) { /* Tailwind's 2xl breakpoint */
+    .carousel {
+        display: none !important;
+    }
+}
+
 .carousel_wrapper {
     display: flex; /* Use flexbox for horizontal layout */
     transition: transform 0.5s ease; /* Add transition for smooth sliding */

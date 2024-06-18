@@ -31,7 +31,7 @@ const PerformanceMap = () => {
 
   return (
     <APIProvider apiKey={'AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk'}>
-      <div style={{ height: "100vh", width: "100%" }}>
+      <div style={{ height: "50vh", width: "100%" }}>
         <Map center={{ lat: -2.548926, lng: 118.0148634 }} zoom={5} mapId={'5f23de08f244d7c0'}>
           {indonesianCities.map((city) => (
             <AdvancedMarker
