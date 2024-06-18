@@ -25,39 +25,7 @@ const columns = [
   { field: 'status', header: 'Status' }
 ];
 
-const stats = [
-  {
-    label: "Wasted Leaves",
-    value: "250",
-    unit: "Kg",
-    color: "#0F7275",
-    icon: ExpiredWetLeaves,
-    delay: 1
-  },
-  {
-    label: "Awaiting Leaves",
-    value: "243",
-    unit: "Kg",
-    color: "#C0CD30",
-    icon: AwaitingLeaves,
-    delay: 1.25
-  },
-  {
-    label: "Processed Leaves",
-    value: "243",
-    unit: "Kg",
-    color: "#79B2B7",
-    icon: ProcessedLeaves,
-    delay: 1.5
-  },
-  {
-    label: "Total Wet Leaves",
-    value: "1500",
-    unit: "Kg",
-    color: "#0F7275",
-    delay: 1.75
-  }
-];
+
 
 const AdminWetLeaves = () => {
   const [data, setData] = useState([]);
@@ -69,15 +37,17 @@ const AdminWetLeaves = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/wetleaves/get`);
+        console.log(response)
         const processedData = await Promise.all(response.data.map(async item => ({
           id: item.WetLeavesID,
           name: await getUser(item.UserID),
           weight: item.Weight,
           date: formatDate(item.ReceivedTime),
           expiration: formatDate(addMonth(item.ReceivedTime)),
-          status: "Awaiting" // Assuming status is a part of the response
+          status: item.Status // Assuming status is a part of the response
         })));
         setData(processedData);
+        
       } catch (error) {
         console.error('Error fetching wet leaves data', error);
       }

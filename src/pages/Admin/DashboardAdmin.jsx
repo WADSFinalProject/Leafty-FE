@@ -18,20 +18,19 @@ function DashboardAdmin() {
     const [tabletMode, setTabletMode] = useState(false);
     const [users, setUsers] = useState([]);
     const [shipments, setShipments] = useState([]);
+    const [unscaled, setUnscaled] = useState(0); // Corrected state variable name
     const [statistics, setStatistics] = useState({
         sum_wet_leaves: 0,
         sum_dry_leaves: 0,
         sum_flour: 0,
         sum_shipment_quantity: 0,
-        rescalled_packages_count: 0,
-        unscalled_packages_count: 0
     });
 
     const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Powder'];
     const Piedata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
     const Bartitle = 'Total Production';
-    const Barlabels = ['01/12', '01/13', '01/14', '01/15', '01/16', '01/17', '01/18'];
-    const Bardata = [1200, 1500, 1100, 1700, 1300, 1900, 1400];
+    const Barlabels = ["Wet Leaves", "Dry Leaves", "Powder"];
+    const Bardata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
 
     useEffect(() => {
         console.log("user:"+user_id)
@@ -48,7 +47,7 @@ function DashboardAdmin() {
         return () => {
             tabletMediaQuery.removeListener(handleScreenChange);
         };
-    }, []);
+    }, [user_id]);
 
     useEffect(() => {
         const fetchShipments = async () => {
@@ -65,12 +64,8 @@ function DashboardAdmin() {
 
     useEffect(() => {
         const calculateStatistics = () => {
-            const unscalledPackagesCount = shipments.filter(shipment => !shipment.Rescalled_Weight).length;
-
-            setStatistics(prevStats => ({
-                ...prevStats,
-                unscalled_packages_count: unscalledPackagesCount,
-            }));
+            const unscaledPackagesCount = shipments.filter(shipment => !shipment.Rescalled_Weight).length;
+            setUnscaled(unscaledPackagesCount);
         };
 
         calculateStatistics();
@@ -101,7 +96,7 @@ function DashboardAdmin() {
     useEffect(() => {
         const fetchStatistics = async () => {
             try {
-                const response = await axios.get(`${API_URL}/statistics/all`);
+                const response = await axios.get(`${API_URL}/statistics/all_no_format`);
                 setStatistics(response.data);
             } catch (error) {
                 console.error('Error fetching statistics:', error);
@@ -146,7 +141,7 @@ function DashboardAdmin() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.35, delay: 2 }}>
-                    <StatsContainer label="Unscaled Pickups" value={statistics.unscalled_packages_count} icon_unit={box} description="Scale Your Pickup!" color={"#0F7275"} />
+                    <StatsContainer label="Unscaled Pickups" value={unscaled} icon_unit={box} description="Scale Your Pickup!" color={"#0F7275"} />
                 </motion.div>
             </div>
 
