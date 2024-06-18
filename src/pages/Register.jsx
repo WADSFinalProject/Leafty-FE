@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { motion, useAnimationControls } from "framer-motion";
 import '@style/App.css';
@@ -18,13 +18,18 @@ import MyMapComponent from '@components/MyMapComponents';
 import axios from 'axios';
 import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
+import OtpApi from '../OtpProvider';
+import RegApi from '../RegProvider';
 
 axios.defaults.withCredentials = true
 
 function Register() {
+    const Reg = useContext(RegApi);
+    const Otp = useContext(OtpApi);
     const controls = useAnimationControls();
     const navigate = useNavigate();
     const Location = useLocation();
+    const [loading, setLoading] = useState(false);
 
     const [isVerified, setIsVerified] = useState(false);
     const [isImageVisible, setIsImageVisible] = useState(false);
@@ -36,7 +41,7 @@ function Register() {
 
     const [currentUserId, setCurrentUserId] = useState("");
     const [email, setEmail] = useState(emailAddress);
-
+ 
     const [password, setPassword] = useState(userPassword);
     const [username, setUsername] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
@@ -64,21 +69,6 @@ function Register() {
         }
     }, [userPassword]);
 
-    const createUser = async () => {
-        try {
-            const response = await axios.post(API_URL + "/user/post", {
-                Username: username,
-                Email: email,
-                PhoneNumber: phoneNumber,
-                RoleID: 5,
-                Password: password,
-            });
-            console.log(response.data);
-        } catch (error) {
-            console.error('Error calling backend function', error);
-        }
-
-    };
 
     async function handleWhoAmI() {
         try {
@@ -113,14 +103,45 @@ function Register() {
         setValue(localStorage.getItem('email'))
     })
 
-    const handleRegister = async () => {
-        createUser()
+    // const handleRegister = async () => {
+    //     createUser()
         
-        .then(res => navigate("/"))
-        .catch((err) => alert(err.message));
+    //     .then(res => navigate("/"))
+    //     .catch((err) => alert(err.message));
+    // };
+
+    const createUser = async () => {
+        try {
+            const response = await axios.post(API_URL + "/user/post", {
+                Username: username,
+                Email: email,
+                PhoneNumber: phoneNumber,
+                RoleID: 5,
+                Password: password,
+            });
+            console.log(response.data);
+        } catch (error) {
+            console.error('Error calling backend function', error);
+        }
+
     };
 
+    const handleRegister = async () => {
+        Otp.setOtp(true);
+        setLoading(true);
+
+        const handleNavigation = async () => {
+            await new Promise(resolve => setTimeout(resolve, 0));
+            navigate('/verify', { state: { Username: username, emailAddress: email, PhoneNumber: phoneNumber, Password: password, ForgotPass: false, locationPoint: addressDetails} });
+        };
+
+        setTimeout(() => {
+            handleNavigation();
+        }, 1500);
+      };
+
     const handleGoBack = (e) => {
+        Reg.setReg(false);
         e.preventDefault();
         navigate(-1);
     }
@@ -133,6 +154,10 @@ function Register() {
     const handleCloseMap = () => {
         setShowMap(false);
     }
+
+    if (loading) {
+        return <LoadingCircle />;
+      }
 
     return (
         <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
