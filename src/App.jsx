@@ -57,11 +57,16 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import React from "react";
 import AuthApi from "./AuthApi";
+import ForgotPassword from "./pages/ForgotPassword";
+import ForgotPasswordEmail from "./pages/ForgotPasswordEmail";
+import OtpApi from "./OtpProvider";
+import RegApi from "./RegProvider";
 import DryLeavesOverview from "./pages/XYZ Desktop/DryLeavesOverview";
 import PowderOverview from "./pages/XYZ Desktop/PowderOverview";
 import DownloadPDF from "./pages/Downloadpdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import AdminShipment from "./pages/Admin/AdminShipment";
+import AdminShipmentDetails from "./pages/Admin/AdminShipmentDetail";
 
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
@@ -75,6 +80,8 @@ const USER_TYPES = {
 
 function App() {
   const [auth, setAuth] = useState(false);
+  const [otp, setOtp] = useState(false);
+  const [reg, setReg] = useState(false);
   const [CURRENT_USER, setUser] = useState(null);
   const [CURRENT_USER_ROLE, setRole] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -132,6 +139,27 @@ function App() {
     return <Outlet />;
   };
 
+  const ProtectedOtp = ({}) => {
+    const { otp } = React.useContext(OtpApi);
+  
+    if (otp) {
+      return <Outlet/>;
+    }
+  
+    return <Navigate to="/" />;
+  };
+
+  const ProtectedRegistering = ({}) => {
+    const { reg } = React.useContext(RegApi);
+  
+    if (reg) {
+      return <Outlet/>;
+    }
+  
+    return <Navigate to="/" />;
+  };
+
+
   const ProtectedCentra = ({}) => {
     if (CURRENT_USER_ROLE != 1) {
       return <Navigate to="/" />;
@@ -165,17 +193,26 @@ function App() {
   };
 
   return (
-    <AuthApi.Provider value={{ auth, setAuth }}>
-      <Router>
-        <Routes>
-          <Route exact path="/" element={<ProtectedLogin />}>
-            <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI} />} />
-          </Route>
-          <Route path="verify" element={<Verification />} />
-          <Route path="register" element={<Register />} />
-          <Route path="approval" element={<Approval />} />
-          <Route path="*" element={<PageNotFound />} />
-          {/* <Route path="company" element={<PageNotFound />}></Route> */}
+    <AuthApi.Provider value={{auth, setAuth}}>
+      <OtpApi.Provider value={{otp, setOtp}}>
+        <RegApi.Provider value={{reg, setReg}}>
+          <Router>
+            <Routes>
+              <Route exact path="/" element={<ProtectedLogin/>}>
+                <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI}/>}></Route>
+                <Route path="forgor" element={<ForgotPassword/>}></Route>
+                <Route path="email-forgor" element={<ForgotPasswordEmail/>}></Route>
+                <Route exact path="/" element={<ProtectedOtp/>}>
+                  <Route path="verify" element={<Verification />}></Route>
+                </Route>\
+                <Route exact path="/" element={<ProtectedRegistering/>}>
+                  <Route path="register" element={<Register />}></Route>
+                </Route>
+              </Route>            
+              
+              <Route path="approval" element={<Approval />}></Route>
+              <Route path="*" element={<PageNotFound />}></Route>
+              {/* <Route path="company" element={<PageNotFound />}></Route> */}
 
           <Route exact path="/" element={<ProtectedRoute />}>
             <Route exact path="/" element={<ProtectedCompany />}>
@@ -243,6 +280,7 @@ function App() {
                 <Route path="powder" element={<AdminPowder />} />
                 <Route path="user management" element={<AdminUserTable />} />
                 <Route path="shipment" element={<AdminShipment />} />
+                <Route path="shipmentdetails" element={<AdminShipmentDetails />} />
                 <Route path="user approval" element={<AdminUserApproval />} />
               </Route>
             </Route>
@@ -252,6 +290,8 @@ function App() {
           <Route path="qr" element={<QRPage />} />
         </Routes>
       </Router>
+        </RegApi.Provider>
+      </OtpApi.Provider>
     </AuthApi.Provider>
   );
 }
