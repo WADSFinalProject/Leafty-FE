@@ -9,8 +9,12 @@ import Button from '@components/Button';
 import Image from '@components/Images';
 import Illustration from "@assets/Approval.svg";
 import UnapprovedIllustration from "@assets/Unapproved.svg"; // Import the new illustration/svg
+import { API_URL } from '../App';
+import AuthApi from '../AuthApi';
+import axios from 'axios';
 
 function Approval() {
+  const Auth = React.useContext(AuthApi);
   const [isApproved, setIsApproved] = useState(false);
   const [showLoadingCircle, setShowLoadingCircle] = useState(false);
   const [showUnapprovedIllustration, setShowUnapprovedIllustration] = useState(false); // State to toggle the unapproved illustration
@@ -30,6 +34,24 @@ function Approval() {
     // Update state to show the unapproved illuAstration and loading circle
     setShowUnapprovedIllustration(true);
   };
+
+  async function handle() {
+    try {
+        const response = await axios.delete(API_URL + "/delete_session")
+        if (response) {
+            Auth.setAuth(false);
+            navigate('/');
+        }
+        return false
+    } catch (error) {
+        console.error("Error while deleting session:", error);
+        console.error(error.response.data);   
+        console.error(error.response.status); 
+        console.error(error.response.headers);
+        return false
+
+    }
+  }
 
   return (
     <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
@@ -52,7 +74,7 @@ function Approval() {
           background="#0F7275"
           color="#F7FAFC"
           label="Logout"
-          onClick={handleLogout} // Attach handleLogout function
+          onClick={handle} // Attach handleLogout function
         ></Button>
       </div>
 

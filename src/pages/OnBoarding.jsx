@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import '@style/App.css';
@@ -12,17 +12,20 @@ import Google from '@assets/icons/google.svg';
 import Divider from '@components/Divider';
 import Button from '@components/Button';
 import CarouselImage from "@components/CarouselImage.jsx";
+import LoadingCircle from "@components/LoadingCircle"
 import { Slides } from '../components/Slides.js';
 import axios from 'axios';
 import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
 import AuthApi from '../AuthApi.js';
+import RegApi from '../RegProvider.js';
 
 function OnBoarding( ) {
 
-  const Auth = React.useContext(AuthApi);
+  const Reg = useContext(RegApi);
+  const Auth = useContext(AuthApi);
   const [isLogin, setIsLogin] = useState(false);
-
+  const [loading, setLoading] = useState(false);
   const [isSubmit, setIsSubmit] = useState(false);
 
   const [isRegister, setIsRegister] = useState(false);
@@ -35,28 +38,17 @@ function OnBoarding( ) {
   const navigate = useNavigate();
   const [showCarousel, setShowCarousel] = useState(false);
 
+  console.log(Reg.reg);
   useEffect(() => {
     controls.start("login");
-    if (isSubmit) {
-      // if (isLogin) {
-      //   console.log(email)
-      //   const timeout = setTimeout(() => {
-      //     navigate('/verify', { state: { emailAddress: email } });
-      //   }, 3000);
+}, []);
 
-      //   // Clean up the timeout to avoid memory leaks
-      //   return () => clearTimeout(timeout);
-      // }
-      if (isSignUp) {
-        const timeout = setTimeout(() => {
-          navigate('/register', { state: { emailAddress: email, userPassword: password } });
-        }, 3000);
-
-        // Clean up the timeout to avoid memory leaks
-        return () => clearTimeout(timeout);
-      }
-    }
-  }, [isSubmit, isLogin, isSignUp]);
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setShowCarousel(true);
+    }, 1000);
+    return () => clearTimeout(timeout);
+  }, []);
 
   async function handleRouting() {
     
@@ -93,23 +85,32 @@ function OnBoarding( ) {
   }
   };
 
-  const handleSignUp = () => {
+  const handleNavigation = async () => {
+    await new Promise(resolve => setTimeout(resolve, 0));
+    navigate('/register', { state: { emailAddress: email, userPassword: password } });
+};
+
+  const handleSignUp = async () => {
     setIsSignUp(!isSignUp);
+    Reg.setReg(true);
+    setLoading(true);
+
+    setTimeout(() => {
+        handleNavigation();
+    }, 1500);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setIsSubmit(!isSubmit);
   }
 
-  useEffect(() => {
-    // Set a timeout to show the carousel after 2 seconds
-    const timeout = setTimeout(() => {
-      setShowCarousel(true);
-    }, 500);
-    // Clear the timeout to avoid memory leaks
-    return () => clearTimeout(timeout);
-  }, []);
+  const handleForgotpassword = () => {
+    navigate("/email-forgor");
+  }
+
+  if (loading) {
+    return <LoadingCircle />;
+  }
 
   return (
     <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>
@@ -127,7 +128,7 @@ function OnBoarding( ) {
           <InputField type={"password"} icon={Password} label={"Password"} placeholder={"***********"} onChange={(e) => { setPassword(e.target.value) }} value={password} />
           <div className='flex flex-row justify-between items-center'>
             <CheckBox label={"Remember Me"} />
-            <span className='' style={{ color: "#79B2B7" }}>Forgot Password?</span>
+            <span className='' style={{ color: "#79B2B7", cursor: "pointer" }} onClick={handleForgotpassword}>Forgot Password?</span>
           </div>
           <Button type={"submit"} background="#0F7275" color="#F7FAFC" label={isRegister ? (isSignUp ? <span className='loading loading-dots loading-sm'></span> : "Sign Up") : (isLogin ? <span className='loading loading-dots loading-sm'></span> : "Sign In")} onClick={isRegister ? handleSignUp : handleLogin}></Button>
         </form>
