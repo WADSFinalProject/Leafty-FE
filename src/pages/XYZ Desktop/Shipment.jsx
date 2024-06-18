@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
@@ -18,6 +19,8 @@ function Shipment() {
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
     const [searchTerm, setSearchTerm] = useState('');
+
+    const navigate = useNavigate(); // Initialize useNavigate
 
     const handlePageClick = (newPage) => {
         setCurrentPage(newPage);
@@ -71,6 +74,10 @@ function Shipment() {
 
         fetchShipments();
     }, []);
+
+    const handleShipmentClick = (shipment) => {
+        navigate(`/company/shipmentdetails`, { state: { shipment } }); // Navigate to ShipmentDetails with shipment data
+    };
 
     const offset = currentPage * itemsPerPage;
 
@@ -155,6 +162,7 @@ function Shipment() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
+                        onClick={() => handleShipmentClick(item)} // Handle click event
                     >
                         <LongContainer
                             showWeight={true}
