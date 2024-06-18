@@ -55,13 +55,16 @@ const Powder = () => {
 
         flourResponse.data.forEach(item => {
           stats.total += item.Flour_Weight;
-          if (item.Status === 'Awaiting') {
-            stats.awaiting += item.Flour_Weight;
-          } else if (item.Status === 'Processed') {
-            stats.processed += item.Flour_Weight;
-          } else if (item.Status === 'Expired') {
+          console.log(item.Status)
+          if (item.Status === 'Thrown' || (new Date(item.Expiration) < new Date())) {
             stats.wasted += item.Flour_Weight;
-          }
+          } 
+          else if (item.Status === 'Awaiting') {
+            stats.awaiting += item.Flour_Weight;
+          } 
+          else if (item.Status === 'Processed') {
+            stats.processed += item.Flour_Weight;
+          } 
         });
 
         setStats(stats);

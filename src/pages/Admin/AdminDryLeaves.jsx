@@ -75,7 +75,7 @@ const AdminDryLeaves = () => {
           weight: item.Processed_Weight + " Kg",
           date: formatDate(item.ReceivedTime),
           expiration: formatDate(addMonth(item.ReceivedTime)),
-          status: "Awaiting" // Assuming status is a part of the response
+          status: item.Status // Assuming status is a part of the response
         })));
         setData(processedData);
       } catch (error) {

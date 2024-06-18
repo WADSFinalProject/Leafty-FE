@@ -202,7 +202,7 @@ const AdminPowder = () => {
         UserID: await getUserID(name), // Function to get user ID from name
         Processed_Weight: weight.replace(' Kg', ''),
         ReceivedTime: new Date(date).toISOString(),
-        ExpirationTime: new Date(expiration).toISOString(),
+        ExpirationTime: new Date(expiration).toISOString()
       });
 
       // Update the local state
