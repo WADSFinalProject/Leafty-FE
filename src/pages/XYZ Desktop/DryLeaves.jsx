@@ -50,16 +50,20 @@ const DryLeaves = () => {
           processed: 0,
           wasted: 0,
           total: 0
+          
         };
+        
 
         dryLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Processed_Weight;
-          if (leaf.Status === 'Processed') {
+          if ((new Date(leaf.Expiration) < new Date()) == true) {
+            stats.wasted += leaf.Processed_Weight;
+            
+          }
+          else if(leaf.Status === 'Processed') {
             stats.processed += leaf.Processed_Weight;
           }
-          else if (new Date(leaf.Expiration) < new Date()) {
-            stats.wasted += leaf.Processed_Weight;
-          }
+          
           else if (leaf.Status === 'Awaiting') {
             stats.awaiting += leaf.Processed_Weight;
           } 
