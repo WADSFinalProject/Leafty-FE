@@ -15,6 +15,7 @@ import "primereact/resources/themes/lara-light-cyan/theme.css";
 import axios from 'axios';  // Ensure you have axios installed and imported
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 import dayjs from 'dayjs';
+import LoadingStatic from '../../components/LoadingStatic';
 
 const header = 'Recently Gained Powder'; // Example header
 
@@ -36,45 +37,49 @@ const Powder = () => {
     wasted: 0,
     total: 0
   });
-
+  const [ContentLoaded, setContentLoaded] = useState(false); 
   useEffect(() => {
     const fetchFlour = async () => {
       try {
-        const flourResponse = await axios.get(`${API_URL}/flour/get`);
-        const usersResponse = await axios.get(`${API_URL}/user/get`);
-        setFlour(flourResponse.data);
-        setUsers(usersResponse.data);
-
-        // Calculate statistics
+        const [flourResponse, usersResponse] = await Promise.all([
+          axios.get(`${API_URL}/flour/get`),
+          axios.get(`${API_URL}/user/get`)
+        ]);
+  
+        const flourData = flourResponse.data;
+        const currentDate = new Date();
         const stats = {
           awaiting: 0,
           processed: 0,
           wasted: 0,
           total: 0
         };
-
-        flourResponse.data.forEach(item => {
+  
+        flourData.forEach(item => {
           stats.total += item.Flour_Weight;
-          console.log(item.Status)
-          if (item.Status === 'Thrown' || (new Date(item.Expiration) < new Date())) {
+  
+          if (item.Status === 'Thrown' || (new Date(item.Expiration) < currentDate)) {
             stats.wasted += item.Flour_Weight;
-          }
-          else if (item.Status === 'Awaiting') {
+          } else if (item.Status === 'Awaiting') {
             stats.awaiting += item.Flour_Weight;
-          }
-          else if (item.Status === 'Processed') {
+          } else if (item.Status === 'Processed') {
             stats.processed += item.Flour_Weight;
           }
         });
-
+  
+        setFlour(flourData);
+        setUsers(usersResponse.data);
         setStats(stats);
+        setContentLoaded(true);
       } catch (error) {
         console.error('Error fetching data:', error);
+        // Handle error state or logging as necessary
       }
     };
-
+  
     fetchFlour();
   }, []);
+  
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
@@ -169,6 +174,13 @@ const Powder = () => {
   };
 
   return (
+    <div className="container mx-auto w-full h-screen flex items-center justify-center">
+    {!ContentLoaded && (
+      <div className="fixed inset-0 flex items-center justify-center">
+        <LoadingStatic />
+      </div>
+    )} 
+    {ContentLoaded && (
     <div className="container mx-auto w-full">
       <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} />
       <div className="flex flex-wrap gap-4 justify-stretch">
@@ -241,6 +253,8 @@ const Powder = () => {
           />
         </motion.div>
       </div>
+      </div>
+      )}
     </div>
   );
 };
