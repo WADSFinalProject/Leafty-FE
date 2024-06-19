@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
@@ -182,22 +182,12 @@ function WetLeaves() {
     fetchData();
   }, [UserID]);
 
-  const fetchSumWetLeavesWeightToday = async () => {
-    try {
-      const response = await axios.get(`${API_URL}/wetleaves/sum_weight_today/${UserID}`);
-      return response.data.total_weight_today;
-    } catch (error) {
-      console.error('Error fetching sum wet leaves weight today:', error);
-      return 0;
-    }
-  };
-
-  const handleButtonClick = (item) => {
+  const handleButtonClick = useCallback((item) => {
     setSelectedData(item);
     setTimeout(() => {
       document.getElementById('AddLeaves').showModal();
     }, 5);
-  };
+  }, []);
 
   return (
     <>

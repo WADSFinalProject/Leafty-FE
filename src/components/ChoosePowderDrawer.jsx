@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import Checkbox from '@mui/material/Checkbox';
@@ -10,6 +10,7 @@ import axios from 'axios';
 import PowderLogo from '@assets/Powder.svg';
 import ReadyIcon from '@assets/ReadyIcon.svg';
 import { API_URL } from '../App';
+import LoadingStatic from '@components/LoadingStatic';
 import "./Drawer.css";
 
 const drawerBleeding = 56;
@@ -48,26 +49,29 @@ const theme = createTheme({
 });
 
 function ChoosePowderDrawer(props) {
-    const { window, open, toggleDrawer, UserID, onSelectFlour, weight } = props; // Receiving weight as a prop
+    const { window, open, toggleDrawer, UserID, onSelectFlour, weight } = props;
     const [PowderData, setPowderData] = useState([]);
     const [selectedFlours, setSelectedFlours] = useState([]);
+    const [loading, setLoading] = useState(true); // Loading state
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
-
-                setPowderData(response.data.filter(item => item.Status === "Awaiting" && new Date(item.Expiration) > new Date()));
-                console.log(response.data);
-            } catch (error) {
-                console.error('Error fetching Powder data:', error);
-            }
-        };
-
         fetchData();
     }, [UserID]);
 
-    const handleSelectFlour = (flourID, flourWeight) => {
+    const fetchData = useCallback(async () => {
+        try {
+            setLoading(true);
+            const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
+            const data = response.data.filter(item => item.Status === "Awaiting" && new Date(item.Expiration) > new Date());
+            setPowderData(data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Error fetching Powder data:', error);
+            setLoading(false);
+        }
+    }, [UserID]);
+
+    const handleSelectFlour = useCallback((flourID, flourWeight) => {
         const flour = { FlourID: flourID, Flour_Weight: flourWeight };
         setSelectedFlours(prevSelected => {
             if (prevSelected.some(item => item.FlourID === flourID)) {
@@ -76,18 +80,18 @@ function ChoosePowderDrawer(props) {
                 return [...prevSelected, flour];
             }
         });
-    };
+    }, []);
 
-    const handleConfirmSelection = () => {
-        if (selectedFlours.length >= 0) {
-            const updatedData = PowderData.map((item) =>
+    const handleConfirmSelection = useCallback(() => {
+        if (selectedFlours.length > 0) {
+            const updatedData = PowderData.map(item =>
                 selectedFlours.some(f => f.FlourID === item.FlourID) ? { ...item, selected: true } : item
             );
             setPowderData(updatedData);
             onSelectFlour(selectedFlours);
             toggleDrawer(false)();
         }
-    };
+    }, [PowderData, selectedFlours, onSelectFlour, toggleDrawer]);
 
     const container = window !== undefined ? () => window().document.body : undefined;
 
@@ -98,23 +102,27 @@ function ChoosePowderDrawer(props) {
                     container={container}
                     anchor="bottom"
                     open={open}
-                    onClose={toggleDrawer(false)} // Pass false to close the drawer
+                    onClose={toggleDrawer(false)}
                     onOpen={toggleDrawer(true)}
                     swipeAreaWidth={drawerBleeding}
                     disableSwipeToOpen={false}
-                    ModalProps={{
-                        keepMounted: true,
-                    }}
+                    ModalProps={{ keepMounted: true }}
                 >
                     <StyledBox>
                         <Puller />
                         <div className='flex justify-between flex-col h-full'>
                             <div className='flex flex-col gap-2'>
                                 <span className='font-bold text-2xl'>Choose Powder</span>
-                                {PowderData.length > 0 ? (
-                                    PowderData.map((item) => (
-                                        <div key={item.FlourID} className='flex justify-between'> {/* Corrected key prop */}
-                                            <WidgetContainer container={false} borderRadius="10px" className="w-full flex items-center ">
+                                {loading ? (
+                                    <div className='text-center p-4'>
+                                        <span className="font-montserrat text-base font-semibold leading-tight tracking-wide">
+                                            <LoadingStatic />
+                                        </span>
+                                    </div>
+                                ) : PowderData.length > 0 ? (
+                                    PowderData.map(item => (
+                                        <div key={item.FlourID} className='flex justify-between'>
+                                            <WidgetContainer container={false} borderRadius="10px" className="w-full flex items-center">
                                                 <Checkbox
                                                     sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
                                                     checked={selectedFlours.some(f => f.FlourID === item.FlourID)}
@@ -131,7 +139,6 @@ function ChoosePowderDrawer(props) {
                                                 </div>
                                                 <div className="flex ml-auto items-center">
                                                     <Countdown time={item.Expiration} color={"#C0CD30"} image={ReadyIcon} />
-                                                    {/* <Button onClick={() => handleSelectFlour(item.FlourID, item.Flour_Weight)}>Select</Button> */}
                                                 </div>
                                             </WidgetContainer>
                                         </div>

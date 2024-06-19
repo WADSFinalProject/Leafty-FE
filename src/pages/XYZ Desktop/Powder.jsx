@@ -130,6 +130,11 @@ const Powder = () => {
         logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
       }
     }
+    else if (rowData.status === "Expired") {
+      backgroundColor = hexToRGBA("#D45D5D", 0.5);
+      textColor = "#D45D5D";
+      logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    }
     else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
       textColor = "#E28834";

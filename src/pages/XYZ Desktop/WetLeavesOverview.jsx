@@ -51,10 +51,18 @@ function WetLeavesOverview() {
 
     const stats = [
         {
+            label: "Wasted Leaves",
+            value: "250",
+            unit: "Kg",
+            color: "#79B2B7",
+            icon: ExpiredWetLeaves,
+            delay: 1.5
+        },
+        {
             label: "Awaiting Leaves",
             value: "243",
             unit: "Kg",
-            color: "#C0CD30",
+            color: "#D2D681",
             icon: AwaitingLeaves,
             delay: 1
         },
@@ -62,23 +70,16 @@ function WetLeavesOverview() {
             label: "Processed Leaves",
             value: "243",
             unit: "Kg",
-            color: "#79B2B7",
+            color: "#0F7275",
             icon: ProcessedLeaves,
             delay: 1.25
         },
-        {
-            label: "Wasted Leaves",
-            value: "250",
-            unit: "Kg",
-            color: "#0F7275",
-            icon: ExpiredWetLeaves,
-            delay: 1.5
-        },
+        
         {
             label: "Total Wet Leaves",
             value: "1500",
             unit: "Kg",
-            color: "#0F7275",
+            color: "#94C3B3",
             icon: TotalCollectedWet,
             delay: 1.75
         }
@@ -191,6 +192,7 @@ function WetLeavesOverview() {
                                     showFilter={false}
                                     showSearch={false}
                                     widihmin={'45rem'}
+                                    action = {false}
                                 />
                             </motion.div>
                         </WidgetContainer>

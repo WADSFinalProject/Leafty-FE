@@ -69,6 +69,7 @@ function Verification() {
     };
 
     useEffect(() => {
+        setIsImageVisible(true)
         if (email){
             generateOTP();
         }
