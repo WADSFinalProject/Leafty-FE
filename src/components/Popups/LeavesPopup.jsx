@@ -32,7 +32,10 @@ const LeavesPopup = forwardRef(({
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: value
+    }));
   };
 
   const handleSubmit = () => {
@@ -91,16 +94,19 @@ const LeavesPopup = forwardRef(({
                   className="flex items-center justify-center rounded-md overflow-hidden"
                 >
                   <div className="flex items-center gap-2">
-                    {status === "Processed" &&<>
-                    <span style={{ color: "rgba(212, 150, 93)" }}>Processing</span>
-                    <img src={ProcessedLeaves} alt="Processed" /></>}
+                    {formData.status === "Processed" &&
+                      <>
+                        <span style={{ color: "rgba(212, 150, 93)" }}>Processing</span>
+                        <img src={ProcessedLeaves} alt="Processed" />
+                      </>
+                    }
                   </div>
                 </div>
               </div>
-              {currentDate < new Date(expiredDate) && (
+              {currentDate < new Date(formData.expiration) && (
                 <div className='flex flex-col justify-center items-center'>
                   <span className='font-semibold text-md'>Expired in</span>
-                  <RealTimeCountDown collectedDate={new Date()} expiredDate={expiredDate} />
+                  <RealTimeCountDown collectedDate={new Date()} expiredDate={formData.expiration} />
                 </div>
               )}
             </div>
@@ -132,7 +138,7 @@ const LeavesPopup = forwardRef(({
           ✕
         </button>
         {editable && (
-          <Button className="w-full" type="submit" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleSubmit} />
+          <Button className="w-full" type="button" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleSubmit} />
         )}
       </div>
     </dialog>

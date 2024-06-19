@@ -104,8 +104,8 @@ function AdminLayout(CURRENT_USER) {
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
                         <FilterDashboard tablet={tabletMode} />
-                        <Profile />
-                        <Button onClick={openModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" />
+                        <Profile Username = {userData.Username}/>
+                        {/* <Button onClick={openModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" /> */}
                     </div>
                 </div>
                 <Outlet context={user_id}/>

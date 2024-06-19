@@ -20,7 +20,6 @@ const columns = [
   { field: 'id', header: 'Batch Id' },
   { field: 'name', header: 'Centra Name' },
   { field: 'weight', header: 'Weight' },
-  { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
   { field: 'status', header: 'Status' }
 ];
@@ -64,42 +63,39 @@ const AdminPowder = () => {
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [editable, setEditable] = useState(false);
   const leavesModalRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/flour/get`); 
-        const processedData = await Promise.all(response.data.map(async item => ({
+        const [flourResponse, usersResponse] = await Promise.all([
+          axios.get(`${API_URL}/flour/get`),
+          axios.get(`${API_URL}/user/get`) // Assuming we can fetch all users at once
+        ]);
+
+        const users = usersResponse.data.reduce((acc, user) => {
+          acc[user.UserID] = user.Username;
+          return acc;
+        }, {});
+
+        const processedData = flourResponse.data.map(item => ({
           id: item.FlourID,
-          name: await getUser(item.UserID),
-          weight: item.Flour_Weight + " Kg",
+          name: users[item.UserID] || 'Unknown User',
+          weight: `${item.Flour_Weight} Kg`,
           expiration: formatDate(item.Expiration),
           DryLeavesID: item.DryLeavesID,
-          status: item.Status // Assuming status is a part of the response
-        })));
+          status: item.Status,
+        }));
+
         setData(processedData);
       } catch (error) {
-        console.error('Error fetching powder data', error);
+        console.error('Error fetching flour data', error);
       }
     };
 
     fetchData();
-
-    // Clean up
-    return () => {
-      setData([]);
-    };
+    setLoading(false);
   }, []);
-
-  const getUser = async (userId) => {
-    try {
-      const response = await axios.get(`${API_URL}/user/get_user/${userId}`); // Placeholder API URL
-      return response.data.Username;
-    } catch (error) {
-      console.error('Error fetching user data', error);
-      return 'Unknown User';
-    }
-  };
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
@@ -139,31 +135,33 @@ const AdminPowder = () => {
     let textColor;
     let logo;
 
-    switch (rowData.status) {
-      case "Awaiting":
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-        textColor = "#79B2B7";
-        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Processed":
-        backgroundColor = hexToRGBA("D4965D", 0.5);
-        textColor = "#E28834";
-        logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Expired":
+    const currentTime = new Date();
+    const isExpired = new Date(rowData.expiration) < currentTime;
+
+    if (rowData.status === "Awaiting") {
+      if (isExpired) {
         backgroundColor = hexToRGBA("#D45D5D", 0.5);
         textColor = "#D45D5D";
         logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Thrown":
-        backgroundColor = hexToRGBA("9E2B2B", 0.5);
-        textColor = "#9E2B2B";
-        logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      default:
-        backgroundColor = "inherit";
-        textColor = "#000000";
+      } else {
+        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        textColor = "#79B2B7";
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      }
     }
+    else if (rowData.status === "Processed") {
+      backgroundColor = hexToRGBA("D4965D", 0.5);
+      textColor = "#E28834";
+      logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else if (rowData.status === "Thrown") {
+      backgroundColor = hexToRGBA("9E2B2B", 0.5);
+      textColor = "#9E2B2B";
+      logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else {
+      backgroundColor = "inherit";
+      textColor = "#000000";
+    }
+
 
     const dynamicWidth = "150px";
     const dynamicHeight = "35px";

@@ -47,7 +47,7 @@ function TableComponent({
             />
           </label>
         )}
-        {showFilter && (
+        {/* {showFilter && (
           <button className="btn" style={{ background: "#94C3B3" }}>
             <img src={filter} alt="filter" />
           </button>
@@ -56,7 +56,7 @@ function TableComponent({
           <button className="btn" style={{ background: "#94C3B3" }}>
             <img src={plus} alt="add" />
           </button>
-        )}
+        )} */}
       </div>
     </div>
   );

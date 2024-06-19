@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { animate, motion, useAnimationControls } from "framer-motion";
 import '@style/App.css';
@@ -19,8 +19,9 @@ import * as bcrypt from 'bcryptjs';
 import { API_URL } from '../App';
 import AuthApi from '../AuthApi.js';
 import RegApi from '../RegProvider.js';
+import Popup from '../components/Popups/Popup.jsx';
 
-function OnBoarding( ) {
+function OnBoarding() {
 
   const Reg = useContext(RegApi);
   const Auth = useContext(AuthApi);
@@ -41,7 +42,7 @@ function OnBoarding( ) {
   console.log(Reg.reg);
   useEffect(() => {
     controls.start("login");
-}, []);
+  }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -51,7 +52,7 @@ function OnBoarding( ) {
   }, []);
 
   async function handleRouting() {
-    
+
     const response = await axios.get(API_URL + "/user/get_user_email/" + email);
     const user_id = response.data.UserID;
     try {
@@ -59,7 +60,7 @@ function OnBoarding( ) {
       });
       console.log("session created")
     } catch (error) {
-        console.error('Error calling backend function for session', error);
+      console.error('Error calling backend function for session', error);
     }
     Auth.setAuth(true);
   }
@@ -68,27 +69,31 @@ function OnBoarding( ) {
     setIsLogin(!isLogin);
     try {
       const response = await axios.get(API_URL + "/user/get_user_email/" + email);
-      bcrypt.compare(password, response.data.Password, function(err, result) {
-        if (err){
+      bcrypt.compare(password, response.data.Password, function (err, result) {
+        if (err) {
           console.error('Error encrypting password:', err);
         }
-        if (result){
+        if (result) {
           handleRouting();
         }
-        else{
+        else {
           console.log("wrong password");
+          setIsLogin(false)
+          modalRef.current.showModal();
         }
       })
-  } catch (error) {
+    } catch (error) {
       console.error("Error while checking session:", error);
+      setIsLogin(false)
+      modalRef.current.showModal();
       return false
-  }
+    }
   };
 
   const handleNavigation = async () => {
     await new Promise(resolve => setTimeout(resolve, 0));
     navigate('/register', { state: { emailAddress: email, userPassword: password } });
-};
+  };
 
   const handleSignUp = async () => {
     setIsSignUp(!isSignUp);
@@ -96,7 +101,7 @@ function OnBoarding( ) {
     setLoading(true);
 
     setTimeout(() => {
-        handleNavigation();
+      handleNavigation();
     }, 1500);
   }
 
@@ -111,6 +116,8 @@ function OnBoarding( ) {
   if (loading) {
     return <LoadingCircle />;
   }
+
+  const modalRef = useRef(null);
 
   return (
     <div className='flex w-screen h-screen md:overflow-hidden disable-zoom'>
@@ -135,7 +142,7 @@ function OnBoarding( ) {
         <Divider label={"OR"} />
         <Button border={"2px solid #0F7275"} background="#F7FAFC" color="#4C4949" label={isRegister ? "Sign up with Google" : "Sign in with Google"} img={Google}></Button>
         <span className='flex justify-center gap-2'>Don't have an account?<button onClick={() => setIsRegister(!isRegister)} className={"font-bold"} style={{ color: "#79B2B7" }}>{isRegister ? "Sign In" : "Sign Up"}</button></span>
-      </div>  
+      </div>
       {/* End of Login Contents */}
       {/* Features */}
       <motion.div className='w-1/2 h-screen relative justify-end items-center hidden md:block'
@@ -174,6 +181,7 @@ function OnBoarding( ) {
       )}
 
       {/* End of Features */}
+      <Popup ref={modalRef} error description={"Invalid Credentials, please try again."} onConfirm={() => modalRef.current.close()} />
     </div>
   );
 }

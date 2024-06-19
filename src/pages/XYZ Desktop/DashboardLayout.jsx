@@ -12,89 +12,80 @@ import shipment from '@assets/icons/sidebar/shipment.svg';
 import wet_leaves from '@assets/icons/sidebar/wet_leaves.svg';
 import leafty_Logo from '@assets/LeaftyLogo.svg';
 import profile_pic from '@assets/icons/sidebar/profile_pic.svg';
-import { animate, motion, useAnimationControls } from "framer-motion";
-import FilterDashboard from "@components/filterDashboard"
+import { motion } from "framer-motion";
 import axios from "axios";
 import { API_URL } from "../../App";
 import Profile from "@components/Profile";
+import LoadingBackdrop from "../../components/LoadingBackdrop";
 
-function DashboardLayout(CURRENT_USER) {
+function DashboardLayout({ CURRENT_USER }) {
     const [collapsed, setCollapsed] = useState(false);
-    const [tabletMode, setTabletMode] = useState(false);
-    const [title, setTitle] = useState("Dashboard");
-    const navigate = useNavigate();
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
-    const user_id = CURRENT_USER.CURRENT_USER
-
-    // async function handleWhoAmI() {
-    //     try {
-    //       const response = await axios.get(API_URL + "/whoami")
-    //       console.log(response.data.user_id)
-    //       if (response) {
-    //         return response.data.user_id
-    //       }
-    //       return false
-    //     } catch (error) {
-    //       console.error("Error while checking session:", error);
-    //       return false
-     
-    //     }
-    // }
+    const [loading, setLoading] = useState(true);
+    const [title, setTitle] = useState("Dashboard"); // State to hold the title
+    const navigate = useNavigate();
 
     const getUser = async () => {
         try {
-          console.log("this is user id: " + user_id);
-          if (user_id) {
-            const response = await axios.get(API_URL + `/user/get_user/${user_id}`);
-            console.log(response.data);
-            return response.data; 
-          } else {
-            console.error('User ID not found');
-            return null; 
-          }
+            console.log("this is user id: " + CURRENT_USER);
+            if (CURRENT_USER) {
+                const response = await axios.get(API_URL + `/user/get_user/${CURRENT_USER}`);
+                console.log(response.data);
+                return response.data;
+            } else {
+                console.error('User ID not found');
+                return null;
+            }
         } catch (error) {
-          console.error('Error calling backend function', error);
-          return null; 
+            console.error('Error calling backend function', error);
+            return null;
         }
     };
-   
+
     useEffect(() => {
         const fetchData = async () => {
-            const userData = await getUser();
-            if (userData) {
-                setUserData(userData);
+            try {
+                const userData = await getUser();
+                if (userData) {
+                    setUserData(userData);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            } finally {
+                setLoading(false);
             }
         };
         fetchData();
-    }, []);
+    }, [CURRENT_USER]);
 
-    
+    // Function to handle menu item click
+    const handleMenuItemClick = (path, itemTitle) => {
+        navigate(path, { replace: true });
+        setTitle(itemTitle); // Update the title based on the clicked item
+    };
+
+    if (loading) {
+        return <LoadingBackdrop />;
+    }
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
-          
-            <motion.div initial={{
-                x: -250
-            }}
-                transition={{
-                    duration: 2,
-                    type: "linear"
-                }} animate={{ x: 0 }} className="hidden sm:block">
+            <motion.div initial={{ x: -250 }} transition={{ duration: 0.5, type: "spring" }} animate={{ x: 0 }} className="hidden sm:block">
                 <Sidebar collapsed={collapsed} className="sidebar" backgroundColor="#94c3b3" color="#94c3b3">
                     <Menu
                         menuItemStyles={{
-                            button: ({ level, active, disabled }) => {
-                                return {
-                                    "&:hover": {
-                                        backgroundColor: "#94c3b3 !important",
-                                    },
-                                };
-                            },
+                            button: ({ level, active, disabled }) => ({
+                                "&:hover": {
+                                    backgroundColor: "#94c3b3 !important",
+                                },
+                            }),
                         }}
                     >
-                        <MenuItem style={{ backgroundColor: "#94c3b3" }} className={`flex ${collapsed ? 'justify-start' : 'justify-center'}`} disabled={true} icon={<img src={leafty_Logo} />}><span className="text-3xl" style={{ fontFamily: "LT-Saeada", color: "#417679" }}>{collapsed ? '' : 'Leafty'}</span></MenuItem>
+                        <MenuItem style={{ backgroundColor: "#94c3b3" }} className={`flex ${collapsed ? 'justify-start' : 'justify-center'}`} disabled={true} icon={<img src={leafty_Logo} alt="Leafty Logo" />}>
+                            <span className="text-3xl" style={{ fontFamily: "LT-Saeada", color: "#417679" }}>{collapsed ? '' : 'Leafty'}</span>
+                        </MenuItem>
                         <div className="flex flex-col justify-center items-center my-4">
-                            <img src={profile_pic} />
+                            <img src={profile_pic} alt="Profile Pic" />
                             {!collapsed && (
                                 <div className="flex flex-col justify-center items-center my-2">
                                     <span className="font-bold text-2xl">{userData.Username}</span>
@@ -102,31 +93,25 @@ function DashboardLayout(CURRENT_USER) {
                                 </div>
                             )}
                         </div>
-                        <MenuItem icon={<img src={dashboard} />} onClick={() => navigate("/company/dashboard", {replace: true})}> Dashboard </MenuItem>
-                        <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} />}>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} />} onClick={() => navigate("/company/wetoverview", {replace: true})}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} />} onClick={() => navigate("/company/dryleaves", {replace: true})}> Dry Leaves </MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} />} onClick={() => navigate("/company/powder", {replace: true})}> Powder </MenuItem>
+                        {/* Menu items with onClick handler to update title */}
+                        <MenuItem icon={<img src={dashboard} alt="Dashboard Icon" />} onClick={() => handleMenuItemClick("/company/dashboard", "Dashboard")}> Dashboard </MenuItem>
+                        <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} alt="Leaves Distribution Icon" />}>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} alt="Wet Leaves Icon" />} onClick={() => handleMenuItemClick("/company/wetoverview", "Wet Leaves Overview")}> Wet Leaves</MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves Icon" />} onClick={() => handleMenuItemClick("/company/dryoverview", "Dry Leaves Overview")}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} alt="Powder Icon" />} onClick={() => handleMenuItemClick("/company/powderoverview", "Powder Overview")}> Powder </MenuItem>
                         </SubMenu>
-                        <MenuItem icon={<img src={shipment} />} onClick={() => navigate("/company/shipment", {replace: true})}> Shipment </MenuItem>
-                        <MenuItem icon={<img src={pickup} />} onClick={() => navigate("/company/pickup", {replace: true})}> Pickup </MenuItem>
-                        <MenuItem icon={<img src={reception} />} onClick={() => navigate("/company/reception/centra", {replace: true})}> Reception </MenuItem>
-                        <MenuItem icon={<img src={performance} />} onClick={() => navigate("/company/performance", {replace: true})}> Performance </MenuItem>
+                        <MenuItem icon={<img src={shipment} alt="Shipment Icon" />} onClick={() => handleMenuItemClick("/company/shipment", "Shipment")}> Shipment </MenuItem>
+                        {/* <MenuItem icon={<img src={pickup} alt="Pickup Icon" />} onClick={() => handleMenuItemClick("/company/pickup", "Pickup")}> Pickup </MenuItem> */}
+                        <MenuItem icon={<img src={reception} alt="Reception Icon" />} onClick={() => handleMenuItemClick("/company/reception/centra", "Reception")}> Reception </MenuItem>
+                        <MenuItem icon={<img src={performance} alt="Performance Icon" />} onClick={() => handleMenuItemClick("/company/performance", "Performance")}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>
             </motion.div>
-            <motion.div initial={{
-                x: 750
-            }}
-                transition={{
-                    duration: 1.5,
-                    type: "spring"
-                }} animate={{ x: 0 }} className="flex flex-col border w-full h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl" >
+            <motion.div initial={{ x: 750 }} transition={{ duration: 1.5, type: "spring" }} animate={{ x: 0 }} className="flex flex-col border w-full h-full bg-base-100 justify-stretch gap-2 p-2 sm:p-6 overflow-y-auto no-scrollbar w-fit sm:rounded-2xl">
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
-                        <FilterDashboard tablet={tabletMode} />
-                        <Profile username = {userData.Username}/>
+                        <Profile Username={userData.Username} />
                     </div>
                 </div>
                 <Outlet />

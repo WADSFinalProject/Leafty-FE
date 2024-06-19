@@ -24,18 +24,20 @@ const AdminUserApproval = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const response = await axios.get(`${API_URL}/user/get`);
-        const users = Array.isArray(response.data) ? response.data : response.data.users;
-        const filteredUsers = users.filter(user => user.role.RoleName === 'Unverified' || user.role.RoleName === 'Rejected');
-        console.log(filteredUsers)
-        const mappedUsers = filteredUsers.map(user => ({
-          userid: user.UserID,
-          username: user.Username,
-          email: user.Email,
-          phone: user.PhoneNumber,
-          role: user.role.RoleName,
-        }));
-        setUsers(mappedUsers);
+        const { data } = await axios.get(`${API_URL}/user/get`);
+        const usersArray = Array.isArray(data) ? data : data.users;
+        
+        const filteredAndMappedUsers = usersArray
+          .filter(user => user.role.RoleName === 'Unverified' || user.role.RoleName === 'Rejected')
+          .map(({ UserID, Username, Email, PhoneNumber, role }) => ({
+            userid: UserID,
+            username: Username,
+            email: Email,
+            phone: PhoneNumber,
+            role: role.RoleName,
+          }));
+          
+        setUsers(filteredAndMappedUsers);
       } catch (error) {
         console.error('Error fetching users:', error);
       }

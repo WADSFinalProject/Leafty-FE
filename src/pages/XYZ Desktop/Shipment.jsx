@@ -1,24 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Import useNavigate from React Router
-import 'daisyui/dist/full.css';
-import { motion } from "framer-motion";
-import StatsContainer from "@components/Cards/StatsContainer";
+import { motion } from 'framer-motion';
+import StatsContainer from '@components/Cards/StatsContainer';
+import LongContainer from '@components/Cards/LongContainer';
+import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
+import axios from 'axios';
+import { API_URL } from '../../App';
+import search from '../../assets/SearchLogo.svg';
 import VerifiedPackages from '@assets/VerifiedPackages.svg';
 import DeparturedPackages from '@assets/DeparturedPackages.svg';
 import RescalledPackages from '@assets/RescalledPackages.svg';
 import TotalPackagesReceived from '@assets/TotalPackagesReceived.svg';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
-import LongContainer from '@components/Cards/LongContainer';
-import { IoIosArrowForward, IoIosArrowBack } from 'react-icons/io';
-import axios from 'axios'; // Ensure you have axios installed and imported
-import { API_URL } from "../../App"; // Adjust the import according to your project structure
-import search from "../../assets/SearchLogo.svg";
+import LoadingStatic from '@components/LoadingStatic';
 
 function Shipment() {
     const [shipments, setShipments] = useState([]);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
     const [searchTerm, setSearchTerm] = useState('');
+    const [loading, setLoading] = useState(true);
 
     const navigate = useNavigate(); // Initialize useNavigate
 
@@ -46,29 +46,36 @@ function Shipment() {
         const fetchShipments = async () => {
             try {
                 const response = await axios.get(`${API_URL}/shipment/get`);
-                const updatedShipments = await Promise.all(response.data.map(async (shipment) => {
-                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
-                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                const updatedShipments = await Promise.all(
+                    response.data.map(async (shipment) => {
+                        const flourDetails = await Promise.all(
+                            shipment.FlourIDs.map(async (flourID) => {
+                                const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                                return {
+                                    FlourID: flourID,
+                                    Flour_Weight: flourResponse.data.Flour_Weight, // Assuming API response structure
+                                };
+                            })
+                        );
+
+                        const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
+                        const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                        const courierName = courierResponse.data.CourierName;
+
                         return {
-                            FlourID: flourID,
-                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
+                            ...shipment,
+                            ShipmentWeight: totalFlourWeight,
+                            CourierName: courierName,
                         };
-                    }));
+                    })
+                );
 
-                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
-
-                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
-
-                    return {
-                        ...shipment,
-                        ShipmentWeight: totalFlourWeight,
-                        CourierName: courierName
-                    };
-                }));
-                setShipments(updatedShipments)
+                setShipments(updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
+            } finally {
+                setLoading(false);
             }
         };
 
@@ -80,8 +87,7 @@ function Shipment() {
     };
 
     const offset = currentPage * itemsPerPage;
-
-    const filteredShipments = shipments.filter(shipment => {
+    const filteredShipments = shipments.filter((shipment) => {
         const searchTermLower = searchTerm.toLowerCase();
         const courierMatch = shipment.CourierName.toLowerCase().includes(searchTermLower);
         const shipmentIDMatch = shipment.ShipmentID.toString().includes(searchTerm.replace(/#/i, ''));
@@ -137,6 +143,14 @@ function Shipment() {
         return date.toLocaleDateString(undefined, options);
     }
 
+    if (loading) {
+        return (
+            <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+                <LoadingStatic />
+            </div>
+        );
+    }
+
     return (
         <div className="container mx-auto w-full">
             <div className="flex flex-row justify-between m-0 items-center">
@@ -148,13 +162,13 @@ function Shipment() {
                             type="text" 
                             placeholder="Search by Courier Name or Expedition#ID" 
                             value={searchTerm} 
-                            onChange={e => setSearchTerm(e.target.value)} 
+                            onChange={(e) => setSearchTerm(e.target.value)} 
                             className="grow"
                         />
                     </label>
                 </div>
             </div>
-            <div className='flex flex-col gap-2'>
+            <div className="flex flex-col gap-2">
                 {currentPageData.map((item, index) => (
                     <motion.div
                         key={item.ShipmentID}

@@ -12,7 +12,7 @@ import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
-import { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 function DryLeavesOverview() {
     const data = [
@@ -22,6 +22,7 @@ function DryLeavesOverview() {
         { status: "Thrown", id: 4, name: 'John Doe', weight: 10, date: '17/06/2024 13:05' },
         { status: "Expired", id: 5, name: 'John Doe', weight: 10, date: '17/06/2024 13:05' },
     ];
+
     const datasets = [
         {
             label: 'LLeaves',
@@ -46,43 +47,42 @@ function DryLeavesOverview() {
         { field: 'id', header: 'Batch Id' },
         { field: 'name', header: 'Centra Name' },
         { field: 'weight', header: 'Weight' },
-        { field: 'date', header: 'Date' },
     ];
 
     const stats = [
         {
-          label: "Awaiting Dry Leaves",
-          value: "243",
-          unit: "Kg",
-          color: "#C0CD30",
-          icon: AwaitingLeaves,
-          delay: 1
+            label: "Awaiting Dry Leaves",
+            value: "243",
+            unit: "Kg",
+            color: "#C0CD30",
+            icon: AwaitingLeaves,
+            delay: 1
         },
         {
-          label: "In-Processed Leaves",
-          value: "243",
-          unit: "Kg",
-          color: "#79B2B7",
-          icon: ProcessedLeaves,
-          delay: 1.25
+            label: "In-Processed Leaves",
+            value: "243",
+            unit: "Kg",
+            color: "#79B2B7",
+            icon: ProcessedLeaves,
+            delay: 1.25
         },
         {
-          label: "Expired Dry Leaves",
-          value: "250",
-          unit: "Kg",
-          color: "#0F7275",
-          icon: ExpiredDryLeaves,
-          delay: 1.5
+            label: "Expired Dry Leaves",
+            value: "250",
+            unit: "Kg",
+            color: "#D45D5D",
+            icon: ExpiredDryLeaves,
+            delay: 1.5
         },
         {
-          label: "Total Collected Dry Leaves",
-          value: "1500",
-          unit: "Kg",
-          color: "#0F7275",
-          icon: TotalDryLeaves,
-          delay: 1.75
+            label: "Total Collected Dry Leaves",
+            value: "1500",
+            unit: "Kg",
+            color: "#0F7275",
+            icon: TotalDryLeaves,
+            delay: 1.75
         }
-      ];
+    ];
 
     const statusBodyTemplate = (rowData) => {
         let backgroundColor;
@@ -145,13 +145,44 @@ function DryLeavesOverview() {
     const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Powder'];
     const Piedata = [100, 200, 700];
 
+    const navigate = useNavigate();
+
     return (
-        <div className="flex flex-col gap-2">
-            <div className="flex flex-row gap-2">
-                <WidgetContainer className=" flex-col flex-auto w-11/12 h-full" container={false}>
+        <div className="flex flex-row gap-2">
+            <div className="w-3/4">
+                <WidgetContainer className=" flex-col flex-auto">
                     <LineChart xAxisLabel="Time" yAxisLabel="Values" datasets={datasets} />
                 </WidgetContainer>
-                <div className="grid grid-cols-2 gap-2  ">
+                <div className="flex flex-row gap-2">
+                    <div className="flex-auto w-2/5">
+                        <div className="flex items-center justify-between mb-0">
+                            <span className="font-bold text-xl">Recently Gained Dry Leaves</span>
+                            <button
+                                className="text-[#94C3B3]"
+                                onClick={() => navigate("/company/dryleaves", { replace: true })}
+                            >
+                                See all
+                            </button>
+                        </div>
+                        <WidgetContainer className={"w-fit"} >
+                            <TableComponent
+                                data={data}
+                                header={header}
+                                columns={columns}
+                                ColorConfig={statusBodyTemplate}
+                                admin={false}
+                                paginator={false}
+                                rows={5}
+                                showFilter={false}
+                                showSearch={false}
+                                widihmin={'45rem'}
+                            />
+                        </WidgetContainer>
+                    </div>
+                </div>
+            </div>
+            <div className="flex flex-col gap-2">
+                <div className="grid grid-cols-2 gap-2">
                     {stats.map((stat, index) => (
                         <motion.div
                             key={index}
@@ -170,36 +201,21 @@ function DryLeavesOverview() {
                                 color={stat.color}
                                 modal={false}
                                 frontIcon={stat.icon}
-                                
                             />
                         </motion.div>
                     ))}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35, delay: 2 }}
+                        className="flex"
+                    >
+                        <WidgetContainer container={false} className="flex w-fit h-fit p-5">
+                            <PieChart labels={Pielabels} data={Piedata} />
+                        </WidgetContainer>
+                    </motion.div>
                 </div>
-            </div>
-            <div className="flex flex-row gap-2">
-                <div className="flex-auto w-3/5">
-                    <div className="flex items-center justify-between mb-0">
-                        <span className="font-bold text-xl">Recently Gained Wet Leaves</span>
-                        <span className="text-[#94C3B3]">See all</span>
-                    </div>
-                    <WidgetContainer>
-                        <TableComponent 
-                            data={data} 
-                            header={header} 
-                            columns={columns} 
-                            ColorConfig={statusBodyTemplate} 
-                            admin={false} 
-                            paginator={false} 
-                            rows={5} 
-                            showFilter={false} 
-                            showSearch={false}
-                            widihmin={'50rem'} 
-                        />
-                    </WidgetContainer>
-                </div>
-                <WidgetContainer className="flex-auto w-2/12 h-full">
-                    <PieChart labels={Pielabels} data={Piedata} />
-                </WidgetContainer>
             </div>
         </div>
     );

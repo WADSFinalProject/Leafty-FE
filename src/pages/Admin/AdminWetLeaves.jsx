@@ -12,6 +12,7 @@ import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import { API_URL } from '../../App';
 import dayjs from 'dayjs';
+import LoadingStatic from "@components/LoadingStatic"
 import LeavesPopup from '@components/Popups/LeavesPopup';
 
 const header = 'Recently Gained Wet Leaves';
@@ -20,7 +21,6 @@ const columns = [
   { field: 'id', header: 'Batch Id' },
   { field: 'name', header: 'Centra Name' },
   { field: 'weight', header: 'Weight' },
-  { field: 'date', header: 'Date' },
   { field: 'expiration', header: 'Expiration Date' },
   { field: 'status', header: 'Status' }
 ];
@@ -32,50 +32,39 @@ const AdminWetLeaves = () => {
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [editable, setEditable] = useState(false);
   const leavesModalRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`${API_URL}/wetleaves/get`);
-        console.log(response)
-        const processedData = await Promise.all(response.data.map(async item => ({
+        const usersResponse = await axios.get(`${API_URL}/user/get`); // Assuming we can fetch all users at once
+        const users = usersResponse.data.reduce((acc, user) => {
+          acc[user.UserID] = user.Username;
+          return acc;
+        }, {});
+
+        const processedData = response.data.map(item => ({
           id: item.WetLeavesID,
-          name: await getUser(item.UserID),
+          name: users[item.UserID] || 'Unknown User',
           weight: item.Weight,
-          date: formatDate(item.ReceivedTime),
-          expiration: formatDate(addMonth(item.ReceivedTime)),
-          status: item.Status // Assuming status is a part of the response
-        })));
+          expiration: formatDate(item.Expiration),
+          status: item.Status,
+        }));
+
         setData(processedData);
-        
       } catch (error) {
         console.error('Error fetching wet leaves data', error);
       }
     };
 
     fetchData();
-
-    return () => {
-      setData([]);
-    };
+    setTimeout(2500);
+    setLoading(false)
   }, []);
-
-  const getUser = async (userId) => {
-    try {
-      const response = await axios.get(`${API_URL}/user/get_user/${userId}`);
-      return response.data.Username;
-    } catch (error) {
-      console.error('Error fetching user data', error);
-      return 'Unknown User';
-    }
-  };
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
-  };
-
-  const addMonth = (dateString) => {
-    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
   };
 
   const handleDelete = async (id) => {
@@ -91,7 +80,7 @@ const AdminWetLeaves = () => {
     setSelectedRowData(rowData);
     setEditable(false);
     if (leavesModalRef.current) {
-      leavesModalRef.current.showModal();
+      setTimeout(leavesModalRef.current.showModal(), 100);
     }
   };
 
@@ -99,7 +88,7 @@ const AdminWetLeaves = () => {
     setSelectedRowData(rowData);
     setEditable(true);
     if (leavesModalRef.current) {
-      leavesModalRef.current.showModal();
+      setTimeout(leavesModalRef.current.showModal(), 100);
     }
   };
 
@@ -108,30 +97,32 @@ const AdminWetLeaves = () => {
     let textColor;
     let logo;
 
-    switch (rowData.status) {
-      case "Awaiting":
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-        textColor = "#79B2B7";
-        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Processed":
-        backgroundColor = hexToRGBA("D4965D", 0.5);
-        textColor = "#E28834";
-        logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Expired":
+
+    const currentTime = new Date();
+    const isExpired = new Date(rowData.expiration) < currentTime;
+
+    if (rowData.status === "Awaiting") {
+      if (isExpired) {
         backgroundColor = hexToRGBA("#D45D5D", 0.5);
         textColor = "#D45D5D";
         logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Thrown":
-        backgroundColor = hexToRGBA("9E2B2B", 0.5);
-        textColor = "#9E2B2B";
-        logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      default:
-        backgroundColor = "inherit";
-        textColor = "#000000";
+      } else {
+        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        textColor = "#79B2B7";
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      }
+    }
+    else if (rowData.status === "Processed") {
+      backgroundColor = hexToRGBA("D4965D", 0.5);
+      textColor = "#E28834";
+      logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else if (rowData.status === "Thrown") {
+      backgroundColor = hexToRGBA("9E2B2B", 0.5);
+      textColor = "#9E2B2B";
+      logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else {
+      backgroundColor = "inherit";
+      textColor = "#000000";
     }
 
     const dynamicWidth = "150px";
@@ -148,7 +139,7 @@ const AdminWetLeaves = () => {
         className="flex items-center justify-center rounded-md overflow-hidden"
       >
         <div className="flex items-center gap-2">
-          <span>{rowData.status}</span>
+          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiration) < new Date()) ? "Expired" : rowData.status}</span>
           {logo}
         </div>
       </div>
@@ -163,6 +154,12 @@ const AdminWetLeaves = () => {
 
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoadingStatic />
+    </div>
+  }
 
   return (
     <div className="container mx-auto w-full">

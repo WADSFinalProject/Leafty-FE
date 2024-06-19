@@ -15,21 +15,22 @@ function ShipmentCompleted() {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        const fetchShipments = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_URL}/shipment/get`);
-                console.log('Fetched shipments:', response.data);
-                const completedShipments = response.data.filter(shipment =>
+                const [shipmentsResponse, usersResponse] = await Promise.all([
+                    axios.get(`${API_URL}/shipment/get`),
+                    axios.get(`${API_URL}/user/get`)
+                ]);
+
+                const fetchedShipments = shipmentsResponse.data.filter(shipment =>
                     shipment.ShipmentDate !== null
-                ); // Exclude shipments without a ShipmentDate
+                );
 
-                // Fetch details for each shipment
-                const updatedShipments = await Promise.all(completedShipments.map(async (shipment) => {
-                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
-
-                    const userResponse = await axios.get(`${API_URL}/user/get_user/${shipment.UserID}`);
-                    const userName = userResponse.data.Username;
+                const updatedShipments = await Promise.all(fetchedShipments.map(async (shipment) => {
+                    const [courierResponse, userResponse] = await Promise.all([
+                        axios.get(`${API_URL}/courier/get/${shipment.CourierID}`),
+                        axios.get(`${API_URL}/user/get_user/${shipment.UserID}`)
+                    ]);
 
                     const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                         const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
@@ -40,31 +41,23 @@ function ShipmentCompleted() {
 
                     return {
                         ...shipment,
-                        CourierName: courierName,
-                        UserName: userName,
+                        CourierName: courierResponse.data.CourierName,
+                        UserName: userResponse.data.Username,
                         ShipmentWeight: totalFlourWeight
                     };
                 }));
 
                 setShipments(updatedShipments);
+                setUsers(usersResponse.data);
+
                 console.log('Updated shipments:', updatedShipments);
+                console.log('Fetched users:', usersResponse.data);
             } catch (error) {
-                console.error('Error fetching shipments:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/user/get`);
-                console.log('Fetched users:', response.data);
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        fetchShipments();
-        fetchUsers();
+        fetchData();
     }, []);
 
     const handleButtonClick = (item) => {
@@ -77,7 +70,7 @@ function ShipmentCompleted() {
 
     const accordions = [
         {
-            summary: 'Completed Shipment',
+            summary: 'Completed Shipments',
             details: () => (
                 <>
                     {shipments.map((item, index) => (

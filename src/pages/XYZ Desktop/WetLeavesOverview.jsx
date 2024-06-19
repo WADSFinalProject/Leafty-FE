@@ -151,7 +151,15 @@ function WetLeavesOverview() {
         <div className="flex flex-row gap-2">
             <div className="w-3/4">
                 <WidgetContainer className=" flex-col flex-auto">
-                    <LineChart xAxisLabel="Time" yAxisLabel="Values" datasets={datasets} />
+                    {/* LineChart with fade-up animation */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35 }}
+                    >
+                        <LineChart xAxisLabel="Time" yAxisLabel="Values" datasets={datasets} />
+                    </motion.div>
                 </WidgetContainer>
                 <div className="flex flex-row gap-2">
                     <div className="flex-auto w-2/5">
@@ -165,18 +173,26 @@ function WetLeavesOverview() {
                             </button>
                         </div>
                         <WidgetContainer className={"w-fit"} >
-                            <TableComponent
-                                data={data}
-                                header={header}
-                                columns={columns}
-                                ColorConfig={statusBodyTemplate}
-                                admin={false}
-                                paginator={false}
-                                rows={5}
-                                showFilter={false}
-                                showSearch={false}
-                                widihmin={'45rem'}
-                            />
+                            {/* TableComponent with fade-up animation */}
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -20 }}
+                                transition={{ duration: 0.35, delay: 0.1 }}
+                            >
+                                <TableComponent
+                                    data={data}
+                                    header={header}
+                                    columns={columns}
+                                    ColorConfig={statusBodyTemplate}
+                                    admin={false}
+                                    paginator={false}
+                                    rows={5}
+                                    showFilter={false}
+                                    showSearch={false}
+                                    widihmin={'45rem'}
+                                />
+                            </motion.div>
                         </WidgetContainer>
                     </div>
 
@@ -193,6 +209,7 @@ function WetLeavesOverview() {
                             transition={{ duration: 0.35, delay: stat.delay }}
                             className="flex"
                         >
+                            {/* StutsContainer with fade-up animation */}
                             <StutsContainer
                                 row={true}
                                 label={stat.label}
@@ -202,13 +219,22 @@ function WetLeavesOverview() {
                                 color={stat.color}
                                 modal={false}
                                 frontIcon={stat.icon}
-
                             />
                         </motion.div>
                     ))}
-                    <WidgetContainer container = {false} className="flex w-fit h-fit p-5">
-                        <PieChart labels={Pielabels} data={Piedata} />
-                    </WidgetContainer>
+                    {/* PieChart with fade-up animation */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        transition={{ duration: 0.35, delay: 2 }}
+                        className="flex"
+                    >
+                        <WidgetContainer container={false} className="flex w-fit h-fit p-5">
+                            {/* PieChart component */}
+                            <PieChart labels={Pielabels} data={Piedata} />
+                        </WidgetContainer>
+                    </motion.div>
                 </div>
             </div>
         </div>
@@ -216,3 +242,4 @@ function WetLeavesOverview() {
 }
 
 export default WetLeavesOverview;
+

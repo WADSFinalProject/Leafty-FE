@@ -83,7 +83,7 @@ function ShipmentDetails() {
     }
 
     return (
-        <div className="flex flex-col h-full justify-between">
+        <div className="flex flex-col h-full">
             <Stepper className="mt-4" activeStep={currentComponent} alternativeLabel>
                 {['Shipping', 'Harbor Reception', 'Rescalling Input', 'Centra Reception', 'Reception Detail'].map((label, index) => (
                     <Step key={label}>
@@ -131,20 +131,6 @@ function ShipmentDetails() {
                     <div id="decor" className="w-[25px] h-[175px] rounded-[10px_0px_0px_10px] shadow-[inset_0px_4px_4px_#0000001a]" style={{ background: "#79B2B7" }} />
                 </div>
             </WidgetContainer>
-
-            <div className="mt-4">
-                {currentComponent === 0 && <VerificationWait padding={false} />}
-                {currentComponent === 1 && <HarborReception title="Harbor Reception" containers={HarborContainers} />}
-                {currentComponent === 2 && <ReceptionDetail harbor />}
-                {currentComponent === 2 && <RescallingInput />}
-                {currentComponent === 3 && <HarborReception title="Centra Reception" containers={CentraContainers} />}
-                {currentComponent === 4 && <ReceptionDetail harbor centra />}
-            </div>
-
-            <div className={`flex ${currentComponent === 0 ? 'justify-end':'justify-between'} items-center mt-4 px-4`}>
-                <Button label="Previous" onClick={handlePrevious} disabled={currentComponent === 0} className='px-4 py-2 bg-gray-200 rounded-md' background="#79B2B7" color="white" />
-                <Button label="Next" onClick={handleNext} disabled={currentComponent === 5} className='px-4 py-2 bg-gray-200 rounded-md' background="#417579" color="white" />
-            </div>
         </div>
     );
 }
