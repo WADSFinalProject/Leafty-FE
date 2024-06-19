@@ -32,7 +32,7 @@ function Powder() {
 
         setFlourData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
         setProcessedFlourData(data.filter(item => item.Status === "Processed"));
-        setExpiredFlourData(data.filter(item => new Date(item.Expiration) < currentTime));
+        setExpiredFlourData(data.filter(item => new Date(item.Expiration) < currentTime) && item.Status === "Awaiting");
         setThrownPowderData(data.filter(item => item.Status === "Thrown"));
       } catch (error) {
         console.error('Error fetching flour data:', error);

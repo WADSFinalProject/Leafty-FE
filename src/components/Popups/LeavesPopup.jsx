@@ -1,11 +1,15 @@
-import React, { forwardRef, useState } from 'react';
+import React, { forwardRef, useState, useEffect } from 'react';
 import WetLeaves from "@assets/WetLeaves.svg";
 import DryLeaves from "@assets/DryLeaves.svg";
 import Powder from "@assets/Powder.svg";
-import ProcessedLeaves from "@assets/icons/Wat.svg";
+import ProcessedLeaves from '@assets/icons/Wat.svg';
 import InputField from '@components/InputField';
 import RealTimeCountDown from '@components/RealtimeCountDown';
-import Button from '@components/Button'; // Ensure this import is correct based on your project structure
+import Button from '@components/Button';
+import trash from '@assets/icons/trash.svg';
+import Countdown from '@assets/Countdown.svg';
+import Exc from '@assets/icons/Exc.svg';
+import axios from 'axios'; // Import axios for making HTTP requests
 
 const LeavesPopup = forwardRef(({
   leavesid,
@@ -17,32 +21,44 @@ const LeavesPopup = forwardRef(({
   expiredDate,
   collectedDate,
   editable = false,
-  Status,
+  status,
   onSubmit
 }, ref) => {
   const currentDate = new Date();
-  const [formData, setFormData] = useState({
-    id: leavesid,
-    name: centra_name,
-    weight: weight,
-    date: collectedDate,
-    expiration: expiredDate,
-    status: Status
-  });
+  const [id, setid] = useState(leavesid);
+  const [name, setName] = useState(centra_name);
+  const [leavesWeight, setLeavesWeight] = useState(weight);
+  const [expiration, setExpiration] = useState(expiredDate);
+  const [leavesStatus, setLeavesStatus] = useState(status);
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prevData => ({
-      ...prevData,
-      [name]: value
-    }));
-  };
 
-  const handleSubmit = () => {
-    if (onSubmit) {
-      onSubmit(formData);
+  const handleEditSubmit = async () => {
+    try {
+      await axios.put(`${API_URL}/dryleaves/update/${id}`, {
+        UserID: await getUserID(name),
+        Processed_Weight: leavesWeight, // Update with leavesWeight state
+        ExpirationTime: new Date(expiration).toISOString(),
+      });
+
+      // Assuming setData function exists to update data after successful API call
+      setData(prevData =>
+        prevData.map(item =>
+          item.id === id ? { ...item, name, weight: leavesWeight, expiration } : item
+        )
+      );
+      ref.current.close();
+    } catch (error) {
+      console.error('Error updating dry leaves data', error);
     }
   };
+
+  useEffect(() => {
+    setid(leavesid);
+    setName(centra_name);
+    setLeavesWeight(weight);
+    setExpiration(expiredDate);
+    setLeavesStatus(status);
+  }, [leavesid, centra_name, weight, expiredDate, status]);
 
   const renderImage = () => {
     if (wet_leaves) return <img className="w-[150px] h-[150px]" src={WetLeaves} alt="Wet Leaves" />;
@@ -51,83 +67,144 @@ const LeavesPopup = forwardRef(({
     return null;
   };
 
+
   return (
     <dialog ref={ref} id={leavesid} className="modal">
       <div className="modal-box rounded-lg flex items-start flex-col gap-2">
+        <span className='font-bold text-xl'>Leaves ID - {id}</span>
         <div className="flex flex-row w-full items-start gap-2">
           <div className="p-7 bg-[#94C3B3] rounded-lg">
             {renderImage()}
           </div>
+
           <div className='flex flex-col w-full'>
-            <InputField
-              padding={false}
-              type="datetime-local"
-              label="Expired Date"
-              green={true}
-              value={formData.expiration}
-              className="font-semibold"
-              name="expiration"
-              onChange={handleInputChange}
-              disabled={!editable}
-            />
+
+            <div className={`px-0`}>
+              <span className="label-text font-semibold">Expired Date</span>
+            </div>
+            <div className={`input input-bordered flex items-center gap-2 input-md green`}>
+              <input
+                type={"datetime-local"}
+                className="grow"
+                placeholder={""}
+                onChange={(e) => setExpiration(e.target.value)}
+                value={expiration}
+                disabled={!editable}
+              />
+            </div>
+
             <div className='flex flex-row gap-2'>
               <div className='flex flex-col'>
                 <span className='label-text font-semibold'>Status</span>
-                <div
-                  style={{
-                    backgroundColor: "rgba(212, 150, 93, 0.5)",
-                    color: "black",
-                    width: "150px",
-                    height: "40px",
-                  }}
-                  className="flex items-center justify-center rounded-md overflow-hidden"
-                >
-                  <div className="flex items-center gap-2">
-                    {formData.status === "Processed" &&
-                      <>
-                        <span style={{ color: "rgba(212, 150, 93)" }}>Processing</span>
-                        <img src={ProcessedLeaves} alt="Processed" />
-                      </>
-                    }
+                {(status === "Awaiting" && new Date(expiration) < currentDate) && (
+                  <div
+                    style={{
+                      backgroundColor: "#D45D5D90",
+                      color: "black",
+                      width: "150px",
+                      height: "40px",
+                    }}
+                    className="flex items-center justify-center rounded-md overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: "#D45D5D" }}>Expired</span>
+                      <img src={Exc} alt="Processed" />
+                    </div>
                   </div>
-                </div>
+                )}
+                {(status === "Awaiting" && new Date(expiration) > currentDate) && (
+                  <div
+                    style={{
+                      backgroundColor: "#94C3B380",
+                      color: "black",
+                      width: "150px",
+                      height: "40px",
+                    }}
+                    className="flex items-center justify-center rounded-md overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: "#94C3B3" }}>Awaiting</span>
+                      <img src={Countdown} alt="Processed" />
+                    </div>
+                  </div>
+                )}
+                {status === "Processed" && (
+                  <div
+                    style={{
+                      backgroundColor: "rgba(212, 150, 93, 0.5)",
+                      color: "black",
+                      width: "150px",
+                      height: "40px",
+                    }}
+                    className="flex items-center justify-center rounded-md overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: "rgba(212, 150, 93)" }}>Processed</span>
+                      <img src={ProcessedLeaves} alt="Processed" />
+                    </div>
+                  </div>
+                )}
+                {status === "Thrown" && (
+                  <div
+                    style={{
+                      backgroundColor: "#9E2B2B90",
+                      color: "black",
+                      width: "150px",
+                      height: "40px",
+                    }}
+                    className="flex items-center justify-center rounded-md overflow-hidden"
+                  >
+                    <div className="flex items-center gap-2">
+                      <span style={{ color: "#9E2B2B" }}>Thrown</span>
+                      <img src={trash} alt="Processed" />
+                    </div>
+                  </div>
+                )}
               </div>
-              {currentDate < new Date(formData.expiration) && (
+              {currentDate < new Date(expiration) && (
                 <div className='flex flex-col justify-center items-center'>
                   <span className='font-semibold text-md'>Expired in</span>
-                  <RealTimeCountDown collectedDate={new Date()} expiredDate={formData.expiration} />
+                  <RealTimeCountDown collectedDate={new Date()} expiredDate={expiration} />
                 </div>
               )}
             </div>
           </div>
         </div>
-        <InputField
-          value={formData.name}
-          padding={false}
-          type="text"
-          label="Centra Name"
-          green={true}
-          className="font-semibold"
-          name="name"
-          onChange={handleInputChange}
-          disabled={!editable}
-        />
-        <InputField
-          value={`${formData.weight} Kg`}
-          padding={false}
-          type="text"
-          label="Weight"
-          green={true}
-          className="font-semibold"
-          name="weight"
-          onChange={handleInputChange}
-          disabled={!editable}
-        />
+        <div className='flex flex-col w-full'>
+          <div className={`px-0`}>
+            <span className="label-text font-semibold">Centra Name</span>
+          </div>
+          <div className={`input input-bordered flex items-center gap-2 input-md green`}>
+            <input
+              type={"text"}
+              className="grow"
+              placeholder={""}
+              onChange={() => { }}
+              value={name}
+              disabled={true}
+            />
+          </div>
+        </div>
+        <div className='flex w-full flex-col'>
+          <div className={`px-0`}>
+            <span className="label-text font-semibold">Weight</span>
+          </div>
+          <div className={`input input-bordered flex items-center gap-2 input-md green`}>
+            <input
+              type={"number"}
+              className="grow"
+              placeholder={""}
+              onChange={(e) => setLeavesWeight(e.target.value)}
+              value={leavesWeight}
+              disabled={!editable}
+            />
+          </div>
+        </div>
         <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 font-bold text-[#0F7275]" onClick={() => ref?.current?.close()}>
           ✕
         </button>
         {editable && (
-          <Button className="w-full" type="button" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleSubmit} />
+          <Button className="w-full" noMax = {true} type="button" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleEditSubmit} />
         )}
       </div>
     </dialog>

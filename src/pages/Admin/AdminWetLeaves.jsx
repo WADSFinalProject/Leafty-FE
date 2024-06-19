@@ -53,6 +53,7 @@ const AdminWetLeaves = () => {
           name: users[item.UserID] || 'Unknown User',
           weight: item.Weight,
           expiration: formatDate(item.Expiration),
+          expiredDate: item.Expiration,
           status: item.Status,
         }));
 
@@ -180,10 +181,11 @@ const AdminWetLeaves = () => {
       />
       {selectedRowData && (
         <LeavesPopup
+          status={selectedRowData.status}
           weight={selectedRowData.weight}
           centra_name={selectedRowData.name}
           collectedDate={selectedRowData.date}
-          expiredDate={selectedRowData.expiration}
+          expiredDate={selectedRowData.expiredDate}
           ref={leavesModalRef}
           wet_leaves={true}
           leavesid={selectedRowData.id}

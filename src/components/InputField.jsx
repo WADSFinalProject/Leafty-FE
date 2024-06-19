@@ -1,9 +1,9 @@
 import WidgetContainer from "./Cards/WidgetContainer";
 import "@style/InputField.css"
 
-function InputField({ type, label, placeholder, icon, onChange, value, className, green = false, disabled = false, padding = true}) {
+function InputField({ type, label, placeholder, icon, onChange, value, className, green = false, disabled = false, padding = true, formControl = true}) {
     return <>
-        <label className={`form-control w-full md:max-w-md ${className}`}>
+        <label className={`${formControl && "form-control"} w-full md:max-w-md ${className}`}>
             {label ?
                 <div className={`px-0 ${padding ? "py-1":""}`}>
                     <span className="label-text">{label}</span>

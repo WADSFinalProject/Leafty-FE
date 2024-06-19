@@ -6,14 +6,10 @@ import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
-import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
-import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
-import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
-import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
-import { API_URL } from '../../App';
-import dayjs from 'dayjs';
 import LoadingStatic from '../../components/LoadingStatic';
 import LeavesPopup from '@components/Popups/LeavesPopup';
+import { API_URL } from '../../App';
+import dayjs from 'dayjs';
 
 const header = 'Recently Gained Dry Leaves';
 
@@ -25,54 +21,20 @@ const columns = [
   { field: 'status', header: 'Status' }
 ];
 
-const stats = [
-  {
-    label: "Wasted Leaves",
-    value: "250",
-    unit: "Kg",
-    color: "#0F7275",
-    icon: ExpiredWetLeaves,
-    delay: 1
-  },
-  {
-    label: "Awaiting Leaves",
-    value: "243",
-    unit: "Kg",
-    color: "#C0CD30",
-    icon: AwaitingLeaves,
-    delay: 1.25
-  },
-  {
-    label: "Processed Leaves",
-    value: "243",
-    unit: "Kg",
-    color: "#79B2B7",
-    icon: ProcessedLeaves,
-    delay: 1.5
-  },
-  {
-    label: "Total Dry Leaves",
-    value: "1500",
-    unit: "Kg",
-    color: "#0F7275",
-    delay: 1.75
-  }
-];
-
 const AdminDryLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [editable, setEditable] = useState(false);
-  const [loading, setLoading] = useState(true); // State for loading indicator
+  const [loading, setLoading] = useState(true);
   const leavesModalRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // Set loading state to true before fetching data
+      setLoading(true);
       try {
         const [leavesResponse, usersResponse] = await Promise.all([
           axios.get(`${API_URL}/dryleaves/get/`),
-          axios.get(`${API_URL}/user/get`) // Assuming we can fetch all users at once
+          axios.get(`${API_URL}/user/get`)
         ]);
 
         const users = usersResponse.data.reduce((acc, user) => {
@@ -83,8 +45,9 @@ const AdminDryLeaves = () => {
         const processedData = leavesResponse.data.map(item => ({
           id: item.DryLeavesID,
           name: users[item.UserID] || 'Unknown User',
-          weight: `${item.Processed_Weight} Kg`,
-          expiration: formatDate(item.expiration),
+          weight: `${item.Processed_Weight}`,
+          expiration: formatDate(item.Expiration),
+          expiredDate: item.Expiration,
           status: item.Status,
         }));
 
@@ -92,7 +55,7 @@ const AdminDryLeaves = () => {
       } catch (error) {
         console.error('Error fetching dry leaves data', error);
       } finally {
-        setLoading(false); // Set loading state to false after fetching data
+        setLoading(false);
       }
     };
 
@@ -101,10 +64,6 @@ const AdminDryLeaves = () => {
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
-  };
-
-  const addMonth = (dateString) => {
-    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
   };
 
   const handleDelete = async (id) => {
@@ -127,6 +86,7 @@ const AdminDryLeaves = () => {
   const handleEditClick = (rowData) => {
     setSelectedRowData(rowData);
     setEditable(true);
+    console.log(rowData)
     if (leavesModalRef.current) {
       leavesModalRef.current.showModal();
     }
@@ -138,7 +98,7 @@ const AdminDryLeaves = () => {
     let logo;
 
     const currentTime = new Date();
-    const isExpired = new Date(rowData.expiration) < currentTime;
+    const isExpired = new Date(rowData.expiredDate) < currentTime;
 
     if (rowData.status === "Awaiting") {
       if (isExpired) {
@@ -181,7 +141,7 @@ const AdminDryLeaves = () => {
         className="rounded-md overflow-hidden"
       >
         <div className="flex items-center justify-center gap-2">
-          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiration) < new Date()) ? "Expired" : rowData.status}</span>
+          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiredDate) < new Date()) ? "Expired" : rowData.status}</span>
           {logo}
         </div>
       </div>
@@ -197,39 +157,6 @@ const AdminDryLeaves = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
-  const handleEditSubmit = async (updatedData) => {
-    try {
-      const { id, name, weight, date, expiration } = updatedData;
-      await axios.put(`${API_URL}/dryleaves/update/${id}`, {
-        UserID: await getUserID(name), // Function to get user ID from name
-        Processed_Weight: weight,
-        ReceivedTime: new Date(date).toISOString(),
-        ExpirationTime: new Date(expiration).toISOString(),
-      });
-
-      // Update the local state
-      setData((prevData) =>
-        prevData.map((item) =>
-          item.id === id ? { ...item, name, weight, date, expiration } : item
-        )
-      );
-      leavesModalRef.current.close();
-      setEditable(false);
-    } catch (error) {
-      console.error('Error updating dry leaves data', error);
-    }
-  };
-
-  const getUserID = async (username) => {
-    try {
-      const response = await axios.get(`${API_URL}/user/get_user_id/${username}`);
-      return response.data.UserID;
-    } catch (error) {
-      console.error('Error fetching user ID', error);
-      return null;
-    }
-  };
-
   if (loading) {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -237,7 +164,6 @@ const AdminDryLeaves = () => {
       </div>
     );
   }
-  
 
   return (
     <div className="container mx-auto w-full">
@@ -254,15 +180,15 @@ const AdminDryLeaves = () => {
       />
       {selectedRowData && (
         <LeavesPopup
+          key={selectedRowData.id} // Add key to force re-render
           weight={selectedRowData.weight}
           centra_name={selectedRowData.name}
-          collectedDate={selectedRowData.date}
-          expiredDate={selectedRowData.expiration}
+          expiredDate={selectedRowData.expiredDate}
           ref={leavesModalRef}
           dry_leaves={true}
+          status={selectedRowData.status}
           leavesid={selectedRowData.id}
           editable={editable}
-          onSubmit={handleEditSubmit}
         />
       )}
     </div>

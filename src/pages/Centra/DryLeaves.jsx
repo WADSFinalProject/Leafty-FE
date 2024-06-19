@@ -40,7 +40,7 @@ function DryLeaves() {
         // Update all state variables in one batch
         const newData = {
           DryLeavesData: data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"),
-          ExpiredLeavesData: data.filter(item => new Date(item.Expiration) < currentTime),
+          ExpiredLeavesData: data.filter(item => new Date(item.Expiration) < currentTime && item.Status === "Awaiting"),
           ProcessedLeavesData: data.filter(item => item.Status === "Processed"),
           thrownLeavesData: data.filter(item => item.Status === "Thrown")
         };
