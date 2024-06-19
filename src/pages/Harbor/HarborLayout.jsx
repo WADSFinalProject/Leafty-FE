@@ -8,14 +8,41 @@ import reception from "../../assets/icons/bottombar/reception.svg";
 import receptionActive from "../../assets/icons/bottombar/reception_active.svg";
 import scan from "../../assets/icons/scan.svg";
 import "../../style/BottomNavigation.css";
-import { Outlet, useNavigate,Link,useLocation } from "react-router-dom";
+import { Outlet, useNavigate, Link, useLocation } from "react-router-dom";
 import "../../style/mobile.css"
 import { animate, motion, useAnimationControls } from "framer-motion";
+import AuthApi from '../../AuthApi';
+import logout from "@assets/logout.svg"
+import axios from 'axios';
+import { API_URL } from '../../App';
+import LoadingBackdrop from '../../components/LoadingBackdrop';
 
 const HarborLayout = () => {
     const [value, setValue] = useState("Dashboard");
     const navigate = useNavigate();
     const location = useLocation();
+    const [loading, setLoading] = useState(false);
+
+    const Auth = React.useContext(AuthApi);
+
+    async function handle() {
+        setLoading(true);
+        try {
+            const response = await axios.delete(API_URL + "/delete_session")
+            if (response) {
+                Auth.setAuth(false);
+                navigate('/');
+            }
+            return false
+        } catch (error) {
+            console.error("Error while deleting session:", error);
+            console.error(err.response.data);    // ***
+            console.error(err.response.status);  // ***
+            console.error(err.response.headers);
+            return false
+
+        }
+    }
 
     const navbarContent = [
         {
@@ -57,10 +84,9 @@ const HarborLayout = () => {
                 <div className='flex justify-between items-center'>
                     <span className='font-bold text-3xl'>{value}</span>
                     <div className="flex items-center gap-2">
-                        <img src={NotificationBell} alt="Notification" className='' style={{ width: "30px", height: "30px" }} />
-                        <Link to="/usersetting" state={{ from: location.pathname }}>
-                            <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
-                        </Link>
+                        {/* <img src={NotificationBell} alt="Notification" className='' style={{ width: "30px", height: "30px" }} /> */}
+                        <button onClick = {handle}><img src={logout} alt="Profile" className='w-12 h-12 rounded-full' /></button>
+
                     </div>
                 </div>
                 <Outlet />
@@ -86,6 +112,7 @@ const HarborLayout = () => {
                     </BottomNavigation>
                 </div>
             </div>
+            {loading && <LoadingBackdrop />}
         </div>
     );
 };

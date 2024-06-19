@@ -123,7 +123,7 @@ function Dashboard() {
                 {unreceivedPackages.map((item, index) => (
                     <LongContainer
                         key={index}
-                        showWeight={!tabletMode}
+                        showWeight={false}
                         packageCount={item.ShipmentQuantity}
                         weightValue={item.Rescalled_Weight}
                         dateValue={formatDate(item.ShipmentDate)}

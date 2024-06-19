@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import CircularButton from '../../components/CircularButton';
@@ -17,9 +17,9 @@ function ShipmentOrders() {
     const [users, setUsers] = useState([]);
     const UserID = useOutletContext();
     const [loading, SetLoading] = useState(true);
+    const courierCache = useMemo(() => ({}), []);
 
-    // Function to fetch shipments
-    const fetchShipments = async () => {
+    const fetchShipments = useCallback(async () => {
         try {
             // Fetching shipments and users in parallel
             const [shipmentsResponse, usersResponse] = await Promise.all([
@@ -41,8 +41,14 @@ function ShipmentOrders() {
 
                 const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
 
-                const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                const courierName = courierResponse.data.CourierName;
+                let courierName;
+                if (courierCache[shipment.CourierID]) {
+                    courierName = courierCache[shipment.CourierID];
+                } else {
+                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                    courierName = courierResponse.data.CourierName;
+                    courierCache[shipment.CourierID] = courierName;
+                }
 
                 return {
                     ...shipment,
@@ -57,35 +63,30 @@ function ShipmentOrders() {
             // Update state with fetched data
             setShipmentData(updatedShipments);
             setUsers(usersResponse.data);
-
             SetLoading(false);
 
             // Logging
             console.log('Updated shipments:', updatedShipments);
             console.log('Fetched users:', usersResponse.data);
-
         } catch (error) {
             console.error('Error fetching data:', error);
         }
-    };
-
+    }, [UserID, courierCache]); 
 
     // Initial fetch on component mount
     useEffect(() => {
         fetchShipments();
-    }, [UserID]);
+    }, [fetchShipments]);
 
-    // Function to handle button click and show popup
-    const handleButtonClick = (item) => {
+    const handleButtonClick = useCallback((item) => {
         setSelectedData(item);
         console.log('Selected shipment data:', item);
         setTimeout(() => {
             document.getElementById('ShipmentPopup').showModal();
         }, 5);
-    };
+    }, []);
 
-    // Function to refresh shipment data
-    const refreshData = async () => {
+    const refreshData = useCallback(async () => {
         try {
             const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
             const shipments = response.data.filter(shipment => shipment.ShipmentDate === null);
@@ -117,7 +118,7 @@ function ShipmentOrders() {
         } catch (error) {
             console.error('Error refreshing shipments:', error);
         }
-    };
+    }, [UserID]);
 
     const accordions = [
         {

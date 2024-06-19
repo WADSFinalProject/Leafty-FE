@@ -12,10 +12,11 @@ import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
 import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
 import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
-import "primereact/resources/themes/lara-light-cyan/theme.css";
 import dayjs from 'dayjs';
 import LeavesPopup from '@components/Popups/LeavesPopup';
-import { API_URL } from "../../App"; // Adjust the import path to your configuration file
+import StutsContainer from '../../components/Cards/StutsContainer';
+import LoadingStatic from "@components/LoadingStatic";
+import { API_URL } from '../../App'; // Adjust the import path to your configuration file
 
 const header = 'Recently Gained Wet Leaves';
 
@@ -28,117 +29,96 @@ const columns = [
 ];
 
 const WetLeaves = () => {
-  const [wetLeaves, setWetLeaves] = useState([]);
-  const [users, setUsers] = useState([]);
-  const [todayWeight, setTodayWeight] = useState([]);
+  const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [stats, setStats] = useState({
     awaiting: 0,
     processed: 0,
     wasted: 0,
-    total: 0
+    total: 0,
   });
 
   const leavesModalRef = useRef(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const [wetLeavesResponse, usersResponse] = await Promise.all([
+          axios.get(`${API_URL}/wetleaves/get`),
+          axios.get(`${API_URL}/user/get`),
+        ]);
+
+        const users = usersResponse.data.reduce((acc, user) => {
+          acc[user.UserID] = user.Username;
+          return acc;
+        }, {});
+
+        const stats = {
+          awaiting: 0,
+          processed: 0,
+          wasted: 0,
+          total: 0,
+        };
+
+        const processedData = wetLeavesResponse.data.map(item => {
+          const isExpired = new Date(item.Expiration) < new Date();
+          if (item.Status === 'Processed') {
+            stats.processed += item.Weight;
+          } else if (isExpired || item.Status === "Thrown") {
+            stats.wasted += item.Weight;
+          } else if (item.Status === 'Awaiting') {
+            stats.awaiting += item.Weight;
+          }
+          stats.total += item.Weight;
+
+          return {
+            id: item.WetLeavesID,
+            name: users[item.UserID] || 'Unknown User',
+            weight: item.Weight,
+            expiration: formatDate(item.Expiration),
+            status: isExpired ? 'Expired' : item.Status,
+          };
+        });
+
+        setData(processedData);
+        setStats(stats);
+      } catch (error) {
+        console.error('Error fetching wet leaves data', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
   };
 
-  const addMonth = (dateString) => {
-    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
-  };
-
   const handleDetailsClick = (rowData) => {
     setSelectedRowData(rowData);
     if (leavesModalRef.current) {
-      leavesModalRef.current.showModal();
+      setTimeout(leavesModalRef.current.showModal(), 100);
     }
   };
-
-  useEffect(() => {
-    const fetchWetLeaves = async () => {
-      try {
-        const wetLeavesResponse = await axios.get(`${API_URL}/wetleaves/get`);
-        const usersResponse = await axios.get(`${API_URL}/user/get`);
-        setWetLeaves(wetLeavesResponse.data);
-        setUsers(usersResponse.data);
-        const stats = {
-          awaiting: 0,
-          processed: 0,
-          wasted: 0,
-          total: 0
-        };
-
-        wetLeavesResponse.data.forEach(leaf => {
-          const receivedTime = dayjs(leaf.ReceivedTime);
-          stats.total += leaf.Weight;
-          if (leaf.Status === 'Processed') {
-            stats.processed += leaf.Weight;
-          }
-          else if (new Date(leaf.Expiration) < new Date() || leaf.Status == "Thrown") {
-            stats.wasted += leaf.Weight;
-          } else if (leaf.Status === 'Awaiting') {
-            stats.awaiting += leaf.Weight;
-          }
-        });
-
-        setStats(stats);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
-    fetchWetLeaves();
-  }, []);
-
-  const mergedData = wetLeaves.map(leaf => {
-    const user = users.find(u => u.UserID === leaf.UserID);
-    return {
-      id: leaf.WetLeavesID,
-      name: user ? user.Username : 'Unknown',
-      weight: leaf.Weight,
-      status: new Date(leaf.Expiration) < new Date() ? "Expired" : leaf.Status,
-      expiration: formatDate((leaf.Expiration)),
-    };
-  });
-
-  mergedData.sort((a, b) => {
-    if (a.status < b.status) {
-      return -1;
-    }
-    if (a.status > b.status) {
-      return 1;
-    }
-    return 0;
-  });
 
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
     let logo;
 
-
-    const currentTime = new Date();
-    const isExpired = new Date(rowData.expiration) < currentTime;
-
     if (rowData.status === "Awaiting") {
-      if (isExpired) {
-        backgroundColor = hexToRGBA("#D45D5D", 0.5);
-        textColor = "#D45D5D";
-        logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-      } else {
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-        textColor = "#79B2B7";
-        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-      }
-    }
-    else if (rowData.status === "Expired") {
+      backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+      textColor = "#79B2B7";
+      logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else if (rowData.status === "Expired") {
       backgroundColor = hexToRGBA("#D45D5D", 0.5);
       textColor = "#D45D5D";
       logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-    }
-    else if (rowData.status === "Processed") {
+    } else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
       textColor = "#E28834";
       logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
@@ -165,7 +145,7 @@ const WetLeaves = () => {
         className="flex items-center justify-center rounded-md overflow-hidden"
       >
         <div className="flex items-center gap-2">
-          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiration) < new Date()) ? "Expired" : rowData.status}</span>
+          <span>{rowData.status}</span>
           {logo}
         </div>
       </div>
@@ -181,19 +161,22 @@ const WetLeaves = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoadingStatic />
+    </div>;
+  }
+
   return (
     <div className="container mx-auto w-full">
       <TableComponent
-        data={mergedData}
+        data={data}
         header={header}
         columns={columns}
         ColorConfig={statusBodyTemplate}
         admin={false}
         onDetailsClick={handleDetailsClick}
       />
-      {/* <div className="daily-limit">
-        <h3>Daily Limit: {dailyLimit}/30 kg</h3>
-      </div> */}
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -204,11 +187,10 @@ const WetLeaves = () => {
         >
           <StatsContainer
             label="Awaiting Leaves"
-            value={stats.awaiting}
+            value={stats.awaiting || "0"}
             unit="Kg"
-            description=""
-            color="#C0CD30"
             modal={false}
+            color="#C0CD30"
             frontIcon={AwaitingLeaves}
           />
         </motion.div>
@@ -221,11 +203,10 @@ const WetLeaves = () => {
         >
           <StatsContainer
             label="Processed Leaves"
-            value={stats.processed}
+            value={stats.processed || "0"}
             unit="Kg"
-            description=""
-            color="#79B2B7"
             modal={false}
+            color="#79B2B7"
             frontIcon={ProcessedLeaves}
           />
         </motion.div>
@@ -238,11 +219,10 @@ const WetLeaves = () => {
         >
           <StatsContainer
             label="Wasted Leaves"
-            value={stats.wasted}
+            value={stats.wasted || "0"}
             unit="Kg"
-            description=""
-            color="#0F7275"
             modal={false}
+            color="#0F7275"
             frontIcon={ExpiredWetLeaves}
           />
         </motion.div>
@@ -255,26 +235,16 @@ const WetLeaves = () => {
         >
           <StatsContainer
             label="Total Wet Leaves"
-            value={stats.total}
+            value={stats.total || "0"}
             unit="Kg"
-            description=""
-            color="#0F7275"
             modal={false}
+            color="#0F7275"
             frontIcon={TotalCollectedWet}
           />
         </motion.div>
       </div>
       {selectedRowData && (
-        <LeavesPopup
-          weight={selectedRowData.weight}
-          centra_name={selectedRowData.name}
-          collectedDate={selectedRowData.Expiration}
-          expiredDate={selectedRowData.expiration}
-          ref={leavesModalRef}
-          wet_leaves={true}
-          leavesid={selectedRowData.id}
-          editable={false}
-        />
+        <LeavesPopup ref={leavesModalRef} data={selectedRowData} />
       )}
     </div>
   );

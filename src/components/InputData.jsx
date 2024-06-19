@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Plus from "@assets/Plus.svg";
 import { API_URL } from "../App";
 import WidgetContainer from "../components/Cards/WidgetContainer";
 import ChoosePowderDrawer from "./ChoosePowderDrawer";
 import "./InputData.css";
+import Popup from "./Popups/Popup";
 
 const InputData = ({
   Data,
@@ -25,6 +26,7 @@ const InputData = ({
   DryLeaves = false,
   Flour = false,
   Shipment = false,
+  WetLeavesWeightToday = 0,
 }) => {
   const [date, setDate] = useState('');
   const [weight, setWeight] = useState(30);
@@ -117,6 +119,13 @@ const InputData = ({
     setDrawerOpen(open);
   };
 
+  const CheckWetLeaves = async () =>{
+    if (WetLeavesWeightToday + weight >= 30){
+      modalRef.current.showModal()
+    }
+    else postWetLeaves();
+  }
+
   const postWetLeaves = async () => {
     try {
       const response = await axios.post(API_URL + "/wetLeaves/post", {
@@ -141,6 +150,7 @@ const InputData = ({
       // Update state with the new data
       setData(newData);
       console.log("Wet Leaves posted successfully:", response.data);
+      modalRef.current.close()
 
     } catch (error) {
       console.error("Error posting wet leaves:", error);
@@ -262,7 +272,8 @@ const InputData = ({
     console.log("Save button clicked");
     if (WetLeaves) {
       console.log("Posting Wet Leaves...");
-      postWetLeaves();
+      CheckWetLeaves()
+      // postWetLeaves();
     } else if (DryLeaves) {
       console.log("Posting Dry Leaves...");
       postDryLeaves();
@@ -288,6 +299,8 @@ const InputData = ({
 
     setDrawerOpen(false);
   };
+
+  const modalRef = useRef(null);
 
   return (
     <div className="w-full max-w mt-4 p-4 ">
@@ -552,6 +565,7 @@ const InputData = ({
           weight={weight} // Passing weight to ChoosePowderDrawer
         />
       ) : <></>}
+      <Popup ref = {modalRef} warning description = {"You are bypassing the daily limit for inputting wet leaves"} confirm onConfirm = {postWetLeaves} onCancel = {() => {modalRef.current.close()}}/>
     </div>
   );
 };

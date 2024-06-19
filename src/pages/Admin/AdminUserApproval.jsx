@@ -1,9 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import 'daisyui/dist/full.css';
 import axios from 'axios';
 import TableComponent from '../../components/LeavesTables/TableComponent';
 import UserDetails from '../../components/Popups/UserDetails';
 import { API_URL } from '../../App';
+import LoadingStatic from '@components/LoadingStatic';
 
 const header = 'User Approval';
 
@@ -20,13 +21,15 @@ const AdminUserApproval = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editable, setEditable] = useState(false);
   const modalRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true); // Set loading to true when fetching data
         const { data } = await axios.get(`${API_URL}/user/get`);
         const usersArray = Array.isArray(data) ? data : data.users;
-        
+
         const filteredAndMappedUsers = usersArray
           .filter(user => user.role.RoleName === 'Unverified' || user.role.RoleName === 'Rejected')
           .map(({ UserID, Username, Email, PhoneNumber, role }) => ({
@@ -36,10 +39,12 @@ const AdminUserApproval = () => {
             phone: PhoneNumber,
             role: role.RoleName,
           }));
-          
+
         setUsers(filteredAndMappedUsers);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching users:', error);
+        setLoading(false); // Ensure loading is set to false on error
       }
     };
 
@@ -61,7 +66,7 @@ const AdminUserApproval = () => {
     try {
       const response = await axios.put(`${API_URL}/user/update_role/${userId}`, { RoleName: newRole });
       if (response.status === 200) {
-        setUsers(prevUsers => 
+        setUsers(prevUsers =>
           prevUsers
             .map(user => user.userid === userId ? { ...user, role: newRole } : user)
             .filter(user => user.role === 'Unverified' || user.role === 'Rejected')
@@ -128,6 +133,12 @@ const AdminUserApproval = () => {
       </div>
     );
   };
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoadingStatic />
+    </div>
+  }
 
   return (
     <div className="container mx-auto w-full">

@@ -19,6 +19,8 @@ import FilterDashboard from "@components/filterDashboard";
 import Profile from "@components/Profile";
 import Button from "@components/Button";
 import Popup from '@components/Popups/Popup'; // Ensure the import path is correct
+import AuthApi from '../../AuthApi';
+import LoadingBackdrop from '../../components/LoadingBackdrop';
 
 function AdminLayout(CURRENT_USER) {
     const [collapsed, setCollapsed] = useState(false);
@@ -28,6 +30,28 @@ function AdminLayout(CURRENT_USER) {
     const user_id = CURRENT_USER.CURRENT_USER;
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     const modalRef = useRef(null);
+    const [loading, setLoading] = useState(false);
+    
+    const Auth = React.useContext(AuthApi);
+    
+    async function handle() {
+        setLoading(true)
+        try {
+            const response = await axios.delete(API_URL + "/delete_session")
+            if (response) {
+                Auth.setAuth(false);
+                navigate('/');
+            }
+            return false
+        } catch (error) {
+            console.error("Error while deleting session:", error);
+            console.error(err.response.data);    // ***
+            console.error(err.response.status);  // ***
+            console.error(err.response.headers);
+            return false
+
+        }
+    }
 
     const getUser = async () => {
         try {
@@ -104,13 +128,14 @@ function AdminLayout(CURRENT_USER) {
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
                         <FilterDashboard tablet={tabletMode} />
-                        <Profile Username = {userData.Username}/>
+                        <Profile Username = {userData.Username} handleLogout = {handle}/>
                         {/* <Button onClick={openModal} background="#0F7275" color="#F7FAFC" label="Open Leaves Modal" /> */}
                     </div>
                 </div>
                 <Outlet context={user_id}/>
             </motion.div>
             <Popup ref={modalRef} leavesid="errorModal" info={true} description = {"You are deleting a data. Are you sure?"} confirm = {true} />
+            {loading && <LoadingBackdrop/>}
         </div>
     );
 }

@@ -148,6 +148,10 @@ function DryLeavesOverview() {
 
     const navigate = useNavigate();
 
+    if (loading){
+        return 
+    }
+
     return (
         <div className="flex flex-row gap-2">
             <div className="w-3/4">

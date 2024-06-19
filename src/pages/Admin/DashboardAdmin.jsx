@@ -64,7 +64,7 @@ function DashboardAdmin() {
         };
 
         fetchData();
-        setLoading(false);
+        setLoading(false)
     }, []);
 
     const unscaledPackagesCount = useMemo(() => {

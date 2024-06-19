@@ -17,6 +17,9 @@ import Return from '../../components/Return';
 import axios from 'axios';
 import LoadingCircle from "@components/LoadingCircle"
 import { API_URL } from '../../App';
+import AuthApi from '../../AuthApi';
+import logout from "@assets/logout.svg";
+import LoadingBackdrop from '../../components/LoadingBackdrop';
 
 function CentraLayout(CURRENT_USER) {
     const [value, setValue] = useState("Dashboard"); // Initialize state with "Dashboard"
@@ -24,8 +27,28 @@ function CentraLayout(CURRENT_USER) {
     const location = useLocation();
     const [showReturn, setShowReturn] = useState(false);
     const UserID = CURRENT_USER.CURRENT_USER;
-    // const [UserID, setUserID] = useState(null);
+    const Auth = React.useContext(AuthApi);
+    const [loading, setLoading]=useState(false);
     
+    async function handle() {
+        setLoading(true);
+        try {
+            const response = await axios.delete(API_URL + "/delete_session")
+            if (response) {
+                Auth.setAuth(false);
+                navigate('/');
+            }
+            return false
+        } catch (error) {
+            console.error("Error while deleting session:", error);
+            console.error(err.response.data);    // ***
+            console.error(err.response.status);  // ***
+            console.error(err.response.headers);
+            return false
+
+        }
+    }
+
     // async function handleWhoAmI() {
     //     try {
     //       const response = await axios.get(API_URL + "/whoami");
@@ -128,7 +151,6 @@ function CentraLayout(CURRENT_USER) {
     };
 
     if (UserID === null) {
-        
         return <LoadingCircle />; // or a loading indicator
     }
 
@@ -142,10 +164,10 @@ function CentraLayout(CURRENT_USER) {
                         <span className='font-bold text-3xl'>{value}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                        <img src={NotificationBell} alt="Notification" className='w-8 h-8' />
-                        <Link to="/usersetting" state={{ from: location.pathname }}>
-                            <img src={Profilepic} alt="Profile" className='w-8 h-8 rounded-full' />
-                        </Link>
+                        {/* <img src={NotificationBell} alt="Notification" className='w-8 h-8' /> */}
+                        
+                        <img src={logout} alt="Profile" onClick = {handle} className='w-12 h-12 rounded-full' />
+                        
                     </div>
                 </div>
                 <Outlet context={UserID} />
@@ -188,6 +210,7 @@ function CentraLayout(CURRENT_USER) {
                     </BottomNavigation>
                 </div>
             </div>
+            {loading && <LoadingBackdrop />}
         </div>
     );
 }

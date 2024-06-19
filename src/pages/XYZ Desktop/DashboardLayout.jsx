@@ -1,5 +1,5 @@
 import { Outlet, useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import dashboard from '@assets/icons/sidebar/dashboard.svg';
 import dry_leaves from '@assets/icons/sidebar/dry_leaves.svg';
@@ -17,6 +17,7 @@ import axios from "axios";
 import { API_URL } from "../../App";
 import Profile from "@components/Profile";
 import LoadingBackdrop from "../../components/LoadingBackdrop";
+import AuthApi from "../../AuthApi";
 
 function DashboardLayout({ CURRENT_USER }) {
     const [collapsed, setCollapsed] = useState(false);
@@ -24,6 +25,28 @@ function DashboardLayout({ CURRENT_USER }) {
     const [loading, setLoading] = useState(true);
     const [title, setTitle] = useState("Dashboard"); // State to hold the title
     const navigate = useNavigate();
+
+    const Auth = useContext(AuthApi);
+
+    async function handle() {
+        setLoading(true);
+        try {
+            const response = await axios.delete(API_URL + "/delete_session")
+            if (response) {
+                Auth.setAuth(false);
+                navigate('/');
+            }
+            return false
+        } catch (error) {
+            console.error("Error while deleting session:", error);
+            console.error(err.response.data);    // ***
+            console.error(err.response.status);  // ***
+            console.error(err.response.headers);
+            return false
+
+        }
+    }
+
 
     const getUser = async () => {
         try {
@@ -96,13 +119,13 @@ function DashboardLayout({ CURRENT_USER }) {
                         {/* Menu items with onClick handler to update title */}
                         <MenuItem icon={<img src={dashboard} alt="Dashboard Icon" />} onClick={() => handleMenuItemClick("/company/dashboard", "Dashboard")}> Dashboard </MenuItem>
                         <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} alt="Leaves Distribution Icon" />}>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} alt="Wet Leaves Icon" />} onClick={() => handleMenuItemClick("/company/wetleaves", "Wet Leaves leaves")}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves Icon" />} onClick={() => handleMenuItemClick("/company/dryleaves", "Dry Leaves leaves")}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} alt="Wet Leaves Icon" />} onClick={() => handleMenuItemClick("/company/wetleaves", "Wet Leaves")}> Wet Leaves</MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves Icon" />} onClick={() => handleMenuItemClick("/company/dryleaves", "Dry Leaves")}> Dry Leaves </MenuItem>
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} alt="Powder Icon" />} onClick={() => handleMenuItemClick("/company/powder", "Powder")}> Powder </MenuItem>
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} alt="Shipment Icon" />} onClick={() => handleMenuItemClick("/company/shipment", "Shipment")}> Shipment </MenuItem>
                         {/* <MenuItem icon={<img src={pickup} alt="Pickup Icon" />} onClick={() => handleMenuItemClick("/company/pickup", "Pickup")}> Pickup </MenuItem> */}
-                        <MenuItem icon={<img src={reception} alt="Reception Icon" />} onClick={() => handleMenuItemClick("/company/reception/centra", "Reception")}> Reception </MenuItem>
+                        {/* <MenuItem icon={<img src={reception} alt="Reception Icon" />} onClick={() => handleMenuItemClick("/company/reception/centra", "Reception")}> Reception </MenuItem> */}
                         <MenuItem icon={<img src={performance} alt="Performance Icon" />} onClick={() => handleMenuItemClick("/company/performance", "Performance")}> Performance </MenuItem>
                     </Menu>
                 </Sidebar>
@@ -111,7 +134,7 @@ function DashboardLayout({ CURRENT_USER }) {
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
-                        <Profile Username={userData.Username} />
+                        <Profile Username={userData.Username} handleLogout = {handle} />
                     </div>
                 </div>
                 <Outlet />

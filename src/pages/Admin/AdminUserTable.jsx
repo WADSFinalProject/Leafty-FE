@@ -4,6 +4,7 @@ import 'daisyui/dist/full.css';
 import TableComponent from '../../components/LeavesTables/TableComponent';
 import UserDetails from '../../components/Popups/UserDetails';
 import { API_URL } from '../../App';
+import LoadingStatic from '@components/LoadingStatic';
 
 const header = 'User Management';
 
@@ -18,14 +19,16 @@ const AdminUserTable = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState(null);
   const [editable, setEditable] = useState(false);
+  const [loading, setLoading] = useState(true);
   const modalRef = useRef(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
+        setLoading(true); // Set loading to true when fetching data
         const { data } = await axios.get(`${API_URL}/user/get`);
         const usersArray = Array.isArray(data) ? data : data.users;
-        
+
         const filteredAndMappedUsers = usersArray
           .filter(user => user.role.RoleName !== 'Unverified' && user.role.RoleName !== 'Rejected')
           .map(({ UserID, Username, Email, PhoneNumber, role }) => ({
@@ -35,10 +38,12 @@ const AdminUserTable = () => {
             phone: PhoneNumber,
             role: role.RoleName,
           }));
-          
+
         setUsers(filteredAndMappedUsers);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching users:', error);
+        setLoading(false); // Ensure loading is set to false on error
       }
     };
 
@@ -48,37 +53,33 @@ const AdminUserTable = () => {
   const handleDetailsClick = (user) => {
     setSelectedUser(user);
     setEditable(false);
-    
   };
 
   const handleEditClick = (user) => {
     setSelectedUser(user);
-    console.log(user)
     setEditable(true);
   };
 
   const handleDelete = async (id) => {
-    setSelectedUser(id)
-    console.log(id)
+    setSelectedUser(id);
     try {
-        await axios.delete(`${API_URL}/user/delete/${id}`);
-        setSelectedUser(null)
-        setUsers(users.filter(user => user.userid !== id));
-        
-    } catch (error) {
-        console.error('Error deleting user:', error);
-    }
-};
-
-useEffect(() => {
-  const dialog = modalRef.current;
-  if (selectedUser && dialog) {
-    dialog.showModal();
-    dialog.addEventListener('close', () => {
+      await axios.delete(`${API_URL}/user/delete/${id}`);
       setSelectedUser(null);
-    });
-  }
-}, [selectedUser]);
+      setUsers(users.filter(user => user.userid !== id));
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+
+  useEffect(() => {
+    const dialog = modalRef.current;
+    if (selectedUser && dialog) {
+      dialog.showModal();
+      dialog.addEventListener('close', () => {
+        setSelectedUser(null);
+      });
+    }
+  }, [selectedUser]);
 
   const RoleBodyTemplate = (rowData) => {
     let backgroundColor;
@@ -121,6 +122,12 @@ useEffect(() => {
       </div>
     );
   };
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoadingStatic />
+    </div>;
+  }
 
   return (
     <div className="container mx-auto w-full">
