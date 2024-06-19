@@ -67,6 +67,7 @@ import DownloadPDF from "./pages/Downloadpdf";
 import { PDFDownloadLink } from "@react-pdf/renderer";
 import AdminShipment from "./pages/Admin/AdminShipment";
 import AdminShipmentDetails from "./pages/Admin/AdminShipmentDetail";
+import PushNotif from "./components/Popups/pushnotif";
 
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
@@ -203,6 +204,7 @@ function App() {
         <RegApi.Provider value={{reg, setReg}}>
           <Router>
             <Routes>
+            <Route path="/pushnotif" element={<PushNotif />} />
               <Route exact path="/" element={<ProtectedLogin/>}>
                 <Route path="/" element={<OnBoarding handleWhoAmI={handleWhoAmI}/>}></Route>
                 <Route path="forgor" element={<ForgotPassword/>}></Route>
@@ -302,6 +304,7 @@ function App() {
         </RegApi.Provider>
       </OtpApi.Provider>
     </AuthApi.Provider>
+    
   );
 }
 

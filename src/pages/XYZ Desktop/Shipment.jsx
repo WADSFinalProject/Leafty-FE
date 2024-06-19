@@ -15,6 +15,10 @@ import LoadingStatic from '@components/LoadingStatic';
 
 function Shipment() {
     const [shipments, setShipments] = useState([]);
+    const [verifiedCount, setVerifiedCount] = useState(0);
+    const [departuredCount, setDeparturedCount] = useState(0);
+    const [rescalledCount, setRescalledCount] = useState(0);
+    const [receivedCount, setReceivedCount] = useState(0);
     const [currentPage, setCurrentPage] = useState(0);
     const [itemsPerPage, setItemsPerPage] = useState(8);
     const [searchTerm, setSearchTerm] = useState('');
@@ -71,6 +75,16 @@ function Shipment() {
                     })
                 );
 
+                const verifiedShipments = updatedShipments.filter(shipment => shipment.Check_in_Date && shipment.Check_in_Weight);
+                const departuredShipments = updatedShipments.filter(shipment => shipment.ShipmentDate);
+                const rescalledShipments = updatedShipments.filter(shipment => shipment.Rescalled_Weight && shipment.Rescalled_Date);
+                const receivedShipments = updatedShipments.filter(shipment => shipment.Centra_Reception_File);
+
+                setVerifiedCount(verifiedShipments.length);
+                setDeparturedCount(departuredShipments.length);
+                setRescalledCount(rescalledShipments.length);
+                setReceivedCount(receivedShipments.length);
+
                 setShipments(updatedShipments);
             } catch (error) {
                 console.error('Error fetching shipments:', error);
@@ -104,32 +118,32 @@ function Shipment() {
     const stats = [
         {
             label: "Verified Packages",
-            value: "",
-            unit: "Kg",
+            value: verifiedCount,
+            unit: "Shipments",
             color: "#C0CD30",
             icon: VerifiedPackages,
             delay: 1
         },
         {
             label: "Departured Packages",
-            value: "",
-            unit: "Kg",
+            value: departuredCount,
+            unit: "Shipments",
             color: "#79B2B7",
             icon: DeparturedPackages,
             delay: 1.25
         },
         {
             label: "Rescalled Packages",
-            value: "",
-            unit: "Kg",
+            value: rescalledCount,
+            unit: "Shipments",
             color: "#0F7275",
             icon: RescalledPackages,
             delay: 1.5
         },
         {
             label: "Total Packages Received",
-            value: "",
-            unit: "Kg",
+            value: receivedCount,
+            unit: "Shipments",
             color: "#0F7275",
             icon: TotalPackagesReceived,
             delay: 1.75

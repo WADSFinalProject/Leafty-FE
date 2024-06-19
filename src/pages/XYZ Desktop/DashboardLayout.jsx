@@ -18,8 +18,10 @@ import { API_URL } from "../../App";
 import Profile from "@components/Profile";
 import LoadingBackdrop from "../../components/LoadingBackdrop";
 import AuthApi from "../../AuthApi";
+import addNotification, { Notifications } from 'react-push-notification';
 
 function DashboardLayout({ CURRENT_USER }) {
+    const [shipments, setShipments] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     const [loading, setLoading] = useState(true);
@@ -66,6 +68,34 @@ function DashboardLayout({ CURRENT_USER }) {
     };
 
     useEffect(() => {
+        const fetchShipments = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/shipment/get`);
+                setShipments(response.data);
+                console.log(response.data);
+
+                // Check for null values in the response data
+                const hasNullValues = response.data.some(shipment =>
+                    Object.values(shipment).some(value => value === null)
+                );
+
+                if (hasNullValues) {
+                    addNotification({
+                        title: 'Information',
+                        subtitle: 'Unclaimed Shipments',
+                        message: 'One or more shipments have not been claimed',
+                        duration: 10000
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching shipments:", error);
+            }
+        };
+
+        fetchShipments();
+    }, [API_URL]);
+
+    useEffect(() => {
         const fetchData = async () => {
             try {
                 const userData = await getUser();
@@ -93,6 +123,9 @@ function DashboardLayout({ CURRENT_USER }) {
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
+            <div>
+                <Notifications position = {'bottom-right'}/>
+            </div>
             <motion.div initial={{ x: -250 }} transition={{ duration: 0.5, type: "spring" }} animate={{ x: 0 }} className="hidden sm:block">
                 <Sidebar collapsed={collapsed} className="sidebar" backgroundColor="#94c3b3" color="#94c3b3">
                     <Menu
