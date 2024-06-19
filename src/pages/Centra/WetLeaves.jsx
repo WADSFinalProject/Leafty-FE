@@ -29,6 +29,7 @@ function WetLeaves() {
   const [processedLeavesData, setProcessedLeavesData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
   const [wetLeavesDailyLimit, setWetLeavesDailyLimit] = useState(30);
+  const [wetLeavesWeightToday, setWetLeavesWeightToday] = useState(0);
   const UserID = useOutletContext();
   const refModal = useRef();
 
@@ -169,10 +170,27 @@ function WetLeaves() {
       } catch (error) {
         console.error('Error fetching wet leaves data:', error);
       }
+
+      try {
+        const weightToday = await fetchSumWetLeavesWeightToday();
+        setWetLeavesWeightToday(weightToday);
+      } catch (error) {
+        console.error('Error fetching sum wet leaves weight today:', error);
+      }
     };
 
     fetchData();
   }, [UserID]);
+
+  const fetchSumWetLeavesWeightToday = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/wetleaves/sum_weight_today/${UserID}`);
+      return response.data.total_weight_today;
+    } catch (error) {
+      console.error('Error fetching sum wet leaves weight today:', error);
+      return 0;
+    }
+  };
 
   const handleButtonClick = (item) => {
     setSelectedData(item);
@@ -183,6 +201,15 @@ function WetLeaves() {
 
   return (
     <>
+      <div className="flex justify-between p-1">
+        <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+          <div className='flex flex-col ml-3'>
+            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+              Total Wet Leaves Weight Today: {wetLeavesWeightToday} Kg
+            </span>
+          </div>
+        </WidgetContainer>
+      </div>
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup
