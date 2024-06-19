@@ -61,23 +61,12 @@ const LeavesPopup = forwardRef(({
           <div className='flex flex-col w-full'>
             <InputField
               padding={false}
-              type="text"
+              type="datetime-local"
               label="Expired Date"
               green={true}
               value={formData.expiration}
               className="font-semibold"
               name="expiration"
-              onChange={handleInputChange}
-              disabled={!editable}
-            />
-            <InputField
-              padding={false}
-              type="text"
-              label="Collected Date"
-              green={true}
-              value={formData.date}
-              className="font-semibold"
-              name="date"
               onChange={handleInputChange}
               disabled={!editable}
             />

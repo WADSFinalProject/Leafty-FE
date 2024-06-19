@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
 import StatsContainer from "@components/Cards/StatsContainer";
@@ -12,11 +12,12 @@ import ExpiredDryLeaves from '@assets//ExpiredDryLeaves.svg';
 import ProcessedLeaves from '@assets/In-ProcessLeaves.svg';
 import TotalDryLeaves from '@assets/TotalDryLeaves.svg';
 import "primereact/resources/themes/lara-light-cyan/theme.css";
-import axios from 'axios';  // Ensure you have axios installed and imported
+import axios from 'axios';
 import dayjs from 'dayjs';
-import { API_URL } from "../../App"; // Adjust the import path to your configuration file
+import { API_URL } from "../../App";
+import LoadingStatic from '../../components/LoadingStatic';
 
-const header = 'Recently Gained Dry Leaves'; // Example header
+const header = 'Recently Gained Dry Leaves';
 
 const columns = [
   { field: 'status', header: 'Status' },
@@ -35,13 +36,7 @@ const DryLeaves = () => {
     wasted: 0,
     total: 0
   });
-    const [contentLoaded, setContentLoaded] = React.useState(false);
-
-    React.useEffect(() => {
-      setTimeout(() => {
-        setContentLoaded(true);
-      }, 3000);
-    }, []);
+  const [ContentLoaded, setContentLoaded] = useState(false); 
 
   useEffect(() => {
     const fetchDryLeaves = async () => {
@@ -51,32 +46,26 @@ const DryLeaves = () => {
         setDryLeaves(dryLeavesResponse.data);
         setUsers(usersResponse.data);
 
-        // Calculate statistics
         const stats = {
           awaiting: 0,
           processed: 0,
           wasted: 0,
           total: 0
-
         };
-
 
         dryLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Processed_Weight;
-          if ((new Date(leaf.Expiration) < new Date()) == true) {
+          if (new Date(leaf.Expiration) < new Date()) {
             stats.wasted += leaf.Processed_Weight;
-
-          }
-          else if (leaf.Status === 'Processed') {
+          } else if (leaf.Status === 'Processed') {
             stats.processed += leaf.Processed_Weight;
-          }
-
-          else if (leaf.Status === 'Awaiting') {
+          } else if (leaf.Status === 'Awaiting') {
             stats.awaiting += leaf.Processed_Weight;
           }
         });
 
         setStats(stats);
+        setContentLoaded(true); 
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -88,11 +77,6 @@ const DryLeaves = () => {
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
   };
-
-  const addMonth = (dateString) => {
-    return dayjs(dateString).add(1, 'month').format('MM/DD/YYYY HH:mm');
-  };
-
 
   const mergedData = dryLeaves.map(leaf => {
     const user = users.find(u => u.UserID === leaf.UserID);
@@ -120,22 +104,24 @@ const DryLeaves = () => {
     let textColor;
     let logo;
 
-
     const currentTime = new Date();
     const isExpired = new Date(rowData.expiration) < currentTime;
 
     if (rowData.status === "Awaiting") {
       if (isExpired) {
-        backgroundColor = hexToRGBA("#D45D5D", 0.5);
+        backgroundColor = hexToRGBA("D45D5D", 0.5);
         textColor = "#D45D5D";
         logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
       } else {
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        backgroundColor = hexToRGBA("A0C2B5", 0.5);
         textColor = "#79B2B7";
         logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
       }
-    }
-    else if (rowData.status === "Processed") {
+    } else if (rowData.status === "Expired") {
+      backgroundColor = hexToRGBA("D45D5D", 0.5);
+      textColor = "#D45D5D";
+      logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
       textColor = "#E28834";
       logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
@@ -179,78 +165,87 @@ const DryLeaves = () => {
   };
 
   return (
-    <div className="container mx-auto w-full">
-      <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} />
-      <div className="flex flex-wrap gap-4 justify-stretch">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1 }}
-          className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
-        >
-          <StatsContainer
-            label="Awaiting Dry Leaves"
-            value={stats.awaiting}
-            unit="Kg"
-            description=""
-            color="#C0CD30"
-            modal={false}
-            frontIcon={AwaitingLeaves}
-          />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.25 }}
-          className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
-        >
-          <StatsContainer
-            label="In-Processed Leaves"
-            value={stats.processed}
-            unit="Kg"
-            description=""
-            color="#79B2B7"
-            modal={false}
-            frontIcon={ProcessedLeaves}
-          />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.5 }}
-          className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
-        >
-          <StatsContainer
-            label="Expired Dry Leaves"
-            value={stats.wasted}
-            unit="Kg"
-            description=""
-            color="#0F7275"
-            modal={false}
-            frontIcon={ExpiredDryLeaves}
-          />
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.35, delay: 1.75 }}
-          className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
-        >
-          <StatsContainer
-            label="Total Collected Dry Leaves"
-            value={stats.total}
-            unit="Kg"
-            description=""
-            color="#0F7275"
-            modal={false}
-            frontIcon={TotalDryLeaves}
-          />
-        </motion.div>
-      </div>
+    <div className="container mx-auto w-full h-screen flex items-center justify-center">
+      {!ContentLoaded && (
+        <div className="fixed inset-0 flex items-center justify-center">
+          <LoadingStatic />
+        </div>
+      )} 
+      {ContentLoaded && (
+        <div className="container mx-auto w-full">
+          <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} />
+          <div className="flex flex-wrap gap-4 justify-stretch">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, delay: 1 }}
+              className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
+            >
+              <StatsContainer
+                label="Awaiting Dry Leaves"
+                value={stats.awaiting}
+                unit="Kg"
+                description=""
+                color="#C0CD30"
+                modal={false}
+                frontIcon={AwaitingLeaves}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, delay: 1.25 }}
+              className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
+            >
+              <StatsContainer
+                label="In-Processed Leaves"
+                value={stats.processed}
+                unit="Kg"
+                description=""
+                color="#79B2B7"
+                modal={false}
+                frontIcon={ProcessedLeaves}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, delay: 1.5 }}
+              className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
+            >
+              <StatsContainer
+                label="Expired Dry Leaves"
+                value={stats.wasted}
+                unit="Kg"
+                description=""
+                color="#0F7275"
+                modal={false}
+                frontIcon={ExpiredDryLeaves}
+              />
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.35, delay: 1.75 }}
+              className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
+            >
+              <StatsContainer
+                label="Total Collected Dry Leaves"
+                value={stats.total}
+                unit="Kg"
+                description=""
+                color="#0F7275"
+                modal={false}
+                frontIcon={TotalDryLeaves}
+              />
+            </motion.div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

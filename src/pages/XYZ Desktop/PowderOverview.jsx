@@ -46,18 +46,10 @@ function PowderOverview() {
         { field: 'id', header: 'Batch Id' },
         { field: 'name', header: 'Centra Name' },
         { field: 'weight', header: 'Weight' },
-        { field: 'date', header: 'Date' },
     ];
 
     const stats = [
-        {
-          label: "Powder Produced",
-          value: "243",
-          unit: "Kg",
-          color: "#C0CD30",
-          icon: PowderProduced,
-          delay: 1
-        },
+        
         {
           label: "In-Process Powder",
           value: "243",
@@ -66,6 +58,14 @@ function PowderOverview() {
           icon: InProcessPowder,
           delay: 1.25
         },
+        {
+            label: "Powder Produced",
+            value: "243",
+            unit: "Kg",
+            color: "#C0CD30",
+            icon: PowderProduced,
+            delay: 1
+          },
         {
           label: "Unpackaged Powder",
           value: "250",
@@ -78,7 +78,7 @@ function PowderOverview() {
           label: "Packaged Powder",
           value: "1500",
           unit: "Kg",
-          color: "#0F7275",
+          color: "#94C3B3",
           icon: PackagedPowder,
           delay: 1.75
         }
@@ -179,7 +179,7 @@ function PowderOverview() {
             <div className="flex flex-row gap-2">
                 <div className="flex-auto w-3/5">
                     <div className="flex items-center justify-between mb-0">
-                        <span className="font-bold text-xl">Recently Gained Wet Leaves</span>
+                        <span className="font-bold text-xl">Recently Gained Powder</span>
                         <span className="text-[#94C3B3]">See all</span>
                     </div>
                     <WidgetContainer>
@@ -193,7 +193,8 @@ function PowderOverview() {
                             rows={5} 
                             showFilter={false} 
                             showSearch={false}
-                            widihmin={'50rem'} 
+                            widihmin={'45rem'}
+                            action = {false} 
                         />
                     </WidgetContainer>
                 </div>

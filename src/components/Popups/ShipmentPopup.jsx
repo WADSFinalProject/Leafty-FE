@@ -11,7 +11,7 @@ import QRPage from '../../pages/QRPage';
 import Button from '@components/Button';
 import { API_URL } from '../../App'; // Adjust the import path as needed
 
-function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfirm, desktop, ShipmentDate = false, confirmDeliver = false }) {
+function ShipmentPopup({ code, weight, quantity, courier, userID, users, UserName, onConfirm, desktop, ShipmentDate = false, confirmDeliver = false }) {
     const ShipmentText = `Expedition #${code}`;
 
     const handleConfirm = async () => {
@@ -85,7 +85,7 @@ function ShipmentPopup({ code, weight, quantity, courier, userID, users, onConfi
                                     <span className='font-montserrat text-16px font-semibold tracking-02em pb-2 ml-1'>Centra</span>
                                     <div className='flex pb-2'>
                                         <img src={Address} alt="Address" style={{ maxWidth: '100px' }} className='w-4 h-7' />
-                                        <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>Unit 1</span>
+                                        <span className=' font-montserrat text-16px font-semibold tracking-02em text-center ml-2'>{UserName}</span>
                                     </div>
 
                                     <div className='flex pb-2'>

@@ -37,8 +37,12 @@ const AdminWetLeaves = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`${API_URL}/wetleaves/get`);
-        const usersResponse = await axios.get(`${API_URL}/user/get`); // Assuming we can fetch all users at once
+        setLoading(true); // Set loading to true when fetching data
+        const [response, usersResponse] = await Promise.all([
+          axios.get(`${API_URL}/wetleaves/get`),
+          axios.get(`${API_URL}/user/get`)
+        ]);
+
         const users = usersResponse.data.reduce((acc, user) => {
           acc[user.UserID] = user.Username;
           return acc;
@@ -53,14 +57,14 @@ const AdminWetLeaves = () => {
         }));
 
         setData(processedData);
+        setLoading(false); // Set loading to false after data is fetched
       } catch (error) {
         console.error('Error fetching wet leaves data', error);
+        setLoading(false); // Ensure loading is set to false on error
       }
     };
 
     fetchData();
-    setTimeout(2500);
-    setLoading(false)
   }, []);
 
   const formatDate = (dateString) => {
