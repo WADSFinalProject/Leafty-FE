@@ -30,6 +30,7 @@ const columns = [
 const WetLeaves = () => {
   const [wetLeaves, setWetLeaves] = useState([]);
   const [users, setUsers] = useState([]);
+  const [todayWeight, setTodayWeight] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [stats, setStats] = useState({
     awaiting: 0,
@@ -39,6 +40,7 @@ const WetLeaves = () => {
   });
 
   const leavesModalRef = useRef(null);
+  const UserID = useOutletContext();
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
@@ -60,8 +62,10 @@ const WetLeaves = () => {
       try {
         const wetLeavesResponse = await axios.get(`${API_URL}/wetleaves/get`);
         const usersResponse = await axios.get(`${API_URL}/user/get`);
+        const todayWeight = await axios.get(`${API_URL}/wetleaves/sum_weight_today/${UserID}`);
         setWetLeaves(wetLeavesResponse.data);
         setUsers(usersResponse.data);
+        setTodayWeight(todayWeight.data);
 
         const stats = {
           awaiting: 0,
