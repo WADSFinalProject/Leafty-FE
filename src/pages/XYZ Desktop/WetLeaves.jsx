@@ -1,8 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import 'daisyui/dist/full.css';
-import { motion } from "framer-motion";
-import StatsContainer from "@components/Cards/StatsContainer";
 import TableComponent from '@components/LeavesTables/TableComponent';
 import trash from '@assets/icons/trash.svg';
 import IPI from '@assets/icons/IPI.svg';
@@ -12,11 +10,12 @@ import AwaitingLeaves from '@assets/AwaitingLeaves.svg';
 import ExpiredWetLeaves from '@assets/ExpiredLeavesWet.svg';
 import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
+import { API_URL } from '../../App';
+import {motion} from "framer-motion"
 import dayjs from 'dayjs';
+import LoadingStatic from "@components/LoadingStatic"
 import LeavesPopup from '@components/Popups/LeavesPopup';
-import StutsContainer from '../../components/Cards/StutsContainer';
-import LoadingStatic from "@components/LoadingStatic";
-import { API_URL } from '../../App'; // Adjust the import path to your configuration file
+import StatsContainer from "@components/Cards/StatsContainer";
 
 const header = 'Recently Gained Wet Leaves';
 
@@ -78,7 +77,8 @@ const WetLeaves = () => {
             name: users[item.UserID] || 'Unknown User',
             weight: item.Weight,
             expiration: formatDate(item.Expiration),
-            status: isExpired ? 'Expired' : item.Status,
+            expiredDate: item.Expiration,
+            status: item.Status,
           };
         });
 
@@ -101,7 +101,7 @@ const WetLeaves = () => {
   const handleDetailsClick = (rowData) => {
     setSelectedRowData(rowData);
     if (leavesModalRef.current) {
-      setTimeout(leavesModalRef.current.showModal(), 100);
+      setTimeout(() => leavesModalRef.current.showModal(), 100);
     }
   };
 
@@ -110,15 +110,21 @@ const WetLeaves = () => {
     let textColor;
     let logo;
 
+    const currentTime = new Date();
+    const isExpired = new Date(rowData.expiredDate) < currentTime;
+
     if (rowData.status === "Awaiting") {
-      backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-      textColor = "#79B2B7";
-      logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-    } else if (rowData.status === "Expired") {
-      backgroundColor = hexToRGBA("#D45D5D", 0.5);
-      textColor = "#D45D5D";
-      logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-    } else if (rowData.status === "Processed") {
+      if (isExpired) {
+        backgroundColor = hexToRGBA("#D45D5D", 0.5);
+        textColor = "#D45D5D";
+        logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      } else {
+        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        textColor = "#79B2B7";
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      }
+    }
+    else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
       textColor = "#E28834";
       logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
@@ -129,7 +135,7 @@ const WetLeaves = () => {
     } else {
       backgroundColor = "inherit";
       textColor = "#000000";
-    }
+    } 
 
     const dynamicWidth = "150px";
     const dynamicHeight = "35px";
@@ -145,7 +151,7 @@ const WetLeaves = () => {
         className="flex items-center justify-center rounded-md overflow-hidden"
       >
         <div className="flex items-center gap-2">
-          <span>{rowData.status}</span>
+          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiration) < new Date()) ? "Expired" : rowData.status}</span>
           {logo}
         </div>
       </div>
@@ -187,10 +193,11 @@ const WetLeaves = () => {
         >
           <StatsContainer
             label="Awaiting Leaves"
-            value={stats.awaiting || "0"}
+            value={stats.awaiting || "0"} 
             unit="Kg"
-            modal={false}
+            description=""
             color="#C0CD30"
+            modal={false}
             frontIcon={AwaitingLeaves}
           />
         </motion.div>
@@ -205,8 +212,9 @@ const WetLeaves = () => {
             label="Processed Leaves"
             value={stats.processed || "0"}
             unit="Kg"
-            modal={false}
+            description=""
             color="#79B2B7"
+            modal={false}
             frontIcon={ProcessedLeaves}
           />
         </motion.div>
@@ -221,8 +229,9 @@ const WetLeaves = () => {
             label="Wasted Leaves"
             value={stats.wasted || "0"}
             unit="Kg"
-            modal={false}
+            description=""
             color="#0F7275"
+            modal={false}
             frontIcon={ExpiredWetLeaves}
           />
         </motion.div>
@@ -237,14 +246,24 @@ const WetLeaves = () => {
             label="Total Wet Leaves"
             value={stats.total || "0"}
             unit="Kg"
-            modal={false}
+            description=""
             color="#0F7275"
+            modal={false}
             frontIcon={TotalCollectedWet}
           />
         </motion.div>
       </div>
       {selectedRowData && (
-        <LeavesPopup ref={leavesModalRef} data={selectedRowData} />
+        <LeavesPopup
+          status={selectedRowData.status}
+          weight={selectedRowData.weight}
+          centra_name={selectedRowData.name}
+          expiredDate={selectedRowData.expiredDate}
+          ref={leavesModalRef}
+          wet_leaves={true}
+          leavesid={selectedRowData.id}
+          editable={false}
+        />
       )}
     </div>
   );

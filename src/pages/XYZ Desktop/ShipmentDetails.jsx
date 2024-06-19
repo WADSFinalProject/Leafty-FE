@@ -56,6 +56,7 @@ function ShipmentDetails() {
         if (shipment?.UserID) {
             fetchUserDetails(shipment.UserID);
         }
+        determineCurrentComponent(shipment)
     }, [shipment]);
 
     const fetchUserDetails = async (userId) => {
@@ -67,12 +68,21 @@ function ShipmentDetails() {
         }
     };
 
-    const handleNext = () => {
-        setCurrentComponent(prevComponent => Math.min(prevComponent + 1, 6));
-    };
-
-    const handlePrevious = () => {
-        setCurrentComponent(prevComponent => Math.max(prevComponent - 1, 0));
+    const determineCurrentComponent = (shipment) => {
+        if (!shipment.ShipmentDate) {
+            setCurrentComponent(1);
+        } else if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
+            setCurrentComponent(2);
+        } else if (!shipment.Harbor_Reception_File) {
+            setCurrentComponent(3);
+        } else if (!shipment.Rescalled_Weight && !shipment.Rescalled_Date) {
+            setCurrentComponent(4);
+        } else if (!shipment.Centra_Reception_File) {
+            setCurrentComponent(5);
+        } 
+        else if (shipment.Centra_Reception_File) {
+            setCurrentComponent(6);
+        }
     };
 
     function formatDate(dateString) {
@@ -84,8 +94,8 @@ function ShipmentDetails() {
 
     return (
         <div className="flex flex-col h-full">
-            <Stepper className="mt-4" activeStep={currentComponent} alternativeLabel>
-                {['Shipping', 'Harbor Reception', 'Rescalling Input', 'Centra Reception', 'Reception Detail'].map((label, index) => (
+            <Stepper className="mt-4" activeStep={currentComponent-1} alternativeLabel>
+                {['Shipping', 'Verification', 'Harbor Reception','Rescalling Input', 'Centra Reception'].map((label, index) => (
                     <Step key={label}>
                         <StepLabel
                             StepIconProps={{
@@ -119,7 +129,7 @@ function ShipmentDetails() {
                         </Column>
                         <Column>
                             <ItemDetail icon={Centra} title="Centra" value={userData?.name || "CentraAB"} altText="Centra" />
-                            <ItemDetail icon={Location} title="Centra Region" value="Sulawesi Tengah" altText="Location" />
+                            {/* <ItemDetail icon={Location} title="Centra Region" value="Sulawesi Tengah" altText="Location" /> */}
                         </Column>
                         <Column>
                             <ItemDetail icon={Van} title="Shipment No." value={`#${shipment?.ShipmentID || '6'}`} altText="Van" />

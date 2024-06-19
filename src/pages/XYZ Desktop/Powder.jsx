@@ -1,9 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import 'daisyui/dist/full.css';
 import { motion } from "framer-motion";
+import LoadingStatic from '../../components/LoadingStatic';
 import StatsContainer from "@components/Cards/StatsContainer";
 import TableComponent from '@components/LeavesTables/TableComponent';
 import trash from '@assets/icons/trash.svg';
+import LeavesPopup from "@components/Popups/LeavesPopup";
 import IPI from '@assets/icons/IPI.svg';
 import If from '@assets/icons/Wat.svg';
 import Exc from '@assets/icons/Exc.svg';
@@ -30,6 +32,7 @@ const Powder = () => {
 
   const [flour, setFlour] = useState([]);
   const [users, setUsers] = useState([]);
+  const [selectedRowData, setSelectedRowData] = useState(null);
   const [stats, setStats] = useState({
     awaiting: 0,
     processed: 0,
@@ -37,44 +40,42 @@ const Powder = () => {
     total: 0
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     const fetchFlour = async () => {
       try {
-        const flourResponse = await axios.get(`${API_URL}/flour/get`);
-        const usersResponse = await axios.get(`${API_URL}/user/get`);
+        const [flourResponse, usersResponse] = await Promise.all([
+          axios.get(`${API_URL}/flour/get`),
+          axios.get(`${API_URL}/user/get`)
+        ]);
+
         setFlour(flourResponse.data);
         setUsers(usersResponse.data);
 
         // Calculate statistics
-        const stats = {
-          awaiting: 0,
-          processed: 0,
-          wasted: 0,
-          total: 0
-        };
-
-        flourResponse.data.forEach(item => {
-          stats.total += item.Flour_Weight;
-          console.log(item.Status)
+        const updatedStats = flourResponse.data.reduce((acc, item) => {
+          acc.total += item.Flour_Weight;
           if (item.Status === 'Thrown' || (new Date(item.Expiration) < new Date())) {
-            stats.wasted += item.Flour_Weight;
+            acc.wasted += item.Flour_Weight;
+          } else if (item.Status === 'Awaiting') {
+            acc.awaiting += item.Flour_Weight;
+          } else if (item.Status === 'Processed') {
+            acc.processed += item.Flour_Weight;
           }
-          else if (item.Status === 'Awaiting') {
-            stats.awaiting += item.Flour_Weight;
-          }
-          else if (item.Status === 'Processed') {
-            stats.processed += item.Flour_Weight;
-          }
-        });
+          return acc;
+        }, { ...stats });
 
-        setStats(stats);
+        setStats(updatedStats);
+        setLoading(false); // Update loading state once everything is done
       } catch (error) {
         console.error('Error fetching data:', error);
+        setLoading(false); // Ensure loading state is updated on error too
       }
     };
 
     fetchFlour();
-  }, []);
+  }, [])
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
@@ -90,8 +91,9 @@ const Powder = () => {
       id: leaf.FlourID,
       name: user ? user.Username : 'Unknown',
       weight: leaf.Flour_Weight,
-      status: new Date(leaf.Expiration) < new Date() ? "Expired" : leaf.Status,
+      status: leaf.Status,
       expiration: formatDate(leaf.Expiration),
+      expiredDate: leaf.Expiration,
     };
   });
 
@@ -173,9 +175,24 @@ const Powder = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
+  const leavesModalRef = useRef(null);
+
+  const handleDetailsClick = (rowData) => {
+    setSelectedRowData(rowData);
+    if (leavesModalRef.current) {
+      setTimeout(() => leavesModalRef.current.showModal(), 100);
+    }
+  };
+
+  if (loading) {
+    return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <LoadingStatic />
+    </div>;
+  }
+
   return (
     <div className="container mx-auto w-full">
-      <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} />
+      <TableComponent data={mergedData} header={header} columns={columns} ColorConfig={statusBodyTemplate} admin={false} onDetailsClick={handleDetailsClick}/>
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -245,7 +262,20 @@ const Powder = () => {
             frontIcon={InProcessPowder}
           />
         </motion.div>
+       
       </div>
+      {selectedRowData && (
+          <LeavesPopup
+            status={selectedRowData.status}
+            weight={selectedRowData.weight}
+            centra_name={selectedRowData.name}
+            expiredDate={selectedRowData.expiredDate}
+            ref={leavesModalRef}
+            powder={true}
+            leavesid={selectedRowData.id}
+            editable={false}
+          />
+        )}
     </div>
   );
 };

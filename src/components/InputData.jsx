@@ -120,7 +120,7 @@ const InputData = ({
   };
 
   const CheckWetLeaves = async () =>{
-    if (WetLeavesWeightToday + weight >= 30){
+    if (WetLeavesWeightToday + weight > 30){
       modalRef.current.showModal()
     }
     else postWetLeaves();

@@ -75,7 +75,7 @@ function Shipment() {
                     })
                 );
 
-                const verifiedShipments = updatedShipments.filter(shipment => shipment.Check_in_Date && shipment.Check_in_Weight);
+                const verifiedShipments = updatedShipments.filter(shipment => shipment.Check_in_Date && shipment.Check_in_Quantity);
                 const departuredShipments = updatedShipments.filter(shipment => shipment.ShipmentDate);
                 const rescalledShipments = updatedShipments.filter(shipment => shipment.Rescalled_Weight && shipment.Rescalled_Date);
                 const receivedShipments = updatedShipments.filter(shipment => shipment.Centra_Reception_File);
@@ -117,7 +117,7 @@ function Shipment() {
 
     const stats = [
         {
-            label: "Verified Packages",
+            label: "Verified Shipments",
             value: verifiedCount,
             unit: "Shipments",
             color: "#C0CD30",
@@ -125,7 +125,7 @@ function Shipment() {
             delay: 1
         },
         {
-            label: "Departured Packages",
+            label: "Departured Shipments",
             value: departuredCount,
             unit: "Shipments",
             color: "#79B2B7",
@@ -133,7 +133,7 @@ function Shipment() {
             delay: 1.25
         },
         {
-            label: "Rescalled Packages",
+            label: "Rescalled Shipments",
             value: rescalledCount,
             unit: "Shipments",
             color: "#0F7275",
@@ -141,7 +141,7 @@ function Shipment() {
             delay: 1.5
         },
         {
-            label: "Total Packages Received",
+            label: "Total Shipments Received",
             value: receivedCount,
             unit: "Shipments",
             color: "#0F7275",
@@ -232,6 +232,7 @@ function Shipment() {
                         className="flex-grow flex-shrink lg:basis-1/5 basis-1/2"
                     >
                         <StatsContainer
+                            small
                             label={stat.label}
                             value={stat.value}
                             unit={stat.unit}

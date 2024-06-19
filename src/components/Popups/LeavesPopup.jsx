@@ -93,7 +93,7 @@ const LeavesPopup = forwardRef(({
               />
             </div>
 
-            <div className='flex flex-row gap-2'>
+            <div className='flex flex-col gap-2'>
               <div className='flex flex-col'>
                 <span className='label-text font-semibold'>Status</span>
                 {(status === "Awaiting" && new Date(expiration) < currentDate) && (
@@ -161,8 +161,8 @@ const LeavesPopup = forwardRef(({
                   </div>
                 )}
               </div>
-              {currentDate < new Date(expiration) && (
-                <div className='flex flex-col justify-center items-center'>
+              {(currentDate < new Date(expiration) && status === "Awaiting") && (
+                <div className='flex flex-col'>
                   <span className='font-semibold text-md'>Expired in</span>
                   <RealTimeCountDown collectedDate={new Date()} expiredDate={expiration} />
                 </div>
