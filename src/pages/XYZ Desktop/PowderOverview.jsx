@@ -50,14 +50,7 @@ function PowderOverview() {
     ];
 
     const stats = [
-        {
-          label: "Powder Produced",
-          value: "243",
-          unit: "Kg",
-          color: "#C0CD30",
-          icon: PowderProduced,
-          delay: 1
-        },
+        
         {
           label: "In-Process Powder",
           value: "243",
@@ -66,6 +59,14 @@ function PowderOverview() {
           icon: InProcessPowder,
           delay: 1.25
         },
+        {
+            label: "Powder Produced",
+            value: "243",
+            unit: "Kg",
+            color: "#C0CD30",
+            icon: PowderProduced,
+            delay: 1
+          },
         {
           label: "Unpackaged Powder",
           value: "250",
@@ -78,7 +79,7 @@ function PowderOverview() {
           label: "Packaged Powder",
           value: "1500",
           unit: "Kg",
-          color: "#0F7275",
+          color: "#94C3B3",
           icon: PackagedPowder,
           delay: 1.75
         }

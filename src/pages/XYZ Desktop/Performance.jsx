@@ -11,6 +11,10 @@ import WidgetContainer from '../../components/Cards/WidgetContainer';
 import PerformanceMap from '../../components/PerformanceMap';
 import MarkerDetails from '../../components/MarkerDetails';
 import LongUser from '../../components/Cards/LongUser';
+import WetLeavesLogo from '../../assets/WetLeavesPerformance.svg';
+import DryLeavesLogo from '../../assets/DryLeavesPerformance.svg';
+import PowderLogo from '../../assets/PowderPerformance.svg';
+import ShipmentLogo from '../../assets/PackagePerformance.svg';
 import axios from 'axios';
 import { API_URL } from "../../App"; // Adjust the import path to your configuration file
 
@@ -93,7 +97,7 @@ const Performance = () => {
             description=""
             color="#C0CD30"
             modal={false}
-            frontIcon={AwaitingLeaves}
+            frontIcon={WetLeavesLogo}
           />
         </motion.div>
         <motion.div
@@ -110,7 +114,7 @@ const Performance = () => {
             description=""
             color="#79B2B7"
             modal={false}
-            frontIcon={ProcessedLeaves}
+            frontIcon={DryLeavesLogo}
           />
         </motion.div>
         <motion.div
@@ -127,7 +131,7 @@ const Performance = () => {
             description=""
             color="#0F7275"
             modal={false}
-            frontIcon={ExpiredWetLeaves}
+            frontIcon={PowderLogo}
           />
         </motion.div>
         <motion.div
@@ -144,7 +148,7 @@ const Performance = () => {
             description=""
             color="#0F7275"
             modal={false}
-            frontIcon={TotalCollectedWet}
+            frontIcon={ShipmentLogo}
           />
         </motion.div>
       </div>
