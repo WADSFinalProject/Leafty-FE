@@ -35,9 +35,9 @@ const DryLeaves = () => {
     wasted: 0,
     total: 0
   });
-    const [contentLoaded, setContentLoaded] = React.useState(false);
+    const [contentLoaded, setContentLoaded] = useState(false);
 
-    React.useEffect(() => {
+    useEffect(() => {
       setTimeout(() => {
         setContentLoaded(true);
       }, 3000);
