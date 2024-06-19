@@ -38,17 +38,15 @@ function DashboardLayout({ CURRENT_USER }) {
                 Auth.setAuth(false);
                 navigate('/');
             }
-            return false
+            return false;
         } catch (error) {
             console.error("Error while deleting session:", error);
-            console.error(err.response.data);    // ***
-            console.error(err.response.status);  // ***
-            console.error(err.response.headers);
-            return false
-
+            console.error(error.response.data);    // ***
+            console.error(error.response.status);  // ***
+            console.error(error.response.headers);
+            return false;
         }
     }
-
 
     const getUser = async () => {
         try {
@@ -74,10 +72,14 @@ function DashboardLayout({ CURRENT_USER }) {
                 setShipments(response.data);
                 console.log(response.data);
 
-                // Check for null values in the response data
-                const hasNullValues = response.data.some(shipment =>
-                    Object.values(shipment).some(value => value === null)
-                );
+                // Check for shipments with Check_in_Date and any null values in columns
+                const hasNullValues = response.data.some(shipment => {
+                    const values = Object.values(shipment);
+                    const hasCheckInDate = shipment.Check_in_Date != null;
+                    const hasNullColumn = values.some(value => value === null);
+
+                    return hasCheckInDate && hasNullColumn;
+                });
 
                 if (hasNullValues) {
                     addNotification({
@@ -124,7 +126,7 @@ function DashboardLayout({ CURRENT_USER }) {
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
             <div>
-                <Notifications position = {'bottom-right'}/>
+                <Notifications position={'bottom-right'} />
             </div>
             <motion.div initial={{ x: -250 }} transition={{ duration: 0.5, type: "spring" }} animate={{ x: 0 }} className="hidden sm:block">
                 <Sidebar collapsed={collapsed} className="sidebar" backgroundColor="#94c3b3" color="#94c3b3">
@@ -167,7 +169,7 @@ function DashboardLayout({ CURRENT_USER }) {
                 <div className="flex flex-row justify-around items-center sm:justify-between">
                     <span className="text-3xl font-bold">{title}</span>
                     <div className="flex gap-4 flex-row items-center">
-                        <Profile Username={userData.Username} handleLogout = {handle} />
+                        <Profile Username={userData.Username} handleLogout={handle} />
                     </div>
                 </div>
                 <Outlet />

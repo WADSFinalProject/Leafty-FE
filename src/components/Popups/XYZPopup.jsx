@@ -28,7 +28,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
         const fetchData = async () => {
             try {
                 const response = await axios.get(`${API_URL}/user/get_role/2`);
-                setHarbor(response.data[0])
+                setHarbor(response.data[0]);
                 setHarborName(response.data[0].Username);
                 setHarborPhone(response.data[0].PhoneNumber);
             } catch (error) {
@@ -36,7 +36,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
             }
         };
         fetchData();
-        console.log(shipment)
+        console.log(shipment);
     }, []);
 
     useEffect(() => {
@@ -66,16 +66,12 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     };
 
     const handleNext = () => {
-        console.log(rescalledWeight)
-        console.log(shipment.ShipmentWeight)
+        console.log(rescalledWeight);
+        console.log(shipment.ShipmentWeight);
         if (currentComponent === 3) {
             updateHarborReception();
         }
         if (currentComponent === 4) {
-            if (rescalledWeight !== shipment.ShipmentWeight) {
-                setError('Rescalled weight does not match shipment weight.');
-                return;
-            }
             updateRescalledWeight();
         } else {
             setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
@@ -89,14 +85,10 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const updateRescalledWeight = async () => {
         try {
             const currentDate = new Date();
-            const response = await axios.put(`${API_URL}/shipment/update_rescalled_weight/${shipment.ShipmentID}`, { Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate });
+            await axios.put(`${API_URL}/shipment/update_rescalled_weight/${shipment.ShipmentID}`, { Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate });
             setShipmentData({ ...shipmentData, Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate });
-            if (rescalledWeight === shipment.ShipmentWeight) {
-                setCurrentComponent(7);
-            } else {
-                setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
-            }
-            const responses = await axios.put(`${API_URL}/shipment/update_centra_reception/${shipment.ShipmentID}`, { Centra_Reception_File: true });
+            setCurrentComponent(5); // Move to the next component
+            await axios.put(`${API_URL}/shipment/update_centra_reception/${shipment.ShipmentID}`, { Centra_Reception_File: true });
         } catch (error) {
             console.error('Error updating rescalled weight:', error);
         }
@@ -105,8 +97,9 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const updateHarborReception = async () => {
         try {
             const currentDate = new Date();
-            const response = await axios.put(`${API_URL}/shipment/update_harbor_reception/${shipment.ShipmentID}`, { Harbor_Reception_File: true });
+            await axios.put(`${API_URL}/shipment/update_harbor_reception/${shipment.ShipmentID}`, { Harbor_Reception_File: true });
             setShipmentData({ ...shipmentData, Harbor_Reception_File: true });
+            setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
         } catch (error) {
             console.error('Error updating Harbor Reception File:', error);
         }
@@ -207,13 +200,9 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         </WidgetContainer>
                     </div>
                     <div className='mt-2'>
-                        {/* Current Component 1 if Harbor has not verified the shipment */}
                         {currentComponent === 1 && <VerificationWait title="Waiting for Sending the Packages" message="Centra has not sent the packages" phoneNumber={harborPhone} text={textHarborContact} />}
-                        {/* Current Component 2 if Harbor has verified the shipment */}
                         {currentComponent === 2 && <VerificationWait title="Waiting for Verification" message="Harbor has not received the packages" phoneNumber={harborPhone} text={textHarborContact} />}
-                        {/* Current Component 3 Update the HarborReceptionFile to TRUE */}
                         {currentComponent === 3 && <DownloadPDF harbor UserID={harbor.UserID} shipment={shipment} />}
-                        {/* Current Component 4 If there is no rescalled weight, input rescalled weight and post*/}
                         {currentComponent === 4 && (
                             <div className='p-2'>
                                 <WidgetContainer borderRadius='20px' container={false}>
@@ -238,14 +227,13 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                         )}
                         {currentComponent === 5 && <VerificationWait title="Re-scaling" message="Please have a confirmation with Centra" />}
                         {currentComponent === 6 && <HarborReception title="Centra Reception" containers={centracontainers} />}
-                        {/* Update the Centra reception file to true*/}
                         {currentComponent === 7 && <div className='flex gap-2 flex-col'>
                             <DownloadPDF harbor UserID={harbor.UserID} shipment={shipment} />
                             <DownloadPDF centra UserID={shipment.UserID} shipment={shipment} />
                         </div>}
                     </div>
                     <div className='flex justify-between items-center mt-auto p-4'>
-                        {currentComponent !== 1 && currentComponent !== 3  && currentComponent !== 2 && currentComponent !== 7 ? (
+                        {currentComponent !== 1 && currentComponent !== 3 && currentComponent !== 2 && currentComponent !== 7 ? (
                             <button
                                 onClick={handlePrevious}
                                 className='font-montserrat text-sm font-medium leading-4 tracking-wide text-green-900 ml-3'
@@ -253,7 +241,7 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                                 Previous
                             </button>
                         ) : (
-                            <div className="w-20"></div> // Empty div to maintain spacing
+                            <div className="w-20"></div>
                         )}
                         {(currentComponent !== 1 && currentComponent !== 7 && currentComponent !== 2) && (
                             <WidgetContainer container={false} backgroundColor="#0F7275" borderRadius="20px" border={false} className='w-full max-w-20 mr-2'>
