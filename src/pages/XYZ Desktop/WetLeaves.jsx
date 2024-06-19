@@ -37,7 +37,7 @@ const WetLeaves = () => {
     wasted: 0,
     total: 0
   });
-  const [dailyLimit, setDailyLimit] = useState(0);
+
   const leavesModalRef = useRef(null);
 
   const formatDate = (dateString) => {
@@ -84,15 +84,9 @@ const WetLeaves = () => {
           } else if (leaf.Status === 'Awaiting') {
             stats.awaiting += leaf.Weight;
           }
-
-          // Check if the leaf was received today
-          if (receivedTime.isSame(today, 'day')) {
-            dailyWeight += leaf.Weight;
-          }
         });
 
         setStats(stats);
-        setDailyLimit(dailyWeight);
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -141,6 +135,11 @@ const WetLeaves = () => {
         textColor = "#79B2B7";
         logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
       }
+    }
+    else if (rowData.status === "Expired") {
+      backgroundColor = hexToRGBA("#D45D5D", 0.5);
+      textColor = "#D45D5D";
+      logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
     }
     else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
@@ -195,9 +194,9 @@ const WetLeaves = () => {
         admin={false}
         onDetailsClick={handleDetailsClick}
       />
-      <div className="daily-limit">
+      {/* <div className="daily-limit">
         <h3>Daily Limit: {dailyLimit}/30 kg</h3>
-      </div>
+      </div> */}
       <div className="flex flex-wrap gap-4 justify-stretch">
         <motion.div
           initial={{ opacity: 0, y: 20 }}

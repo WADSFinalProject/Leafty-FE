@@ -25,7 +25,8 @@ function TableComponent({
   onDelete,
   showSearch = true,
   showFilter = true,
-  widihmin = '65rem'
+  widihmin = '65rem',
+  action= true
 }) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedRowForDeletion, setSelectedRowForDeletion] = useState(null);
@@ -128,7 +129,7 @@ function TableComponent({
             body={column.field === depends ? ColorConfig : null}
           />
         ))}
-        <Column key="action" header="Action" body={actionTemplate} />
+        {action && <Column key="action" header="Action" body={actionTemplate} />}
       </DataTable>
 
       <Popup

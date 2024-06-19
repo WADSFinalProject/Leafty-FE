@@ -13,6 +13,7 @@ import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import dayjs from 'dayjs';
 import LeavesPopup from '@components/Popups/LeavesPopup';
 import { API_URL } from '../../App';
+import LoadingStatic from '../../components/LoadingStatic';
 
 const header = 'Recently Gained Powder';
 
@@ -67,17 +68,18 @@ const AdminPowder = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Set loading state to true before fetching data
       try {
         const [flourResponse, usersResponse] = await Promise.all([
           axios.get(`${API_URL}/flour/get`),
           axios.get(`${API_URL}/user/get`) // Assuming we can fetch all users at once
         ]);
-
+  
         const users = usersResponse.data.reduce((acc, user) => {
           acc[user.UserID] = user.Username;
           return acc;
         }, {});
-
+  
         const processedData = flourResponse.data.map(item => ({
           id: item.FlourID,
           name: users[item.UserID] || 'Unknown User',
@@ -86,16 +88,18 @@ const AdminPowder = () => {
           DryLeavesID: item.DryLeavesID,
           status: item.Status,
         }));
-
+  
         setData(processedData);
       } catch (error) {
         console.error('Error fetching flour data', error);
+      } finally {
+        setLoading(false); // Set loading state to false after fetching data
       }
     };
-
+  
     fetchData();
-    setLoading(false);
   }, []);
+
 
   const formatDate = (dateString) => {
     return dayjs(dateString).format('MM/DD/YYYY HH:mm');
@@ -225,6 +229,14 @@ const AdminPowder = () => {
       return null;
     }
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <LoadingStatic />
+      </div>
+    );
+  }
 
   return (
     <div className="container mx-auto w-full">

@@ -12,6 +12,7 @@ import ProcessedLeaves from '@assets/ProcessedLeaves.svg';
 import TotalCollectedWet from '@assets/TotalCollectedWet.svg';
 import { API_URL } from '../../App';
 import dayjs from 'dayjs';
+import LoadingStatic from '../../components/LoadingStatic';
 import LeavesPopup from '@components/Popups/LeavesPopup';
 
 const header = 'Recently Gained Dry Leaves';
@@ -62,10 +63,12 @@ const AdminDryLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [editable, setEditable] = useState(false);
+  const [loading, setLoading] = useState(true); // State for loading indicator
   const leavesModalRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true); // Set loading state to true before fetching data
       try {
         const [leavesResponse, usersResponse] = await Promise.all([
           axios.get(`${API_URL}/dryleaves/get/`),
@@ -81,14 +84,15 @@ const AdminDryLeaves = () => {
           id: item.DryLeavesID,
           name: users[item.UserID] || 'Unknown User',
           weight: `${item.Processed_Weight} Kg`,
-          date: formatDate(item.ReceivedTime),
-          expiration: formatDate(addMonth(item.ReceivedTime)),
+          expiration: formatDate(item.expiration),
           status: item.Status,
         }));
 
         setData(processedData);
       } catch (error) {
         console.error('Error fetching dry leaves data', error);
+      } finally {
+        setLoading(false); // Set loading state to false after fetching data
       }
     };
 
@@ -141,10 +145,11 @@ const AdminDryLeaves = () => {
         backgroundColor = hexToRGBA("#D45D5D", 0.5);
         textColor = "#D45D5D";
         logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-      } else{
-      backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-      textColor = "#79B2B7";
-      logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;}
+      } else {
+        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        textColor = "#79B2B7";
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      }
     }
     else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);
@@ -197,7 +202,7 @@ const AdminDryLeaves = () => {
       const { id, name, weight, date, expiration } = updatedData;
       await axios.put(`${API_URL}/dryleaves/update/${id}`, {
         UserID: await getUserID(name), // Function to get user ID from name
-        Processed_Weight: weight.replace(' Kg', ''),
+        Processed_Weight: weight,
         ReceivedTime: new Date(date).toISOString(),
         ExpirationTime: new Date(expiration).toISOString(),
       });
@@ -224,6 +229,15 @@ const AdminDryLeaves = () => {
       return null;
     }
   };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <LoadingStatic />
+      </div>
+    );
+  }
+  
 
   return (
     <div className="container mx-auto w-full">

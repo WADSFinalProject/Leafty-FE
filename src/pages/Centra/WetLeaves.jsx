@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
@@ -174,12 +174,12 @@ function WetLeaves() {
     fetchData();
   }, [UserID]);
 
-  const handleButtonClick = (item) => {
+  const handleButtonClick = useCallback((item) => {
     setSelectedData(item);
     setTimeout(() => {
       document.getElementById('AddLeaves').showModal();
     }, 5);
-  };
+  }, []);
 
   return (
     <>
