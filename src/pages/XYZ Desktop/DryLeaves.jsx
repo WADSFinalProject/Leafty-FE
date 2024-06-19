@@ -35,6 +35,13 @@ const DryLeaves = () => {
     wasted: 0,
     total: 0
   });
+    const [contentLoaded, setContentLoaded] = React.useState(false);
+
+    React.useEffect(() => {
+      setTimeout(() => {
+        setContentLoaded(true);
+      }, 3000);
+    }, []);
 
   useEffect(() => {
     const fetchDryLeaves = async () => {
@@ -127,6 +134,11 @@ const DryLeaves = () => {
         textColor = "#79B2B7";
         logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
       }
+    }
+    else if (rowData.status === "Expired") {
+      backgroundColor = hexToRGBA("#D45D5D", 0.5);
+      textColor = "#D45D5D";
+      logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
     }
     else if (rowData.status === "Processed") {
       backgroundColor = hexToRGBA("D4965D", 0.5);

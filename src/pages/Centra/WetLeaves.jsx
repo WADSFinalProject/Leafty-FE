@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import axios from 'axios';
 import { useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
@@ -29,6 +29,7 @@ function WetLeaves() {
   const [processedLeavesData, setProcessedLeavesData] = useState([]);
   const [selectedData, setSelectedData] = useState(null);
   const [wetLeavesDailyLimit, setWetLeavesDailyLimit] = useState(30);
+  const [wetLeavesWeightToday, setWetLeavesWeightToday] = useState(0);
   const UserID = useOutletContext();
   const refModal = useRef();
 
@@ -169,20 +170,36 @@ function WetLeaves() {
       } catch (error) {
         console.error('Error fetching wet leaves data:', error);
       }
+
+      try {
+        const weightToday = await fetchSumWetLeavesWeightToday();
+        setWetLeavesWeightToday(weightToday);
+      } catch (error) {
+        console.error('Error fetching sum wet leaves weight today:', error);
+      }
     };
 
     fetchData();
   }, [UserID]);
 
-  const handleButtonClick = (item) => {
+  const handleButtonClick = useCallback((item) => {
     setSelectedData(item);
     setTimeout(() => {
       document.getElementById('AddLeaves').showModal();
     }, 5);
-  };
+  }, []);
 
   return (
     <>
+      <div className="flex justify-between p-1">
+        <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+          <div className='flex flex-col ml-3'>
+            <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+              Total Wet Leaves Weight Today: {wetLeavesWeightToday} Kg
+            </span>
+          </div>
+        </WidgetContainer>
+      </div>
       <AccordionUsage accordions={accordions} />
       {selectedData && (
         <AddLeavesPopup

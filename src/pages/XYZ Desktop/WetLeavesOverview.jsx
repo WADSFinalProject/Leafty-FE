@@ -192,6 +192,7 @@ function WetLeavesOverview() {
                                     showFilter={false}
                                     showSearch={false}
                                     widihmin={'45rem'}
+                                    action = {false}
                                 />
                             </motion.div>
                         </WidgetContainer>

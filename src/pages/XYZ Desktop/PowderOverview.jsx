@@ -46,7 +46,6 @@ function PowderOverview() {
         { field: 'id', header: 'Batch Id' },
         { field: 'name', header: 'Centra Name' },
         { field: 'weight', header: 'Weight' },
-        { field: 'date', header: 'Date' },
     ];
 
     const stats = [
@@ -180,7 +179,7 @@ function PowderOverview() {
             <div className="flex flex-row gap-2">
                 <div className="flex-auto w-3/5">
                     <div className="flex items-center justify-between mb-0">
-                        <span className="font-bold text-xl">Recently Gained Wet Leaves</span>
+                        <span className="font-bold text-xl">Recently Gained Powder</span>
                         <span className="text-[#94C3B3]">See all</span>
                     </div>
                     <WidgetContainer>
@@ -194,7 +193,8 @@ function PowderOverview() {
                             rows={5} 
                             showFilter={false} 
                             showSearch={false}
-                            widihmin={'50rem'} 
+                            widihmin={'45rem'}
+                            action = {false} 
                         />
                     </WidgetContainer>
                 </div>

@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import CircularButton from '../../components/CircularButton';
 import PowderLogo from '../../assets/Powder.svg';
 import PowderDetail from '../../assets/PowderDetail.svg';
 import PowderStatus from "@components/PowderStatus";
-import Drawer from '../../components/Drawer';
-import DateIcon from '../../assets/Date.svg';
-import WeightLogo from '../../assets/Weight.svg';
 import LoadingStatic from "@components/LoadingStatic";
 import axios from 'axios';
+import Drawer from '../../components/Drawer';
 import { API_URL } from '../../App';
 import AddLeavesPopup from '../../components/Popups/AddLeavesPopup';
 import AccordionUsage from '../../components/AccordionUsage';
-import Throw from "@assets/Thrown.svg";
+import DateIcon from '../../assets/Date.svg';
+import WeightLogo from '../../assets/Weight.svg';
 
 function Powder() {
   const [flourData, setFlourData] = useState([]);
   const [ProcessedFlourData, setProcessedFlourData] = useState([]);
   const [ExpiredFlourData, setExpiredFlourData] = useState([]);
-  const [selectedData, setSelectedData] = useState(null);
   const [ThrownPowderData, setThrownPowderData] = useState([]);
+  const [selectedData, setSelectedData] = useState(null);
+  const [loading, setLoading] = useState(true);
   const UserID = useOutletContext();
 
   useEffect(() => {
@@ -32,10 +32,12 @@ function Powder() {
 
         setFlourData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
         setProcessedFlourData(data.filter(item => item.Status === "Processed"));
-        setExpiredFlourData(data.filter(item => new Date(item.Expiration).toDateString() > new Date().toDateString()));
+        setExpiredFlourData(data.filter(item => new Date(item.Expiration) < currentTime));
         setThrownPowderData(data.filter(item => item.Status === "Thrown"));
       } catch (error) {
         console.error('Error fetching flour data:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -49,31 +51,39 @@ function Powder() {
     }, 5);
   };
 
-  const accordions = React.useMemo(() => [
+  const accordions = useMemo(() => [
     {
       summary: 'Awaiting Powder',
       details: () => (
         <>
-          {flourData.map((item) => (
-            <div key={item.FlourID} className='flex justify-between p-1'>
-              <WidgetContainer borderRadius="10px" className="w-full flex items-center">
-                <button onClick={() => handleButtonClick(item)}>
-                  <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
-                </button>
-                <div className='flex flex-col ml-3'>
-                  <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
-                    {item.Flour_Weight} Kg
-                  </span>
-                  <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
-                    {item.FlourID}
-                  </span>
-                </div>
-                <div className="flex ml-auto items-center">
-                  <PowderStatus ready />
-                </div>
-              </WidgetContainer>
+          {loading ? (
+            <div className='text-center p-4'>
+              <span className="font-montserrat text-base font-semibold leading-tight tracking-wide">
+                <LoadingStatic />
+              </span>
             </div>
-          ))}
+          ) : (
+            flourData.map((item) => (
+              <div key={item.FlourID} className='flex justify-between p-1'>
+                <WidgetContainer borderRadius="10px" className="w-full flex items-center">
+                  <button onClick={() => handleButtonClick(item)}>
+                    <CircularButton imageUrl={PowderLogo} backgroundColor="#94C3B3" />
+                  </button>
+                  <div className='flex flex-col ml-3'>
+                    <span className="font-montserrat text-base font-semibold leading-tight tracking-wide text-left">
+                      {item.Flour_Weight} Kg
+                    </span>
+                    <span className='font-montserrat text-sm font-medium leading-17 tracking-wide text-left'>
+                      {item.FlourID}
+                    </span>
+                  </div>
+                  <div className="flex ml-auto items-center">
+                    <PowderStatus ready />
+                  </div>
+                </WidgetContainer>
+              </div>
+            ))
+          )}
         </>
       ),
       defaultExpanded: true,
@@ -159,7 +169,7 @@ function Powder() {
         </>
       )
     }
-  ], [flourData, ProcessedFlourData, ExpiredFlourData, ThrownPowderData]);
+  ], [loading, flourData, ProcessedFlourData, ExpiredFlourData, ThrownPowderData]);
 
   return (
     <>
@@ -174,7 +184,6 @@ function Powder() {
           status={selectedData.Status}
         />
       )}
-
       <Drawer
         Data={flourData}
         setData={setFlourData}

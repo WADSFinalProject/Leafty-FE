@@ -15,7 +15,7 @@ import { Dry } from "@mui/icons-material";
 
 // Define the points for five Indonesian cities
 const indonesianCities = [
-  { name: 'Jakarta', lat: -6.2088, lng: 106.8456, key: 'jakarta' },
+  { name: 'Centra', lat: -6.2088, lng: 106.8456, key: 'jakarta', },
   { name: 'Surabaya', lat: -7.2575, lng: 112.7521, key: 'surabaya' },
   { name: 'Bandung', lat: -6.9175, lng: 107.6191, key: 'bandung' },
   { name: 'Medan', lat: 3.5952, lng: 98.6722, key: 'medan' },
@@ -55,7 +55,7 @@ const PerformanceMap = () => {
               onCloseClick={handleCloseClick}
             >
 
-              <span className="font-bold text-black justify-center flex text-lg">Centra AB</span>
+              <span className="font-bold text-black justify-center flex text-lg">{open.name}</span>
 
               <div style={{ color: 'black' }} className="grid grid-cols-2 gap-2">
                 <div className="flex flex-row gap-2">

@@ -36,18 +36,28 @@ function DryLeaves() {
         const response = await axios.get(`${API_URL}/dryleaves/get_by_user/${UserID}`);
         const data = response.data;
         const currentTime = new Date();
-        setDryLeavesData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
-        setExpiredLeavesData(data.filter(item => new Date(item.Expiration) < currentTime));
-        setThrownLeavesData(data.filter(item => item.Status === "Thrown"));
-        setProcessedLeavesData(data.filter(item => item.Status === "Processed"));
+  
+        // Update all state variables in one batch
+        const newData = {
+          DryLeavesData: data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"),
+          ExpiredLeavesData: data.filter(item => new Date(item.Expiration) < currentTime),
+          ProcessedLeavesData: data.filter(item => item.Status === "Processed"),
+          thrownLeavesData: data.filter(item => item.Status === "Thrown")
+        };
+  
+        // Set all state variables at once
+        setDryLeavesData(newData.DryLeavesData);
+        setExpiredLeavesData(newData.ExpiredLeavesData);
+        setProcessedLeavesData(newData.ProcessedLeavesData);
+        setThrownLeavesData(newData.thrownLeavesData);
       } catch (error) {
         console.error('Error fetching dry leaves data:', error);
       }
     };
-
+  
     fetchData();
   }, [UserID]);
-
+  
   const handleButtonClick = (item) => {
     setSelectedData(item);
     setTimeout(() => {
