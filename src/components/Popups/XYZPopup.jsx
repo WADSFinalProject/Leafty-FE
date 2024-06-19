@@ -6,12 +6,11 @@ import DateIcon from '../../assets/Date.svg';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import ShipmentWeight from '../../assets/ShipmentWeight.svg';
 import Courier from '../../assets/Courier.svg';
-import Address from '../../assets/Address.svg';
-import HarborReception from '../../components/HarborReception';
-import VerificationWait from '../../components/VerificationWait';
-import ReceptionDetail from '../../components/ReceptionDetail';
 import Centralogo from '../../assets/centra.svg';
 import DownloadPDF from '../../pages/Downloadpdf';
+import VerificationWait from '../../components/VerificationWait';
+import HarborReception from '../../components/HarborReception';
+import ReceptionDetail from '../../components/ReceptionDetail';
 import axios from 'axios';
 import { API_URL } from '../../App';
 
@@ -23,6 +22,7 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     const [harborPhone, setHarborPhone] = useState("0");
     const [loading, setLoading] = useState(true);
     const [rescalledWeight, setRescalledWeight] = useState(shipment.ShipmentWeight);
+    const [error, setError] = useState('');
 
     useEffect(() => {
         const fetchData = async () => {
@@ -66,13 +66,20 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
     };
 
     const handleNext = () => {
-        if (currentComponent === 3 ){
-            updateHarborReception()
+        console.log(rescalledWeight)
+        console.log(shipment.ShipmentWeight)
+        if (currentComponent === 3) {
+            updateHarborReception();
         }
-        if (currentComponent === 4){
-            updateRescalledWeight()
+        if (currentComponent === 4) {
+            if (rescalledWeight !== shipment.ShipmentWeight) {
+                setError('Rescalled weight does not match shipment weight.');
+                return;
+            }
+            updateRescalledWeight();
+        } else {
+            setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
         }
-        else setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
     };
 
     const handlePrevious = () => {
@@ -81,13 +88,15 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
 
     const updateRescalledWeight = async () => {
         try {
-            const currentDate = new Date()
+            const currentDate = new Date();
             const response = await axios.put(`${API_URL}/shipment/update_rescalled_weight/${shipment.ShipmentID}`, { Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate });
-            setShipmentData({ ...shipmentData, Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate});
-            if (rescalledWeight === shipment.ShipmentWeight){
-                setCurrentComponent(7)
-            } else setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
-            const responses = await axios.put(`${API_URL}/shipment/update_centra_reception/${shipment.ShipmentID}`, { Centra_Reception_File:true });
+            setShipmentData({ ...shipmentData, Rescalled_Weight: rescalledWeight, Rescalled_Date: currentDate });
+            if (rescalledWeight === shipment.ShipmentWeight) {
+                setCurrentComponent(7);
+            } else {
+                setCurrentComponent((prevComponent) => (prevComponent % 7) + 1);
+            }
+            const responses = await axios.put(`${API_URL}/shipment/update_centra_reception/${shipment.ShipmentID}`, { Centra_Reception_File: true });
         } catch (error) {
             console.error('Error updating rescalled weight:', error);
         }
@@ -95,11 +104,9 @@ function XYZPopup({ shipment, courier, users, open, onClose }) {
 
     const updateHarborReception = async () => {
         try {
-            const currentDate = new Date()
-            const response = await axios.put(`${API_URL}/shipment/update_harbor_reception/${shipment.ShipmentID}`, { 
-                "Harbor_Reception_File": true
-            });
-            setShipmentData({ ...shipmentData, Harbor_Reception_File:true});
+            const currentDate = new Date();
+            const response = await axios.put(`${API_URL}/shipment/update_harbor_reception/${shipment.ShipmentID}`, { Harbor_Reception_File: true });
+            setShipmentData({ ...shipmentData, Harbor_Reception_File: true });
         } catch (error) {
             console.error('Error updating Harbor Reception File:', error);
         }
@@ -219,8 +226,12 @@ Thank you for your attention to this matter. Looking forward to your prompt resp
                                     <div className="w-full max-w ml- mt-4">
                                         <p className='font-montserrat text-xs font-medium leading-[14.63px] tracking-wide text-left ml-1'>Re-scalled weight</p>
                                         <WidgetContainer backgroundColor="#94C3B380" borderRadius="13.5px" borderWidth="2px" borderColor="#79B2B7" className='mt-2'>
-                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" value={rescalledWeight} onChange={(e) => setRescalledWeight(e.target.value)} />
+                                            <input type="text" className="w-full h-full bg-transparent border-none outline-none px-2" value={rescalledWeight} onChange={(e) => {
+                                                setRescalledWeight(e.target.value);
+                                                setError('');
+                                            }} />
                                         </WidgetContainer>
+                                        {error && <p className='text-red-500 mt-2'>{error}</p>}
                                     </div>
                                 </WidgetContainer>
                             </div>

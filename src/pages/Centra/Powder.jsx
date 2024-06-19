@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useOutletContext } from 'react-router-dom';
+import { useOutletContext } from 'react-router-dom';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
-import SearchLogo from '../../assets/SearchLogo.svg';
 import CircularButton from '../../components/CircularButton';
 import PowderLogo from '../../assets/Powder.svg';
 import PowderDetail from '../../assets/PowderDetail.svg';
@@ -10,7 +9,6 @@ import Drawer from '../../components/Drawer';
 import DateIcon from '../../assets/Date.svg';
 import WeightLogo from '../../assets/Weight.svg';
 import LoadingStatic from "@components/LoadingStatic";
-import ReadyIcon from '../../assets/ReadyIcon.svg';
 import axios from 'axios';
 import { API_URL } from '../../App';
 import AddLeavesPopup from '../../components/Popups/AddLeavesPopup';
@@ -30,10 +28,12 @@ function Powder() {
       try {
         const response = await axios.get(`${API_URL}/flour/get_by_user/${UserID}`);
         const currentTime = new Date();
-        setFlourData(response.data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
-        setProcessedFlourData(response.data.filter(item => item.Status === "Processed"));
-        setExpiredFlourData(response.data.filter(item => new Date(item.Expiration).toDateString() > new Date().toDateString())); // Corrected line
-        setThrownPowderData(response.data.filter(item => item.Status === "Thrown"));
+        const data = response.data;
+
+        setFlourData(data.filter(item => new Date(item.Expiration) > currentTime && item.Status === "Awaiting"));
+        setProcessedFlourData(data.filter(item => item.Status === "Processed"));
+        setExpiredFlourData(data.filter(item => new Date(item.Expiration).toDateString() > new Date().toDateString()));
+        setThrownPowderData(data.filter(item => item.Status === "Thrown"));
       } catch (error) {
         console.error('Error fetching flour data:', error);
       }
@@ -49,7 +49,7 @@ function Powder() {
     }, 5);
   };
 
-  const accordions = [
+  const accordions = React.useMemo(() => [
     {
       summary: 'Awaiting Powder',
       details: () => (
@@ -133,7 +133,7 @@ function Powder() {
       )
     },
     {
-      summary: 'Thrown Powder', // New section for Thrown Powder
+      summary: 'Thrown Powder',
       details: () => (
         <>
           {ThrownPowderData.map((item) => (
@@ -159,7 +159,7 @@ function Powder() {
         </>
       )
     }
-  ];
+  ], [flourData, ProcessedFlourData, ExpiredFlourData, ThrownPowderData]);
 
   return (
     <>
@@ -171,7 +171,7 @@ function Powder() {
           expirationDate={selectedData.Expiration}
           imageSrc={PowderDetail}
           text="Powder"
-          status = {selectedData.Status}
+          status={selectedData.Status}
         />
       )}
 

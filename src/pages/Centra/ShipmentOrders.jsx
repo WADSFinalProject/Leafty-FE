@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import CircularButton from '../../components/CircularButton';
-import Countdown from '../../components/Countdown';
-import CountdownIcon from '../../assets/Countdown.svg';
-import "../../style/TabView.css";
 import Shipments from '../../assets/Shipments.svg';
 import ShipmentPopup from '../../components/Popups/ShipmentPopup';
 import AccordionUsage from '../../components/AccordionUsage';
 import { useOutletContext } from 'react-router';
-import axios from 'axios';
 import { API_URL } from '../../App';
 import ShipmentStatus from '@components/ShipmentStatus';
 
@@ -18,70 +15,17 @@ function ShipmentOrders() {
     const [users, setUsers] = useState([]);
     const UserID = useOutletContext();
 
-    useEffect(() => {
-        const fetchShipments = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
-                console.log('Fetched shipments:', response.data);
-                const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Exclude shipments with a ShipmentDate
-
-                // Fetch details for each FlourID in each shipment
-                const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
-                    const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
-                        const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
-                        console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
-                        return {
-                            FlourID: flourID,
-                            Flour_Weight: flourResponse.data.Flour_Weight // Assuming API response structure
-                        };
-                    }));
-
-                    // Calculate the total ShipmentWeight as the sum of Flour_Weight
-                    const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
-
-                    const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
-                    const courierName = courierResponse.data.CourierName;
-
-                    return {
-                        ...shipment,
-                        ShipmentWeight: totalFlourWeight,
-                        CourierName: courierName
-                    };
-                }));
-
-                setShipmentData(updatedShipments);
-                console.log('Updated shipments:', updatedShipments);
-            } catch (error) {
-                console.error('Error fetching shipments:', error);
-            }
-        };
-
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/user/get`);
-                console.log('Fetched users:', response.data);
-                setUsers(response.data);
-            } catch (error) {
-                console.error('Error fetching users:', error);
-            }
-        };
-
-        fetchShipments();
-        fetchUsers();
-    }, [UserID]);
-
-    const handleButtonClick = (item) => {
-        setSelectedData(item);
-        console.log('Selected shipment data:', item);
-        setTimeout(() => {
-            document.getElementById('ShipmentPopup').showModal();
-        }, 5);
-    };
-
-    const refreshData = async () => {
+    // Function to fetch shipments
+    const fetchShipments = async () => {
         try {
-            const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
-            const shipments = response.data.filter(shipment => shipment.ShipmentDate === null); // Ensure filtering here as well
+            const [shipmentsResponse, usersResponse] = await Promise.all([
+                axios.get(`${API_URL}/shipment/get_by_user/${UserID}`),
+                axios.get(`${API_URL}/user/get`)
+            ]);
+
+            console.log('Fetched shipments:', shipmentsResponse.data);
+            const shipments = shipmentsResponse.data.filter(shipment => shipment.ShipmentDate === null);
+
             const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
                 const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
                     const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
@@ -93,6 +37,59 @@ function ShipmentOrders() {
                 }));
 
                 const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
+                const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
+                const courierName = courierResponse.data.CourierName;
+
+                return {
+                    ...shipment,
+                    ShipmentWeight: totalFlourWeight,
+                    CourierName: courierName
+                };
+            }));
+
+            setShipmentData(updatedShipments);
+            console.log('Updated shipments:', updatedShipments);
+
+            setUsers(usersResponse.data);
+            console.log('Fetched users:', usersResponse.data);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
+    // Initial fetch on component mount
+    useEffect(() => {
+        fetchShipments();
+    }, [UserID]);
+
+    // Function to handle button click and show popup
+    const handleButtonClick = (item) => {
+        setSelectedData(item);
+        console.log('Selected shipment data:', item);
+        setTimeout(() => {
+            document.getElementById('ShipmentPopup').showModal();
+        }, 5);
+    };
+
+    // Function to refresh shipment data
+    const refreshData = async () => {
+        try {
+            const response = await axios.get(`${API_URL}/shipment/get_by_user/${UserID}`);
+            const shipments = response.data.filter(shipment => shipment.ShipmentDate === null);
+
+            const updatedShipments = await Promise.all(shipments.map(async (shipment) => {
+                const flourDetails = await Promise.all(shipment.FlourIDs.map(async (flourID) => {
+                    const flourResponse = await axios.get(`${API_URL}/flour/get/${flourID}`);
+                    console.log(`Fetched flour details for flour ID ${flourID}:`, flourResponse.data);
+                    return {
+                        FlourID: flourID,
+                        Flour_Weight: flourResponse.data.Flour_Weight
+                    };
+                }));
+
+                const totalFlourWeight = flourDetails.reduce((sum, flour) => sum + flour.Flour_Weight, 0);
+
                 const courierResponse = await axios.get(`${API_URL}/courier/get/${shipment.CourierID}`);
                 const courierName = courierResponse.data.CourierName;
 
@@ -112,7 +109,7 @@ function ShipmentOrders() {
 
     const accordions = [
         {
-            summary: 'Ordered shipment',
+            summary: 'Ordered shipments',
             details: () => (
                 <>
                     {shipmentData.map((item, index) => (
@@ -130,6 +127,7 @@ function ShipmentOrders() {
                                         S01{item.ShipmentID}
                                     </span>
                                 </div>
+
                                 <div className="flex ml-auto items-center">
                                     <ShipmentStatus packing />
                                 </div>
@@ -153,14 +151,14 @@ function ShipmentOrders() {
                     userID={selectedData.UserID}
                     users={users}
                     quantity={selectedData.ShipmentQuantity}
-                    weight={selectedData.ShipmentWeight + " Kg"}
+                    weight={`${selectedData.ShipmentWeight} Kg`}
                     date={selectedData.ShipmentDate}
                     imageSrc={selectedData.detailImage}
-                    onConfirm={refreshData} // Pass the refreshData function as a prop
+                    onConfirm={refreshData}
                 />
             )}
         </>
-    )
+    );
 }
 
 export default ShipmentOrders;

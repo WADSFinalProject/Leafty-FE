@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import WidgetContainer from "@components/Cards/WidgetContainer";
 import Powder from '@assets/PowderLogo.svg';
@@ -8,6 +8,8 @@ import Box from '@assets/PackageBox.svg';
 import Location from '@assets/location.svg';
 import DateIcon from '@assets/Date.svg';  // Renamed to avoid conflict with the Date component
 import Centra from '@assets/centra.svg';
+import { styled, ThemeProvider, createTheme } from '@mui/material/styles';
+import Checkbox from '@mui/material/Checkbox';
 import VerificationWait from "../../components/VerificationWait";
 import HarborReception from "../../components/HarborReception";
 import RescallingInput from "../../components/RescallingInput";
@@ -17,6 +19,8 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 import { API_URL } from "../../App"; // Adjust the import according to your project structure
+import { Backdrop } from '@mui/material';
+import LoadingStatic from "@components/LoadingStatic"
 
 const ItemDetail = ({ icon, title, value, altText }) => (
     <div className="flex flex-col gap-2">
@@ -34,28 +38,60 @@ const Column = ({ children, border = false }) => (
     </div>
 );
 
-const HarborContainers = [
-    { label: 'Harbor Name' },
-    { label: 'Total Packages' },
-    { label: 'Centra Name' },
-];
-
-const CentraContainers = [
-    { label: 'Centra Name' },
-    { label: 'Weight' },
-    { label: 'Your Name' },
+const steps = [
+    { label: 'Shipping' },
+    { label: 'Harbor Verification' },
+    { label: 'Harbor Reception' },
+    { label: 'Rescalling Input' },
+    { label: 'Centra Reception' },
 ];
 
 function AdminShipmentDetails() {
     const location = useLocation();
     const { shipment } = location.state || {};
-    const [currentComponent, setCurrentComponent] = useState(0);
+    const [currentComponent, setCurrentComponent] = useState(4);
     const [userData, setUserData] = useState(null);
+    const [maxCurrentComponent, setMaxCurrentComponent] = useState(4);
+    const [loading, setLoading] = useState(false)
+
+    const Root = styled('div')(({ theme }) => ({
+        height: '100%',
+        backgroundColor: 'transparent',
+        zIndex: 1,
+        borderRadius: '30px'
+    }));
+
+    const StyledBox = styled('div')(({ theme }) => ({
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: '30px',
+        padding: theme.spacing(2),
+        height: '75vh', // Use vh to ensure it takes 75% of the viewport height
+        overflowY: 'auto' // Ensure content is scrollable if it overflows
+    }));
+
+    const Puller = styled('div')(({ theme }) => ({
+        width: 30,
+        height: 6,
+        backgroundColor: theme.palette.divider,
+        borderRadius: 3,
+        position: 'absolute',
+        top: 8,
+        left: 'calc(50% - 15px)',
+    }));
+
+    const theme = createTheme({
+        palette: {
+            primary: {
+                main: '#0F7275',
+            },
+        },
+    });
 
     useEffect(() => {
         if (shipment?.UserID) {
             fetchUserDetails(shipment.UserID);
         }
+        determineCurrentComponent(shipment)
     }, [shipment]);
 
     const fetchUserDetails = async (userId) => {
@@ -67,12 +103,14 @@ function AdminShipmentDetails() {
         }
     };
 
-    const handleNext = () => {
-        setCurrentComponent(prevComponent => Math.min(prevComponent + 1, 6));
-    };
-
-    const handlePrevious = () => {
-        setCurrentComponent(prevComponent => Math.max(prevComponent - 1, 0));
+    const handleCheckboxChange = (index) => {
+        // Logic to handle checkbox changes
+        if (index < currentComponent) {
+            // Prevent unchecking previous steps
+            // Optionally, you can leave this block empty if unchecking is not allowed
+        } else if (index === currentComponent) {
+            setCurrentComponent(index - 1);
+        }
     };
 
     function formatDate(dateString) {
@@ -82,11 +120,108 @@ function AdminShipmentDetails() {
         return date.toLocaleDateString(undefined, options);
     }
 
+    const navigate = useNavigate()
+
+    function HandleSave() {
+        if (currentComponent === maxCurrentComponent) {
+            navigate(-1)
+        }
+        else if (currentComponent === 3) {
+            axios.put(API_URL + "/shipment/update_centra_reception/" + shipment.ShipmentID, {
+                "Centra_Reception_File": null
+            })
+        }
+        else if (currentComponent === 2) {
+            axios.put(API_URL + "/shipment/update_centra_reception/" + shipment.ShipmentID, {
+                "Centra_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_rescalled_weight/" + shipment.ShipmentID, {
+                "Rescalled_Weight": null,
+                "Rescalled_Date": null
+            })
+        } else if (currentComponent === 1) {
+            axios.put(API_URL + "/shipment/update_centra_reception/" + shipment.ShipmentID, {
+                "Centra_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_rescalled_weight/" + shipment.ShipmentID, {
+                "Rescalled_Weight": null,
+                "Rescalled_Date": null
+            })
+            axios.put(API_URL + "/shipment/update_harbor_reception/" + shipment.ShipmentID, {
+                "Harbor_Reception_File": null
+            })
+        } else if (currentComponent === 0) {
+            axios.put(API_URL + "/shipment/update_centra_reception/" + shipment.ShipmentID, {
+                "Centra_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_rescalled_weight/" + shipment.ShipmentID, {
+                "Rescalled_Weight": null,
+                "Rescalled_Date": null
+            })
+            axios.put(API_URL + "/shipment/update_harbor_reception/" + shipment.ShipmentID, {
+                "Harbor_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_check_in/" + shipment.ShipmentID, {
+                "Check_in_Date": null,
+                "Check_in_Quantity": null
+            })
+        }
+        else if (currentComponent === -1) {
+            axios.put(API_URL + "/shipment/update_centra_reception/" + shipment.ShipmentID, {
+                "Centra_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_rescalled_weight/" + shipment.ShipmentID, {
+                "Rescalled_Weight": null,
+                "Rescalled_Date": null
+            })
+            axios.put(API_URL + "/shipment/update_harbor_reception/" + shipment.ShipmentID, {
+                "Harbor_Reception_File": null
+            })
+            axios.put(API_URL + "/shipment/update_check_in/" + shipment.ShipmentID, {
+                "Check_in_Date": null,
+                "Check_in_Quantity": null
+            })
+            axios.put(API_URL + "/shipment/update_date/" + shipment.ShipmentID, {
+                "ShipmentDate": null
+            })
+        }
+        setLoading(true)
+        setTimeout(() => { setLoading(false) }, 2500)
+        setTimeout(() => {navigate(-1)}, 3000)
+    }
+
+    const determineCurrentComponent = (shipment) => {
+        if (!shipment.ShipmentDate) {
+            setCurrentComponent(-1);
+            setMaxCurrentComponent(-1);
+        } else if (!shipment.Check_in_Date && !shipment.Check_in_Weight) {
+            setCurrentComponent(0);
+            setMaxCurrentComponent(0);
+        } else if (!shipment.Harbor_Reception_File) {
+            setCurrentComponent(1);
+            setMaxCurrentComponent(1);
+        } else if (!shipment.Rescalled_Weight && !shipment.Rescalled_Date) {
+            setCurrentComponent(2);
+            setMaxCurrentComponent(2);
+        } else if (!shipment.Centra_Reception_File) {
+            setCurrentComponent(3);
+            setMaxCurrentComponent(3);
+        }
+        else if (shipment.Centra_Reception_File) {
+            setCurrentComponent(4);
+            setMaxCurrentComponent(4);
+        }
+    };
+
+    function HandleReset() {
+        setCurrentComponent(maxCurrentComponent);
+    }
+
     return (
         <div className="flex flex-col h-full justify-between">
-            <Stepper className="mt-4" activeStep={currentComponent} alternativeLabel>
-                {['Shipping', 'Harbor Reception', 'Rescalling Input', 'Centra Reception', 'Reception Detail'].map((label, index) => (
-                    <Step key={label}>
+            <Stepper className="mt-4" activeStep={currentComponent + 1} alternativeLabel>
+                {steps.map((step, index) => (
+                    <Step key={index}>
                         <StepLabel
                             StepIconProps={{
                                 style: {
@@ -94,18 +229,19 @@ function AdminShipmentDetails() {
                                     width: '40px',
                                     height: '40px',
                                     backgroundColor: '#ffffff',
-                                    color: '#C0CD30'
+                                    color: index <= currentComponent ? '#C0CD30' : '#000000', // Adjust colors based on active or inactive state
                                 }
                             }}
                             classes={{
                                 label: 'text-lg'
                             }}
                         >
-                            {label}
+                            {step.label}
                         </StepLabel>
                     </Step>
                 ))}
             </Stepper>
+
             <WidgetContainer border={true} className="w-full gap-2 py-4 pl-4 pr-0 flex flex-row justify-between">
                 <div className="flex flex-col gap-2">
                     <span className="font-bold text-2xl">Item Details</span>
@@ -133,18 +269,31 @@ function AdminShipmentDetails() {
             </WidgetContainer>
 
             <div className="mt-4">
-                {currentComponent === 0 && <VerificationWait padding={false} />}
-                {currentComponent === 1 && <HarborReception title="Harbor Reception" containers={HarborContainers} />}
-                {currentComponent === 2 && <ReceptionDetail harbor />}
-                {currentComponent === 2 && <RescallingInput />}
-                {currentComponent === 3 && <HarborReception title="Centra Reception" containers={CentraContainers} />}
-                {currentComponent === 4 && <ReceptionDetail harbor centra />}
+                <WidgetContainer>
+                    <span className='font-bold text-xl'>Modify Status</span>
+                    <div className="flex flex-row gap-2 mt-2 justify-between">
+                        {steps.map((step, index) => (
+                            <label key={index} className='gap-2 flex items-center'>
+                                <Checkbox
+                                    sx={{ '& .MuiSvgIcon-root': { fontSize: 28 } }}
+                                    checked={currentComponent >= index} // Check if currentComponent is equal to or beyond this step
+                                    onChange={() => handleCheckboxChange(index)}
+                                />
+                                <span className=''>{step.label}</span>
+                            </label>
+                        ))}
+                    </div>
+                </WidgetContainer>
             </div>
 
-            <div className={`flex ${currentComponent === 0 ? 'justify-end':'justify-between'} items-center mt-4 px-4`}>
-                <Button label="Previous" onClick={handlePrevious} disabled={currentComponent === 0} className='px-4 py-2 bg-gray-200 rounded-md' background="#79B2B7" color="white" />
-                <Button label="Next" onClick={handleNext} disabled={currentComponent === 5} className='px-4 py-2 bg-gray-200 rounded-md' background="#417579" color="white" />
+            <div className={`flex justify-end items-center mt-4 px-4 gap-2`}>
+                <Button label="Reset" onClick={HandleReset} className='px-4 py-2 bg-gray-200 rounded-md' background="#CAE3DA" color="white" />
+                <Button label="Save" onClick={HandleSave} className='px-4 py-2 bg-gray-200 rounded-md' background="#417579" color="white" />
             </div>
+            <Backdrop
+                sx={{ color: '#94C3B3', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+                open={loading}
+            ><LoadingStatic /></Backdrop>
         </div>
     );
 }

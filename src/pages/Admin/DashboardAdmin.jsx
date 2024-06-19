@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Sidebar, Menu, MenuItem, SubMenu } from 'react-pro-sidebar';
 import WidgetContainer from '../../components/Cards/WidgetContainer';
 import BarChart from '../../components/Cards/BarChart';
@@ -10,7 +10,8 @@ import box from "../../assets/PackageBox.svg";
 import axios from 'axios';
 import { API_URL } from '../../App.jsx';
 import { useOutletContext } from "react-router";
-
+import LoadingBackdrop from "../../components/LoadingBackdrop.jsx";
+import LoadingStatic from "@components/LoadingStatic.jsx";
 
 function DashboardAdmin() {
     const user_id = useOutletContext()
@@ -18,71 +19,35 @@ function DashboardAdmin() {
     const [tabletMode, setTabletMode] = useState(false);
     const [users, setUsers] = useState([]);
     const [shipments, setShipments] = useState([]);
+    const [unscaled, setUnscaled] = useState(0); // Corrected state variable name
     const [statistics, setStatistics] = useState({
         sum_wet_leaves: 0,
         sum_dry_leaves: 0,
         sum_flour: 0,
         sum_shipment_quantity: 0,
-        rescalled_packages_count: 0,
-        unscalled_packages_count: 0
     });
-
+    const [loading, setLoading] = useState(true);
     const Pielabels = ['Wet Leaves', 'Dry Leaves', 'Powder'];
     const Piedata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
     const Bartitle = 'Total Production';
-    const Barlabels = ['01/12', '01/13', '01/14', '01/15', '01/16', '01/17', '01/18'];
-    const Bardata = [1200, 1500, 1100, 1700, 1300, 1900, 1400];
+    const Barlabels = ["Wet Leaves", "Dry Leaves", "Powder"];
+    const Bardata = [statistics.sum_wet_leaves, statistics.sum_dry_leaves, statistics.sum_flour];
+
 
     useEffect(() => {
-        console.log("user:"+user_id)
-        const tabletMediaQuery = window.matchMedia('(max-width: 1024px)');
-
-        const handleScreenChange = (e) => {
-            setCollapsed(e.matches);
-            setTabletMode(e.matches);
-        };
-
-        handleScreenChange(tabletMediaQuery);
-        tabletMediaQuery.addListener(handleScreenChange);
-
-        return () => {
-            tabletMediaQuery.removeListener(handleScreenChange);
-        };
-    }, []);
-
-    useEffect(() => {
-        const fetchShipments = async () => {
+        const fetchData = async () => {
             try {
-                const response = await axios.get(`${API_URL}/shipment/get`);
-                setShipments(response.data);
-            } catch (error) {
-                console.error('Error fetching shipments:', error);
-            }
-        };
+                const [shipmentsResponse, usersResponse, statisticsResponse] = await Promise.all([
+                    axios.get(`${API_URL}/shipment/get`),
+                    axios.get(`${API_URL}/user/get`),
+                    axios.get(`${API_URL}/statistics/all_no_format`)
+                ]);
 
-        fetchShipments();
-    }, []);
+                setShipments(shipmentsResponse.data);
 
-    useEffect(() => {
-        const calculateStatistics = () => {
-            const unscalledPackagesCount = shipments.filter(shipment => !shipment.Rescalled_Weight).length;
-
-            setStatistics(prevStats => ({
-                ...prevStats,
-                unscalled_packages_count: unscalledPackagesCount,
-            }));
-        };
-
-        calculateStatistics();
-    }, [shipments]);
-
-    useEffect(() => {
-        const fetchUsers = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/user/get`);
-                const users = Array.isArray(response.data) ? response.data : response.data.users;
-                const filteredUsers = users.filter(user => user.role.RoleName === 'Unverified' || user.role.RoleName === 'Rejected');
-                const mappedUsers = filteredUsers.map(user => ({
+                const usersData = Array.isArray(usersResponse.data) ? usersResponse.data : usersResponse.data.users;
+                const filteredUsers = usersData.filter(user => user.role.RoleName === 'Unverified');
+                const mappedUsers = filteredUsers.slice(0, 3).map(user => ({
                     userid: user.UserID,
                     username: user.Username,
                     email: user.Email,
@@ -90,26 +55,31 @@ function DashboardAdmin() {
                     role: user.role.RoleName,
                 }));
                 setUsers(mappedUsers);
+
+                setStatistics(statisticsResponse.data);
+
             } catch (error) {
-                console.error('Error fetching users:', error);
+                console.error('Error fetching data:', error);
             }
         };
 
-        fetchUsers();
+        fetchData();
+        setLoading(false);
     }, []);
+
+    const unscaledPackagesCount = useMemo(() => {
+        return shipments.filter(shipment => !shipment.Rescalled_Weight).length;
+    }, [shipments]);
 
     useEffect(() => {
-        const fetchStatistics = async () => {
-            try {
-                const response = await axios.get(`${API_URL}/statistics/all`);
-                setStatistics(response.data);
-            } catch (error) {
-                console.error('Error fetching statistics:', error);
-            }
-        };
+        setUnscaled(unscaledPackagesCount);
+    }, [unscaledPackagesCount]);
 
-        fetchStatistics();
-    }, []);
+    if (loading) {
+        return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+            <LoadingStatic />
+        </div>
+    }
 
     return (
         <>
@@ -146,7 +116,7 @@ function DashboardAdmin() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.35, delay: 2 }}>
-                    <StatsContainer label="Unscaled Pickups" value={statistics.unscalled_packages_count} icon_unit={box} description="Scale Your Pickup!" color={"#0F7275"} />
+                    <StatsContainer label="Unscaled Pickups" value={unscaled} icon_unit={box} description="Scale Your Pickup!" color={"#0F7275"} />
                 </motion.div>
             </div>
 
@@ -154,11 +124,13 @@ function DashboardAdmin() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.35, delay: 2.25 }} className="flex flex-col gap-2">
-                <span className="text-xl font-bold">
+                {users && <span className="text-xl font-bold">
                     Unapproved User
-                </span>
+                </span>}
                 {users.map((user) => (
                     <LongUser
+                        user
+                        
                         key={user.userid}
                         showWeight={!tabletMode}
                         Atis={user.username}

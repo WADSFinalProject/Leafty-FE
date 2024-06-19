@@ -9,10 +9,10 @@ function InputField({ type, label, placeholder, icon, onChange, value, className
                     <span className="label-text">{label}</span>
                 </div> : <></>}
 
-            <label className={`input input-bordered flex items-center gap-2 input-md ${green ? "green" : ""}`}>
+            <div className={`input input-bordered flex items-center gap-2 input-md ${green ? "green" : ""}`}>
                 {icon ? <img src={icon} className="w-5 h-5"></img> : null}
-                <input type={type} className="grow" placeholder={placeholder}  onChange={!disabled ? onChange : undefined}  value={value} />
-            </label>
+                <input type={type} className="grow" placeholder={placeholder} onChange={!disabled ? onChange : undefined}  value={value} />
+            </div>
 
             {/* <div className="label">
                 <span className="label-text-alt">Bottom Left label</span>

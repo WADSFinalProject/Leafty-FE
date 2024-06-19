@@ -7,7 +7,7 @@ import Phone from "../../assets/icons/UserPhone.svg";
 import Mail from "../../assets/icons/UserMail.svg";
 import arrow_square from "../../assets/icons/arrow_square.svg";
 
-function LongUser({ showWeight = false, Atis, Mailis, Phonis, UserId, centra, harbor     }) {
+function LongUser({ showWeight = false, Atis, Mailis, Phonis, UserId, centra, harbor, user     }) {
     const data = [
         {
             "image": At,
@@ -28,7 +28,7 @@ function LongUser({ showWeight = false, Atis, Mailis, Phonis, UserId, centra, ha
             <div className="flex justify-between flex-row items-center font-semibold text-sm lg:text-base px-2">
                 <div className="flex flex-row justify-center items-center gap-2">
                     <img src={Users} alt="Unapproved User"></img>
-                    <span className="w-min sm:w-full">{centra && "Centra"}{harbor && "Harbor"}</span>
+                    <span className="w-min sm:w-full">{centra && "Centra"}{harbor && "Harbor"}{user && "User"}</span>
                 </div>
                 {data.map((e, index) => (
                     <div key={index} className="flex flex-row justify-center items-center gap-2">

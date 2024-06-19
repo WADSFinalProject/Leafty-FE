@@ -6,6 +6,12 @@ import {
   Pin,
   InfoWindow,
 } from "@vis.gl/react-google-maps";
+import WetLeaves from "@assets/WetLeaves.svg"
+import DryLeaves from "@assets/DryLeaves.svg"
+import Powder from "@assets/Powder.svg"
+import box from "@assets/PackageBox.svg"
+import Delivery from "@assets/delivery.svg"
+import { Dry } from "@mui/icons-material";
 
 // Define the points for five Indonesian cities
 const indonesianCities = [
@@ -23,7 +29,7 @@ const PerformanceMap = () => {
     console.log("Marker clicked:", city);
     setOpen(city);
   };
-  
+
   const handleCloseClick = () => {
     console.log("InfoWindow closed");
     setOpen(null);
@@ -31,7 +37,7 @@ const PerformanceMap = () => {
 
   return (
     <APIProvider apiKey={'AIzaSyBpSruz4Yf86sK9Xg5vTWe8X7rnnmEqZgk'}>
-      <div style={{ height: "100vh", width: "100%" }}>
+      <div style={{ height: "50vh", width: "100%" }}>
         <Map center={{ lat: -2.548926, lng: 118.0148634 }} zoom={5} mapId={'5f23de08f244d7c0'}>
           {indonesianCities.map((city) => (
             <AdvancedMarker
@@ -48,9 +54,29 @@ const PerformanceMap = () => {
               position={{ lat: open.lat, lng: open.lng }}
               onCloseClick={handleCloseClick}
             >
-              <div style={{ color: 'black' }}>
-                <h3>{open.name}</h3>
-                <p>Coordinates: {open.lat}, {open.lng}</p>
+
+              <span className="font-bold text-black justify-center flex text-lg">Centra AB</span>
+
+              <div style={{ color: 'black' }} className="grid grid-cols-2 gap-2">
+                <div className="flex flex-row gap-2">
+                  <img src={WetLeaves}></img>
+                  <div className="flex flex-col">
+                    <span>Wet Leaves</span>
+                    <span className="font-bold">200 Kg</span>
+                  </div>
+                </div>
+                <div className="flex flex-row gap-2"><img src={DryLeaves}></img><div className="flex flex-col">
+                  <span>Dry Leaves</span>
+                  <span className="font-bold">200 Kg</span>
+                </div></div>
+                <div className="flex flex-row gap-2"><img src={Powder}></img><div className="flex flex-col">
+                  <span>Powder</span>
+                  <span className="font-bold">200 Kg</span>
+                </div></div>
+                <div className="flex flex-row gap-2"><img src={Delivery} className="w-8 h-8"></img><div className="flex flex-col">
+                  <span>Packages Received</span>
+                  <span className="font-bold">200 Packages</span>
+                </div></div>
               </div>
             </InfoWindow>
           )}

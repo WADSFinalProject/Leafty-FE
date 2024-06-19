@@ -57,19 +57,23 @@ const DryLeaves = () => {
           processed: 0,
           wasted: 0,
           total: 0
+
         };
+
 
         dryLeavesResponse.data.forEach(leaf => {
           stats.total += leaf.Processed_Weight;
-          if (leaf.Status === 'Processed') {
+          if ((new Date(leaf.Expiration) < new Date()) == true) {
+            stats.wasted += leaf.Processed_Weight;
+
+          }
+          else if (leaf.Status === 'Processed') {
             stats.processed += leaf.Processed_Weight;
           }
-          else if (new Date(leaf.Expiration) < new Date()) {
-            stats.wasted += leaf.Processed_Weight;
-          }
+
           else if (leaf.Status === 'Awaiting') {
             stats.awaiting += leaf.Processed_Weight;
-          } 
+          }
         });
 
         setStats(stats);
@@ -116,31 +120,32 @@ const DryLeaves = () => {
     let textColor;
     let logo;
 
-    // Determine background color and text color based on status
-    switch (rowData.status) {
-      case "Awaiting":
-        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
-        textColor = "#79B2B7";
-        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Processed":
-        backgroundColor = hexToRGBA("D4965D", 0.5);
-        textColor = "#E28834";
-        logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Expired":
+
+    const currentTime = new Date();
+    const isExpired = new Date(rowData.expiration) < currentTime;
+
+    if (rowData.status === "Awaiting") {
+      if (isExpired) {
         backgroundColor = hexToRGBA("#D45D5D", 0.5);
         textColor = "#D45D5D";
         logo = <img src={Exc} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      case "Thrown":
-        backgroundColor = hexToRGBA("9E2B2B", 0.5);
-        textColor = "#9E2B2B";
-        logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
-        break;
-      default:
-        backgroundColor = "inherit";
-        textColor = "#000000";
+      } else {
+        backgroundColor = hexToRGBA("#A0C2B5", 0.5);
+        textColor = "#79B2B7";
+        logo = <img src={IPI} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+      }
+    }
+    else if (rowData.status === "Processed") {
+      backgroundColor = hexToRGBA("D4965D", 0.5);
+      textColor = "#E28834";
+      logo = <img src={If} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else if (rowData.status === "Thrown") {
+      backgroundColor = hexToRGBA("9E2B2B", 0.5);
+      textColor = "#9E2B2B";
+      logo = <img src={trash} alt="Logo" style={{ width: '20px', height: '20px' }} />;
+    } else {
+      backgroundColor = "inherit";
+      textColor = "#000000";
     }
 
     const dynamicWidth = "150px";
@@ -157,7 +162,7 @@ const DryLeaves = () => {
         className="flex items-center justify-center rounded-md overflow-hidden"
       >
         <div className="flex items-center gap-2">
-          <span>{rowData.status}</span>
+          <span>{rowData.status === "Awaiting" && (new Date(rowData.expiration) < new Date()) ? "Expired" : rowData.status}</span>
           {logo}
         </div>
       </div>

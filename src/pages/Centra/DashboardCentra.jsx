@@ -27,24 +27,22 @@ function DashboardCentra() {
   const [sumFlour, setSumFlour] = useState("---");
   const [sumShipmentQuantity, setSumShipmentQuantity] = useState("---");
 
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/centra/statistics/${UserID}`);
+      const data = response.data;
+      setSumWetLeaves(data.sum_wet_leaves);
+      setSumDryLeaves(data.sum_dry_leaves);
+      setSumFlour(data.sum_flour);
+      setSumShipmentQuantity(data.sum_shipment_quantity);
+    } catch (error) {
+      console.error('Error fetching statistics data:', error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`${API_URL}/centra/statistics/${UserID}`);
-        const data = response.data;
-        setSumWetLeaves(response.data.sum_wet_leaves);
-        setSumDryLeaves(response.data.sum_dry_leaves);
-        setSumFlour(response.data.sum_flour);
-        setSumShipmentQuantity(response.data.sum_shipment_quantity);
-
-      } catch (error) {
-        console.error('Error fetching statistics data:', error);
-      }
-    };
-
     fetchData();
-    console.log(statsData)
-  }, [UserID])
+  }, [UserID]);
 
   const statsData = [
     { label: "Wet Leaves", value: sumWetLeaves, unit: "Kg", frontIcon: WetLeaves, modal: false, color: "#79B2B7" },
