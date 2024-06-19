@@ -25,8 +25,6 @@ const columns = [
   { field: 'status', header: 'Status' }
 ];
 
-
-
 const AdminWetLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
@@ -97,11 +95,14 @@ const AdminWetLeaves = () => {
     }
   };
 
+  const handleUpdate = (updatedData) => {
+    setData(data.map(item => item.id === updatedData.id ? updatedData : item));
+  };
+
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
     let logo;
-
 
     const currentTime = new Date();
     const isExpired = new Date(rowData.expiration) < currentTime;
@@ -190,6 +191,7 @@ const AdminWetLeaves = () => {
           wet_leaves={true}
           leavesid={selectedRowData.id}
           editable={editable}
+          onSubmit={handleUpdate}
         />
       )}
     </div>

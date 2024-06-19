@@ -25,8 +25,8 @@ const AdminDryLeaves = () => {
   const [data, setData] = useState([]);
   const [selectedRowData, setSelectedRowData] = useState(null);
   const [editable, setEditable] = useState(false);
-  const [loading, setLoading] = useState(true);
   const leavesModalRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -86,10 +86,13 @@ const AdminDryLeaves = () => {
   const handleEditClick = (rowData) => {
     setSelectedRowData(rowData);
     setEditable(true);
-    console.log(rowData)
     if (leavesModalRef.current) {
       leavesModalRef.current.showModal();
     }
+  };
+
+  const handleUpdate = (updatedData) => {
+    setData(data.map(item => item.id === updatedData.id ? updatedData : item));
   };
 
   const statusBodyTemplate = (rowData) => {
@@ -189,6 +192,7 @@ const AdminDryLeaves = () => {
           status={selectedRowData.status}
           leavesid={selectedRowData.id}
           editable={editable}
+          onSubmit={handleUpdate}
         />
       )}
     </div>

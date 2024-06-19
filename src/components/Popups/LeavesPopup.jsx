@@ -1,15 +1,15 @@
 import React, { forwardRef, useState, useEffect } from 'react';
+import axios from 'axios'; 
 import WetLeaves from "@assets/WetLeaves.svg";
 import DryLeaves from "@assets/DryLeaves.svg";
 import Powder from "@assets/Powder.svg";
 import ProcessedLeaves from '@assets/icons/Wat.svg';
-import InputField from '@components/InputField';
-import RealTimeCountDown from '@components/RealtimeCountDown';
-import Button from '@components/Button';
 import trash from '@assets/icons/trash.svg';
 import Countdown from '@assets/Countdown.svg';
 import Exc from '@assets/icons/Exc.svg';
-import axios from 'axios'; // Import axios for making HTTP requests
+import RealTimeCountDown from '@components/RealtimeCountDown';
+import Button from '@components/Button';
+import { API_URL } from '../../App';
 
 const LeavesPopup = forwardRef(({
   leavesid,
@@ -31,24 +31,17 @@ const LeavesPopup = forwardRef(({
   const [expiration, setExpiration] = useState(expiredDate);
   const [leavesStatus, setLeavesStatus] = useState(status);
 
-
   const handleEditSubmit = async () => {
+    const type = wet_leaves ? 'wetleaves' : dry_leaves ? 'dryleaves' : 'flour';
     try {
-      await axios.put(`${API_URL}/dryleaves/update/${id}`, {
-        UserID: await getUserID(name),
-        Processed_Weight: leavesWeight, // Update with leavesWeight state
-        ExpirationTime: new Date(expiration).toISOString(),
+      await axios.put(`${API_URL}/${type}/put/${id}`, {
+        Weight: leavesWeight,
+        Expiration: new Date(expiration).toISOString(),
       });
-
-      // Assuming setData function exists to update data after successful API call
-      setData(prevData =>
-        prevData.map(item =>
-          item.id === id ? { ...item, name, weight: leavesWeight, expiration } : item
-        )
-      );
+      onSubmit({ id, name, weight: leavesWeight, expiration, status: leavesStatus });
       ref.current.close();
     } catch (error) {
-      console.error('Error updating dry leaves data', error);
+      console.error(`Error updating ${type} data`, error);
     }
   };
 
@@ -67,7 +60,6 @@ const LeavesPopup = forwardRef(({
     return null;
   };
 
-
   return (
     <dialog ref={ref} id={leavesid} className="modal">
       <div className="modal-box rounded-lg flex items-start flex-col gap-2">
@@ -76,9 +68,7 @@ const LeavesPopup = forwardRef(({
           <div className="p-7 bg-[#94C3B3] rounded-lg">
             {renderImage()}
           </div>
-
           <div className='flex flex-col w-full'>
-
             <div className={`px-0`}>
               <span className="label-text font-semibold">Expired Date</span>
             </div>
@@ -92,8 +82,7 @@ const LeavesPopup = forwardRef(({
                 disabled={!editable}
               />
             </div>
-
-            <div className='flex flex-col gap-2'>
+            <div className='flex flex-row gap-2'>
               <div className='flex flex-col'>
                 <span className='label-text font-semibold'>Status</span>
                 {(status === "Awaiting" && new Date(expiration) < currentDate) && (
@@ -204,7 +193,7 @@ const LeavesPopup = forwardRef(({
           ✕
         </button>
         {editable && (
-          <Button className="w-full" noMax = {true} type="button" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleEditSubmit} />
+          <Button className="w-full" noMax={true} type="button" background="#0F7275" color="#F7FAFC" label="Save" onClick={handleEditSubmit} />
         )}
       </div>
     </dialog>

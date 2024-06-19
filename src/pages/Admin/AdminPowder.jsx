@@ -91,6 +91,10 @@ const AdminPowder = () => {
     }
   };
 
+  const handleUpdate = (updatedData) => {
+    setData(data.map(item => item.id === updatedData.id ? updatedData : item));
+  };
+
   const statusBodyTemplate = (rowData) => {
     let backgroundColor;
     let textColor;
@@ -156,37 +160,6 @@ const AdminPowder = () => {
     return `rgba(${r}, ${g}, ${b}, ${opacity})`;
   };
 
-  const handleEditSubmit = async (updatedData) => {
-    try {
-      const { weight } = updatedData;
-      await axios.put(`${API_URL}/powder/put/${updatedData.id}`, { // Adjusted API endpoint and payload for update
-        UserID: await getUserID(updatedData.name), // Function to get user ID from name
-        Powder_Weight: weight.replace(' Kg', ''),
-        Expiration: new Date(updatedData.expiredDate).toISOString()
-      });
-
-      // Update the local state
-      setData(prevData =>
-        prevData.map(item =>
-          item.id === updatedData.id ? { ...item, weight, expiredDate: updatedData.expiredDate } : item
-        )
-      );
-      leavesModalRef.current.close();
-      setEditable(false);
-    } catch (error) {
-      console.error('Error updating powder data', error);
-    }
-  };
-
-  const getUserID = async (username) => {
-    try {
-      const response = await axios.get(`${API_URL}/user/get_user_id/${username}`); // Adjusted API endpoint for user ID retrieval
-      return response.data.UserID;
-    } catch (error) {
-      console.error('Error fetching user ID', error);
-      return null;
-    }
-  };
 
   if (loading) {
     return (
@@ -220,7 +193,7 @@ const AdminPowder = () => {
           status={selectedRowData.status}
           leavesid={selectedRowData.id}
           editable={editable}
-          onSubmit={handleEditSubmit}
+          onSubmit={handleUpdate}
         />
       )}
     </div>
