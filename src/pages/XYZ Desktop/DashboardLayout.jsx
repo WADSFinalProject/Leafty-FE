@@ -17,8 +17,10 @@ import axios from "axios";
 import { API_URL } from "../../App";
 import Profile from "@components/Profile";
 import LoadingBackdrop from "../../components/LoadingBackdrop";
+import addNotification, { Notifications } from 'react-push-notification';
 
 function DashboardLayout({ CURRENT_USER }) {
+    const [shipments, setShipments] = useState([]);
     const [collapsed, setCollapsed] = useState(false);
     const [userData, setUserData] = useState({ Username: "Error", Email: "Error" });
     const [loading, setLoading] = useState(true);
@@ -41,6 +43,34 @@ function DashboardLayout({ CURRENT_USER }) {
             return null;
         }
     };
+
+    useEffect(() => {
+        const fetchShipments = async () => {
+            try {
+                const response = await axios.get(`${API_URL}/shipment/get`);
+                setShipments(response.data);
+                console.log(response.data);
+
+                // Check for null values in the response data
+                const hasNullValues = response.data.some(shipment =>
+                    Object.values(shipment).some(value => value === null)
+                );
+
+                if (hasNullValues) {
+                    addNotification({
+                        title: 'Information',
+                        subtitle: 'Unclaimed Shipments',
+                        message: 'One or more shipments have not been claimed',
+                        duration: 10000
+                    });
+                }
+            } catch (error) {
+                console.error("Error fetching shipments:", error);
+            }
+        };
+
+        fetchShipments();
+    }, [API_URL]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -70,6 +100,9 @@ function DashboardLayout({ CURRENT_USER }) {
 
     return (
         <div className="dashboard flex justify-evenly items-center w-screen h-screen overflow-hidden gap-4 sm:p-6 max-w-screen">
+            <div>
+                <Notifications position = {'bottom-right'}/>
+            </div>
             <motion.div initial={{ x: -250 }} transition={{ duration: 0.5, type: "spring" }} animate={{ x: 0 }} className="hidden sm:block">
                 <Sidebar collapsed={collapsed} className="sidebar" backgroundColor="#94c3b3" color="#94c3b3">
                     <Menu
@@ -96,8 +129,8 @@ function DashboardLayout({ CURRENT_USER }) {
                         {/* Menu items with onClick handler to update title */}
                         <MenuItem icon={<img src={dashboard} alt="Dashboard Icon" />} onClick={() => handleMenuItemClick("/company/dashboard", "Dashboard")}> Dashboard </MenuItem>
                         <SubMenu className={"flex justify-center flex-col"} label="Leaves Distribution" icon={<img src={leaves_distribution} alt="Leaves Distribution Icon" />}>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} alt="Wet Leaves Icon" />} onClick={() => handleMenuItemClick("/company/wetleaves", "Wet Leaves leaves")}> Wet Leaves</MenuItem>
-                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves Icon" />} onClick={() => handleMenuItemClick("/company/dryleaves", "Dry Leaves leaves")}> Dry Leaves </MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={wet_leaves} alt="Wet Leaves Icon" />} onClick={() => handleMenuItemClick("/company/wetleaves", "Wet Leaves")}> Wet Leaves</MenuItem>
+                            <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={dry_leaves} alt="Dry Leaves Icon" />} onClick={() => handleMenuItemClick("/company/dryleaves", "Dry Leaves")}> Dry Leaves </MenuItem>
                             <MenuItem style={{ backgroundColor: "#94c3b3" }} icon={<img src={powder} alt="Powder Icon" />} onClick={() => handleMenuItemClick("/company/powder", "Powder")}> Powder </MenuItem>
                         </SubMenu>
                         <MenuItem icon={<img src={shipment} alt="Shipment Icon" />} onClick={() => handleMenuItemClick("/company/shipment", "Shipment")}> Shipment </MenuItem>
