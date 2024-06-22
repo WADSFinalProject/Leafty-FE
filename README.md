@@ -33,7 +33,6 @@ This repository contains the frontend code for the Leafty project, built using R
 2. Direct yourself to the given localhost server in your terminal 
 
 ## Main Folder Structure
-- `public/`: Contains public assets and the HTML template.
 - `src/`: Contains the main source code for the React application.
   - `assets/`: Contain the image that is used on the application.
   - `components/`: Reusable React components.
