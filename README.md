@@ -17,11 +17,7 @@ This repository contains the frontend code for the Leafty project, built using R
    ```sh
    git clone https://github.com/WADSFinalProject/Leafty-FE.git
 
-2. Navigate to the project directory:
-    ```sh
-    cd frontend
-
-3. Install dependencies:
+2. Install dependencies:
     ```sh
     npm i
 
