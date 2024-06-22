@@ -1,7 +1,7 @@
-<img src="LeaftyLogo.png" width="270">
+<img src="LeaftyLogo.png" >
 
 ## Leafty - Frontend
-
+This repository contains the frontend code for the Leafty project, built using React, JavaScript, CSS, and HTML. The frontend interacts seamlessly with the Leafty backend to deliver a smooth and efficient user experience.
 ## What is Leafty?
  Collaborative Task Management System for small and medium-sized enterprise specializing in Moringa-based products. The system will digitize and streamline the supply chain from cultivation to market, directly addressing the manual inefficiencies and information discrepancies hindering company's production planning and execution. 
 
