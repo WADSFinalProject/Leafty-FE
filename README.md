@@ -50,5 +50,7 @@ https://drive.google.com/file/d/1QT06VqAyc-RyDzdizvv_npj0hTLOaGlk/view?usp=shari
 - KELASU - Kenneth Lay
 - rajafarel - Raja Farel
 - Jeff Matthew
+- Troy Prajoga
+- Pranav
 
 
