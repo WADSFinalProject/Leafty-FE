@@ -39,6 +39,10 @@ This repository contains the frontend code for the Leafty project, built using R
 
 https://drive.google.com/file/d/1QT06VqAyc-RyDzdizvv_npj0hTLOaGlk/view?usp=sharing
 
+## Deployment
+There are some configurations that needs to be done for hosting in vercel:
+- Follows the `vercel.json` in the repository which allows navigate page in vercel
+- Then, the hosters can host normally for the frontend
 
 # Contributors:
 - DNeilson67 - Davin Neilson (Supervisor)
