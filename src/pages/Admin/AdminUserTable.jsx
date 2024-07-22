@@ -20,17 +20,25 @@ const AdminUserTable = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [editable, setEditable] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(10);
   const modalRef = useRef(null);
 
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        setLoading(true); // Set loading to true when fetching data
-        const { data } = await axios.get(`${API_URL}/user/get`);
+        setLoading(true);
+        const skip = (currentPage - 1) * pageSize;
+        console.log(`Fetching users: page ${currentPage}, pageSize ${pageSize}, skip ${skip}`);
+        
+        const { data } = await axios.get(`${API_URL}/user/get?skip=${skip}&limit=${pageSize}`);
+        console.log('Received data:', data);
+        
         const usersArray = Array.isArray(data) ? data : data.users;
 
         const filteredAndMappedUsers = usersArray
-          .filter(user => user.role.RoleName !== 'Unverified' && user.role.RoleName !== 'Rejected')
+          .filter(user => user.role.RoleName !== 'Customer' && user.role.RoleName !== 'Rejected')
           .map(({ UserID, Username, Email, PhoneNumber, role }) => ({
             userid: UserID,
             username: Username,
@@ -39,16 +47,22 @@ const AdminUserTable = () => {
             role: role.RoleName,
           }));
 
+        console.log('Filtered and mapped users:', filteredAndMappedUsers);
         setUsers(filteredAndMappedUsers);
-        setLoading(false); // Set loading to false after data is fetched
+        setLoading(false);
+
+        // Fetch total user count
+        const countResponse = await axios.get(`${API_URL}/user/count`);
+        console.log('Total users count:', countResponse.data);
+        setTotalUsers(countResponse.data);
       } catch (error) {
         console.error('Error fetching users:', error);
-        setLoading(false); // Ensure loading is set to false on error
+        setLoading(false);
       }
     };
 
     fetchUsers();
-  }, []);
+  }, [currentPage, pageSize]);
 
   const handleDetailsClick = (user) => {
     setSelectedUser(user);
@@ -66,6 +80,7 @@ const AdminUserTable = () => {
       await axios.delete(`${API_URL}/user/delete/${id}`);
       setSelectedUser(null);
       setUsers(users.filter(user => user.userid !== id));
+      setTotalUsers(prevTotal => prevTotal - 1);
     } catch (error) {
       console.error('Error deleting user:', error);
     }
@@ -123,6 +138,11 @@ const AdminUserTable = () => {
     );
   };
 
+  const handlePageChange = (newPage) => {
+    console.log('Page changed to:', newPage);
+    setCurrentPage(newPage);
+  };
+
   if (loading) {
     return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
       <LoadingStatic />
@@ -137,11 +157,14 @@ const AdminUserTable = () => {
         columns={columns}
         ColorConfig={RoleBodyTemplate}
         admin={true}
-        rows={10}
+        rows={pageSize}
         depends='role'
         onDetailsClick={handleDetailsClick}
         onEditClick={handleEditClick}
         onDelete={handleDelete}
+        totalRecords={totalUsers}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
       />
       {selectedUser && (
         <UserDetails

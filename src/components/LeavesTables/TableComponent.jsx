@@ -1,7 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { Button } from 'primereact/button';
+import { Paginator } from 'primereact/paginator';
 import 'daisyui/dist/full.css';
 import 'primereact/resources/themes/tailwind-light/theme.css';
 import '../../style/TableComponent.css';
@@ -26,11 +27,13 @@ function TableComponent({
   showSearch = true,
   showFilter = true,
   widihmin = '65rem',
-  action= true
+  action = true,
+  totalRecords,
+  currentPage,
+  onPageChange
 }) {
   const [globalFilter, setGlobalFilter] = useState('');
   const [selectedRowForDeletion, setSelectedRowForDeletion] = useState(null);
-  const popupRef = useRef(null);
 
   const renderHeader = () => (
     <div className="flex flex-row justify-between m-0 items-center">
@@ -48,37 +51,12 @@ function TableComponent({
             />
           </label>
         )}
-        {/* {showFilter && (
-          <button className="btn" style={{ background: "#94C3B3" }}>
-            <img src={filter} alt="filter" />
-          </button>
-        )}
-        {admin && (
-          <button className="btn" style={{ background: "#94C3B3" }}>
-            <img src={plus} alt="add" />
-          </button>
-        )} */}
       </div>
     </div>
   );
 
   const handleDeleteClick = (rowData) => {
     setSelectedRowForDeletion(rowData);
-    popupRef.current?.showModal();
-  };
-
-  const handleConfirmDelete = () => {
-    const idToDelete = selectedRowForDeletion?.userid || selectedRowForDeletion?.id;
-    if (idToDelete) {
-      onDelete(idToDelete);
-      setSelectedRowForDeletion(null);
-      popupRef.current?.close();
-    }
-  };
-
-  const handleCancelDelete = () => {
-    setSelectedRowForDeletion(null);
-    popupRef.current?.close();
   };
 
   const actionTemplate = (rowData) => (
@@ -113,8 +91,6 @@ function TableComponent({
     <div className="container">
       <DataTable
         value={data}
-        paginator={paginator}
-        rows={paginator ? rows : undefined}
         tableStyle={{ minWidth: widihmin }}
         globalFilter={globalFilter}
         header={renderHeader()}
@@ -131,15 +107,20 @@ function TableComponent({
         ))}
         {action && <Column key="action" header="Action" body={actionTemplate} />}
       </DataTable>
-
+      <Paginator
+        first={(currentPage - 1) * rows}
+        rows={rows}
+        totalRecords={totalRecords}
+        onPageChange={(e) => onPageChange(e.page + 1)}
+        template="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink"
+      />
       <Popup
-        ref={popupRef}
         warning
         leavesid="delete-confirm-popup"
         description="Are you sure you want to delete this item?"
         confirm
-        onConfirm={handleConfirmDelete}
-        onCancel={handleCancelDelete}
+        onConfirm={() => onDelete(selectedRowForDeletion?.userid)}
+        onCancel={() => setSelectedRowForDeletion(null)}
       />
     </div>
   );
