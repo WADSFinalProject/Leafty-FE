@@ -68,7 +68,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import AdminShipment from "./pages/Admin/AdminShipment";
 import AdminShipmentDetails from "./pages/Admin/AdminShipmentDetail";
 import PushNotif from "./components/Popups/pushnotif";
-
+import Notification from "./pages/XYZ Desktop/Notification";
 const USER_TYPES = {
   UNVERIFIED: 'Unverified',
   CENTRA: "Centra",
@@ -281,6 +281,8 @@ function App() {
               <Route path="xyzshipmentdetail" element={<XYZShipmentDetail />} />
             </Route>
           </Route>
+
+          <Route path="Notification" element={<Notification/>} />
 
           <Route exact path="/" element={<ProtectedRoute />}>
             <Route exact path="/" element={<ProtectedAdmin />}>

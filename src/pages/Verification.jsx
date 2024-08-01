@@ -137,31 +137,50 @@ function Verification() {
             console.error('Error resending OTP', error);
         }
     };
-
+    const getMargin = () => {
+        const width = window.innerWidth;
+        if (width < 320) {
+            return '0.3vw'; // Smaller margin for very small screens
+        } else if (width < 600) {
+            return '0.5vw'; // Smaller margin for small screens
+        } else {
+            return '0.55vw'; // Larger margin for bigger screens
+        }
+    };
+    const margin = getMargin();
+    const getInputStyle = () => {
+        if (window.innerWidth <= 375) {
+          return { width: '45px', height: '45px' }; // For Mobile S
+        } else if (window.innerWidth <= 480) {
+          return { width: '55px', height: '55px' }; // For Mobile M
+        }
+        return { width: '55px', height: '55px' }; // For larger screens
+      };
     return (
-        <div className='flex w-screen h-screen overflow-hidden disable-zoom'>
-            <Button id="back" label={<FaArrowLeft />} onClick={handleGoBack}></Button>
+        <div className='flex flex-col md:flex-row w-screen h-screen overflow-hidden disable-zoom'>
+            <Button id="back" label={<FaArrowLeft />} onClick={handleGoBack} className="ml-5"></Button>
             {/* Login Contents */}
-            <div id="contents" className="flex flex-col w-1/2 h-screen m-20 gap-4 max-w-md">
+            <div id="contents" className="flex flex-col w-full md:w-1/2 h-screen m-4 md:m-20 mt-16 py-8 gap-4 max-w-md">
                 <img className="w-20 h-20" src={logo} alt="Logo" />
                 <div className='flex flex-col'>
-                    <span className='font-bold text-3xl'>Verify Your Account</span>
-                    <span className='text-xl font-medium' style={{ color: "#606060" }}>Enter the code that we have sent to <span style={{ color: "#79B2B7" }}>{email}</span></span>
+                    <span className='font-bold text-3xl me-8'>Verify Your Account</span>
+                    <span className='text-xl font-medium me-8' style={{ color: "#606060" }}>Enter the code that we have sent to <span style={{ color: "#79B2B7" }}>{email}</span></span>
                 </div>
                 <OtpInput
                     value={otp}
                     onChange={setOtp}
                     numInputs={6}
-                    renderSeparator={<span style={{ margin: '0 0.65vw' }} />}
-                    renderInput={(props) => <input {...props} />}
-                    inputStyle={{ width: "60px", height: "60px", background: "#CAE3DA", borderRadius: "0.5rem" }}
-                />
+                    renderSeparator={<span style={{ margin: `0 ${margin}` }} />}
+                    renderInput={(props) => <input {...props} style={{ ...getInputStyle(), background: "#CAE3DA", borderRadius: "0.5rem", marginInlineEnd: margin }} />}
+                    inputStyle={{ /* Keep any additional styles if needed */ }}
+                    />
 
                 <div className='flex flex-row justify-end items-center'>
-                    <span style={{ color: "#79B2B7", cursor: "pointer" }} onClick={handleResendCode}>Resend Code</span>
+                    <span style={{ color: "#79B2B7", cursor: "pointer" }} onClick={handleResendCode} className="me-8">Resend Code</span>
                 </div>
-                <Button background="#0F7275" color="#F7FAFC" label="Submit" onClick={handleVerify}></Button>
-                <span className='flex justify-center gap-2'>Verify with Phone Number?<button className={"font-bold"} style={{ color: "#79B2B7" }}>Switch</button></span>
+
+                <Button background="#0F7275" color="#F7FAFC" label="Submit" onClick={handleVerify} className="me-8"></Button>
+                <span className='flex justify-center me-8 gap-2'>Verify with Phone Number?<button className={"font-bold"} style={{ color: "#79B2B7" }}>Switch</button></span>
             </div>
             {/* End of Login Contents */}
 
